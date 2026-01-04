@@ -26,7 +26,7 @@ Some tutorials to brush up on these skills:
 
 
 !!! note "Communication"
-The primary mode of communication would Slack, please join the class Slack channel [here](https://join.slack.com/t/6725-spring-2026/shared_invite/zt-2wgaprts7-i7aLYPKUXkFZfZKc5oJexQ)
+The primary mode of communication would Slack, please join the class Slack channel [here](https://join.slack.com/t/dsan6725appli-imy3613/shared_invite/zt-3mh6xismt-sKHNzqXmFrJV5ztgueAPbA)
 
 ## Books, Software and Cloud Resources
 
@@ -54,21 +54,20 @@ You will get credits on both platforms that will be enough to support your cours
 
 | Week  | Module                                               | Details                                                                                                  |
 |-------|------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
-| 1     | Introduction to Generative AI and Applications  | Overview of course objectives and an introduction to GenAI                    |
-| 2     | In-context Learning.                           | Introduction to prompt engineering |
-| 3     | Retrieval Augmented Generation (RAG)         | Build a Q&A using a vector db and a FM              |
-| 4     | Advanced RAG Techniques (Graph RAG, Memory-Augmented Systems)                     | Explore structured and unstructured data sources, chunking strategies, query rewrites, graph db etc.
-| 5     | Agent-Based Architectures - Part 1                                  | Tool usage, build agents LangChain, LlamaIndex and Amazon Bedrock      |
-| 5     | Agent-Based Architectures - Part 2                                  | Multi-agent collaboration,       |
-| 6     | Fine-tuning Generative AI models         | Fine-tune LLMs with custom data            |
-| 7     | Responsible AI                      | Data security, guardrails, ethics                             |
-| 8     | Embeddings Models and Representation Learning                                        | Background on vector embeddings, fine-tuning embeddings models
-| 9     | Model serving                                            | Inference servers & engines          |
-| 10    | Model serving Optimizations                                     | Speculative decoding, quantization, distillation, adapter swapping        |
-| 11    | Benchmarking and Evaluation of Generative Models        | Price, performance and accuracy benchmarking using open-source tools |
-| 12    | Gen AI app best practices                                   | Best practices for deploying GenAI apps in production           |
+| 1     | Introduction to Generative AI and Coding Assistants  | Overview of course objectives, introduction to GenAI, and AI-powered coding tools                    |
+| 2     | In-context Learning                           | Introduction to prompt engineering |
+| 3     | Retrieval Augmented Generation (RAG)         | Build Q&A systems using vector databases, foundation models, graph RAG, and advanced RAG techniques including chunking strategies and query rewrites              |
+| 4     | Model Context Protocol (MCP) Servers                     | Building MCP servers for tool integration, API wrapping, authentication, and deployment patterns (local and remote)
+| 5     | Agent-Based Architectures - Part 1                                  | Tool usage, build agents with LangChain, LlamaIndex and Amazon Bedrock      |
+| 6     | Agent-Based Architectures - Part 2                                  | Multi-agent collaboration and memory management       |
+| 7     | Gen AI app best practices and Observability                                   | Best practices for deploying GenAI apps in production with monitoring and evals           |
+| 8     | Guardrails and Evaluation of Generative Models                                        | Data security, guardrails, ethics, bias mitigation, and evaluation frameworks
+| 9     | Benchmarking and Performance Analysis        | Price, performance and accuracy benchmarking using open-source tools |
+| 10    | Embeddings Models and Representation Learning                      | Background on vector embeddings, fine-tuning embeddings models                             |
+| 11    | Model serving and Optimizations                                     | Inference servers, engines, speculative decoding, quantization, distillation, adapter swapping        |
+| 12    | Fine-tuning Generative AI models         | Fine-tune LLMs with custom data using LoRA, PEFT, and other techniques            |
 | 13    | Gen AI platform design, open-discussion            | How to build a platform and not just apps     |
-| 14    | Project presentation, open-discussion                             | Final project presentations and open discussion on course topics.                                        |
+| 14    | Project presentation, open-discussion                             | Final project presentations and open discussion on course topics                                        |
 
 
 

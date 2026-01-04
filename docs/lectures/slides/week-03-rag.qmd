@@ -1,0 +1,508 @@
+---
+title: "Week 3: Retrieval Augumented Generation (RAG) - Part 1"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## What is RAG? {.center}
+
+RAG = Retrieval Augumented Generation  
+A generative AI approach where the model combines external knowledge retrieval with text generation to provide more accurate and contextually rich responses.
+
+## Why RAG?
+
+- **Augments LLM responses with relevant context**: Instead of relying solely on the LLM's training data, RAG retrieves and incorporates specific, up-to-date information into responses.
+
+- **Helps ground responses in factual information**: By providing relevant context from trusted sources, RAG ensures responses are based on actual facts rather than model-generated content.
+
+- **Reduces hallucinations**: With access to specific, retrieved information, the model is less likely to generate incorrect or fabricated responses.
+
+- **Enables use of private/proprietary data**: Organizations can leverage their internal documents, knowledge bases, and proprietary information that wasn't part of the LLM's training data.
+
+- **Provides source attribution**: RAG systems can track where information comes from, making responses more transparent and verifiable.
+
+## Simple RAG Architecture
+
+::: {.callout}
+![RAG simple](img/rag-simple.png)
+:::
+
+Key Components:
+
+  - **Document Processing**: Converts raw documents into chunks and creates embeddings for efficient retrieval.
+  - **Vector Storage**: Stores document embeddings and enables similarity search.
+  - **Query Processing**: Converts user questions into embeddings and finds relevant documents.
+  - **Response Generation**: Combines retrieved context with LLM capabilities to generate accurate answers.
+
+## Building a Basic RAG App
+
+1. **Prepare documents**: Clean and preprocess your source documents, removing irrelevant content and standardizing format.
+
+2. **Create embeddings**: Convert text chunks into numerical vectors using embedding models like [BGE-large-en-v1.5](https://huggingface.co/BAAI/bge-large-en-v1.5) (available on Hugging Face), Amazon Titan embeddings, OpenAI's ada-002 or Cohere's embed-multilingual.
+
+3. **Store in vector database**: Upload embeddings to a vector store like Pinecone, Weaviate, or FAISS for efficient similarity search.
+
+4. **Process user query**: Convert the user's question into an embedding using the same embedding model.
+
+5. **Retrieve relevant context**: Perform similarity search to find the most relevant document chunks.
+
+6. **Generate response**: Combine retrieved context with an LLM prompt to generate an accurate, contextual response.
+
+## Chunking Strategies
+
+>Reference: [Chunking techniques with LangChain and LllamaIndex](https://blog.lancedb.com/chunking-techniques-with-langchain-and-llamaindex/)
+
+- **Document segmentation approaches**: Choose between fixed-size chunks, semantic chunking, or paragraph-based splitting depending on your content structure.
+
+- **Chunk size considerations**: Balance between too large (dilutes relevance) and too small (loses context) - typically 256-1024 tokens works well.
+
+- **Overlap between chunks**: Include some overlap (10-20%) between consecutive chunks to maintain context across boundaries.
+
+- **Maintaining context**: Preserve important metadata and hierarchical information when splitting documents.
+
+- **Structured vs unstructured data**: Adapt chunking strategy based on whether you're dealing with free text, tables, or structured documents.
+
+## Embeddings Deep Dive
+
+Key Considerations:
+
+  - **Model selection criteria**: Consider factors like accuracy, speed, cost, and dimension size when choosing an embedding model.
+
+  - **Dimensionality impact**: Higher dimensions can capture more information but increase storage costs and retrieval time.
+
+  - **Multi-lingual support**: Choose models like Cohere multilingual or Amazon Titan if your application needs to handle multiple languages.
+
+  - **Domain-specific needs**: Consider fine-tuning embedding models for specialized domains like medical or legal text. Finet-tuning using [Sentence Transformers](https://huggingface.co/blog/train-sentence-transformers).
+
+## Popular Embeddings Models
+
+  - **Hugging Face**: Huge collection of embeddings models available
+  - **OpenAI embeddings**: Excellent general-purpose performance but can be expensive for large-scale applications.
+  - **Cohere embeddings**: Strong multilingual support and competitive performance.
+  - **Amazon Titan**: Integrated well with AWS ecosystem, good multilingual capabilities.
+  - **ColBERTv2**: Advanced model with strong performance on academic benchmarks. [Paper](https://arxiv.org/pdf/2112.01488), [HuggingFace](https://huggingface.co/colbert-ir/colbertv2.0), [LangChain example](https://python.langchain.com/docs/integrations/retrievers/ragatouille/).
+
+
+## Vector Databases
+
+Features to Consider:
+
+  - **Scalability**: Ability to handle millions or billions of vectors efficiently.
+
+  - **Query performance**: Fast similarity search with support for approximate nearest neighbors (ANN) algorithms.
+
+  - **Similarity search algorithms**: Support for different distance metrics (cosine, euclidean) and indexing methods.
+
+  - **Metadata filtering**: Ability to combine vector similarity search with metadata filters.
+
+  - **Cost considerations**: Balance between hosting costs, query costs, and storage requirements.
+
+## Examples of Vector Databases
+
+- **Pinecone**: 
+  - Scalable and high-performance vector database.
+  - Designed for real-time search with high availability and easy integration.
+  - Offers fully managed services with automatic scaling and monitoring.
+
+- **Weaviate**: 
+  - Open-source vector search engine with support for hybrid search (text + vector).
+  - Schema-free or schema-driven, flexible for various data types.
+  - Built-in ML model hosting and extensible through modules like transformers.
+
+- **Milvus**: 
+  - Cloud-native vector database optimized for high-throughput and low-latency vector retrieval.
+  - Open-source with strong community support and enterprise-grade features.
+  - Supports massive-scale data management for AI and analytics applications.
+
+
+## Examples of Vector Databases (contd.)
+
+- **Qdrant**: 
+  - Feature-rich, open-source vector database with support for filtering and hybrid search.
+  - Integrates easily with other tools like LangChain and Python.
+  - Designed for both small-scale and production-grade deployments.
+
+- **Vespa**: 
+  - A scalable engine supporting full-text, vector, and structured data search.
+  - Highly customizable ranking functions for advanced retrieval tasks.
+  - Enterprise-grade features, including sharding and high-availability.
+
+- **Redis (with RedisAI)**: 
+  - Extends Redis key-value store to support vector similarity search.
+  - Real-time capabilities with minimal latency and optional AI integration.
+  - Excellent choice for lightweight applications or adding vector search to existing Redis setups.
+
+## Examples of Vector Databases (contd.)
+
+- **FAISS (by Meta AI)**: 
+  - A library rather than a traditional database, optimized for similarity search and clustering.
+  - Ideal for applications requiring high-speed vector operations on dense datasets.
+  - Limited to in-memory computation but extremely efficient.
+
+- **OpenSearch**: 
+  - Open-source search and analytics platform with vector search support using k-NN.
+  - Enables hybrid search across text, vector embeddings, and metadata.
+  - Strong integration with Elasticsearch and big data ecosystems.
+
+- **Chroma**: 
+  - Lightweight and developer-friendly embedding store.
+  - Designed for rapid prototyping and easy integration with LLM applications.
+  - Optimized for smaller-scale use cases but growing in capabilities.
+
+- **PostgreSQL (with pgvector)**: 
+  - Extends PostgreSQL to store and retrieve high-dimensional vector embeddings.
+  - Leverages PostgreSQL's powerful query capabilities, indexes, and extensions.
+  - Suitable for teams already using PostgreSQL for traditional relational data.
+
+
+## **Review: Introduction to RAG & Architecture**
+
+### **Building a Basic RAG App**
+1. **Prepare documents** → Clean and preprocess content.
+2. **Create embeddings** → Use models like BGE, OpenAI, Titan, Cohere.
+3. **Store in vector DB** → Pinecone, FAISS, Weaviate, etc.
+4. **Retrieve relevant context** → Use similarity search.
+5. **Generate response** → Combine retrieved content with LLM prompts.
+
+---
+
+## **Review: Key Techniques & RAG Ecosystem**
+
+### **Key Techniques in RAG**
+- **Chunking Strategies**: Fixed-size, semantic, paragraph-based; balance size and overlap (10-20%).
+- **Embeddings Considerations**: Model selection (accuracy, cost, multilingual), dimensionality trade-offs, fine-tuning for domains.
+- **Query Processing**: Query rewriting, hybrid search (semantic + lexical), entity extraction.
+- **Evaluation Metrics**: MRR, Precision, Recall, NDGC.
+
+### **Vector Databases**
+- **Popular options**: Pinecone, Weaviate, FAISS, Milvus, Qdrant, RedisAI.
+- **Selection criteria**: Scalability, latency, dimensionality support, metadata filtering.
+
+---
+
+## **Review: Key Techniques & RAG Ecosystem**
+
+
+### **RAG Pipelines & Tools**
+- **LangChain, LlamaIndex, Haystack**: Modular frameworks for building RAG applications.
+- **Amazon Bedrock Knowledge Bases**: Managed service for scalable RAG deployment.
+
+---
+
+## Moving beyond semantic similarity
+
+- **Retrieval-Augmented Generation (RAG)** enhances LLM responses by retrieving external knowledge.
+- Three primary approaches:
+  - **Vector Database RAG** (Vector RAG)
+  - **Graph-based RAG** (Graph RAG)
+  - **Structured Data RAG** (SQL RAG).
+
+---
+
+## Vector DB RAG: Overview
+
+- Stores knowledge as **high-dimensional vectors**
+- Uses **embedding-based similarity search**
+- Common libraries: FAISS, ChromaDB, Weaviate
+- Strengths:
+  - Fast approximate nearest neighbor (ANN) search
+  - Scales well with large corpora
+  - Ideal for **unstructured text retrieval**
+
+---
+
+## Graph RAG: Overview
+
+- Represents knowledge as **entities and relationships**
+- Uses **graph traversal and structured queries**
+- Common tools: Neo4j, Memgraph
+- Strengths:
+  - Captures **contextual relationships**
+  - Enables **logical reasoning** over data
+  - Ideal for **structured, interconnected knowledge**
+
+---
+
+## Key Differences
+
+| Feature          | Vector DB RAG               | Graph RAG                 |
+|-----------------|----------------------------|---------------------------|
+| **Storage**     | Dense embeddings (vectors) | Nodes & relationships     |
+| **Retrieval**   | Nearest neighbor search    | Graph traversal queries   |
+| **Scalability** | Efficient for large text   | More complex, depends on structure |
+| **Context**     | Semantic similarity only   | Rich, structured context  |
+| **Use Case**    | Unstructured knowledge     | Structured reasoning      |
+
+---
+
+## When to Use Which?
+
+### **Use Vector DB RAG When:**
+
+- ✅ Dealing with **unstructured text** (articles, docs)
+- ✅ Need **fast similarity search**
+- ✅ No need for explicit relationships
+
+### **Use Graph RAG When:**
+- ✅ Need **explicit relationships & context**
+- ✅ Want to model **causality & dependencies**
+- ✅ Working with **structured knowledge graphs**
+
+---
+
+## Key Benefits of Graph RAG Over Vector RAG
+
+- Let's explore this with an example, consider the Wikipedia entry for [`Niels Bohr`](https://en.wikipedia.org/wiki/Niels_Bohr). 
+- This page has a lot of highly connected data such as where was Bohr born, where did he study, what did he discover, whom did he collaborate with.
+- Using a vector db to find related information is not efficient.
+
+![Bohr](img/bohr.png)
+
+--- 
+
+## Graph RAG with an example
+
+- ✅ 1. Structured, Relationship-Based Knowledge Retrieval
+  - Graph RAG: Directly retrieves meaningful relationships instead of relying on semantic similarity.
+  - Example: "Who were Bohr’s collaborators, and what did they work on together?"
+  - Graph: `MATCH (p:Person {id: "Bohr"})-[:COLLABORATED_WITH]->(collaborator) RETURN collaborator.id`
+  - Vector DB: Needs indirect keyword-based similarity, making it less precise.
+
+- ✅ 2. Multi-Hop Reasoning for Deep Context
+  - Graph RAG: Finds indirect connections across multiple hops.
+  - Example: "Who was Bohr’s mentor's mentor?"
+  - Graph: `MATCH (p:Person {id: "Bohr"})-[:STUDY_UNDER*2]->(mentor) RETURN mentor.id`
+  - Vector DB: Needs recursive similarity searches, which are inefficient.
+
+--- 
+
+## Graph RAG with an example
+
+- ✅ 3. More Explainable and Trustworthy
+  - Graph RAG: Results can be traced back to explicit relationships.
+  - Vector RAG: Results are based on black-box similarity (hard to explain why a result was retrieved).
+  - Example: If asked, “Why was this document retrieved?”, Graph RAG can explicitly show relationships.
+
+- ✅ 4. Query Flexibility: More Than Just Similarity
+  - Graph RAG: Supports specific, structured queries (e.g., "Who studied at the same university as Bohr?").
+  - Vector RAG: Can only find conceptually similar documents, not structured relationships.
+
+- ✅ 5. More Efficient for Small, Highly Connected Datasets
+   - Graph RAG: Efficient when data has explicit relationships (e.g., scientific collaboration networks).
+   - Vector RAG: More useful for large, unstructured text collections (e.g., generic documents, news).
+
+---
+
+## Example: Finding Relevant Information
+
+The vector search for this would have to include potentially several chunks of text and may still not get all the collaborators whereas the graph retrieval would be deterministic and more accurate.
+
+### **Vector DB RAG Query** (FAISS)
+```python
+retriever = vectorstore.as_retriever()
+retriever.get_relevant_documents("Who all did Bohr collaborate with?")
+```
+
+### **Graph RAG Query** (Cypher for Memgraph)
+
+```cypher
+MATCH (p:Person {id: "Bohr"})-[:COLLABORATED_WITH]->(collaborator)
+ RETURN collaborator.id;
+```
+
+
+---
+
+## SQL RAG: Structured Data Retrieval
+
+- Uses **relational databases (e.g., MySQL, PostgreSQL)** as the knowledge base.
+- Retrieves information using **SQL queries** instead of vector similarity or graph traversal.
+- Best for **highly structured, tabular data**.
+- Example query: we want to find the average trip distance on a given day from our favorite NYC TLC dataset, now this is a question that neither a vector db nor a graph db can answer.
+
+```{.python}
+SELECT AVG(trip_distance) AS avg_trip_distance
+FROM nyc_taxi_data
+WHERE DATE(tpep_pickup_datetime) = '2024-12-11';
+
+```
+
+- Works well when LLMs can generate SQL queries dynamically based on natural language input.
+
+## LangChain Connectors for SQL Databases
+
+- **LangChain** provides integrations for querying SQL databases with LLMs.
+- Supported databases:
+  - MySQL
+  - PostgreSQL
+  - SQLite
+  - Microsoft SQL Server
+
+---
+
+## LangChain Connectors for SQL Databases
+
+
+```python
+from langchain.sql_database import SQLDatabase
+from langchain.chains import SQLDatabaseChain
+from langchain_aws import ChatBedrockConverse
+import boto3
+
+# Initialize Bedrock client
+bedrock = boto3.client(
+    service_name='bedrock-runtime',
+    region_name='us-east-1'  # replace with your region
+)
+
+# Initialize the LLM
+llm = ChatBedrockConverse(
+    model_id="anthropic.claude-3-sonnet-20240229",  # or your preferred Claude model
+    client=bedrock,
+    model_kwargs={"temperature": 0}
+)
+
+# Connect to database
+db = SQLDatabase.from_uri("sqlite:///example.db")
+
+# Create the chain
+sql_chain = SQLDatabaseChain.from_llm(llm=llm, database=db, verbose=True)
+
+# Run the query
+sql_chain.run("What are the top 5 research topics?")
+```
+
+- Enables **natural language to SQL translation** for intelligent retrieval from structured datasets.
+
+---
+
+## Summary of different types of RAG on text data
+
+- **Vector DB RAG** → Best for **scalable, unstructured text search**
+- **Graph RAG** → Best for **structured reasoning & entity relationships**
+- **SQL RAG** → Best for **highly structured, tabular data**
+- **Hybrid RAG** → Best of all approaches!
+
+---
+
+## Multimodal RAG: Beyond Text
+
+### What is Multimodal RAG?
+
+- Traditional RAG (Retrieval-Augmented Generation) enhances LLM responses by retrieving relevant text documents
+- Multimodal RAG extends this to include images, audio, video, and other data formats
+- Enables LLMs to ground responses in multi-format knowledge sources
+
+---
+
+## Multimodal RAG: Key Components
+
+### Vector Stores
+- Specialized embeddings for different modalities
+- Cross-modal similarity search
+- Efficient indexing of heterogeneous data
+
+### Embedding Models
+- CLIP for image-text embeddings
+- Whisper for audio-text conversion
+- Domain-specific models for specialized data types
+
+---
+
+## Architecture Deep Dive
+
+```mermaid
+graph TD
+    A[Input Query] --> B[Query Encoder]
+    B --> C[Cross-Modal Vector Search]
+    D[Image Database] --> C
+    E[Text Database] --> C
+    F[Audio Database] --> C
+    C --> G[Context Assembly]
+    G --> H[LLM]
+    H --> I[Enhanced Response]
+```
+
+## Implementation Challenges
+
+1. Modal Alignment
+   - Ensuring coherent representation across modalities
+   - Handling modality-specific nuances
+   - Balancing retrieval across different data types
+
+2. Performance Considerations
+   - Embedding computation overhead
+   - Storage requirements for multi-modal vectors
+   - Retrieval latency management
+
+---
+
+## Real-World Applications
+
+### Healthcare
+- Medical imaging + clinical notes
+- Patient history + diagnostic images
+- Treatment protocols + procedural videos
+
+### E-commerce
+- Product images + descriptions
+- Customer reviews + product photos
+- Usage tutorials + documentation
+
+---
+
+## Best Practices
+
+1. Data Preprocessing
+   - Standardize input formats
+   - Quality filters for each modality
+   - Balanced representation
+
+2. Retrieval Strategy
+   - Modal-specific relevance scoring
+   - Hybrid retrieval approaches
+   - Context window optimization
+
+---
+
+## Evaluation Metrics
+
+| Metric | Description |
+|--------|-------------|
+| Cross-Modal Relevance | Alignment between retrieved items across modalities |
+| Response Coherence | Integration of multi-modal information in outputs |
+| Retrieval Latency | Time to fetch and process multi-modal context |
+| Memory Usage | Resource requirements for different modalities |
+
+---
+
+## Future Directions
+
+### Research Opportunities
+- Zero-shot cross-modal transfer
+- Efficient multi-modal indexing
+- Context compression techniques
+
+### Emerging Applications
+- Multimodal reasoning
+- Cross-modal fact verification
+- Interactive learning systems
+
+---
+
+## References
+1. [Talk to your slide deck: AWS blog post](https://aws.amazon.com/blogs/machine-learning/talk-to-your-slide-deck-using-multimodal-foundation-models-hosted-on-amazon-bedrock-and-amazon-sagemaker-part-1/)
+1. [Retrieve data and generate AI responses with Amazon Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html)
+1. [Course Bookmarks repo: links for RAG](https://github.com/gu-dsan6725/bookmarks/tree/main?tab=readme-ov-file#rag)
+1. [Multimodal Few-Shot Learning with Frozen Language Models (2023)](https://arxiv.org/pdf/2106.13884)
+1. [Learning Transferable Visual Models From Natural Language Supervision](https://cdn.openai.com/papers/Learning_Transferable_Visual_Models_From_Natural_Language.pdf)
+1. [Multimodal Chain-of-Thought Reasoning in Language Models](https://arxiv.org/pdf/2302.00923)

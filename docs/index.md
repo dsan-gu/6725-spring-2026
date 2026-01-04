@@ -19,8 +19,7 @@
         <p>Prof. Amit Arora<br>
         Office Hours: Wed 5-6 PM (virtual)</p>
         <h3>👨‍🏫 TA</h3>
-        <p>Isfar Baset, office hours: Wed 2-3pm, Thu 10-11am<br>
-        Yicheng Zhu, office hours: Mon 2-3pm, Fri 2-3 pm<br></p>
+        <p>Yicheng Zhu, office hours: Mon 2-3pm, Fri 2-3 pm<br></p>
     </div>
     <div class="info-card">
         <h3>📋 Quick Links</h3>

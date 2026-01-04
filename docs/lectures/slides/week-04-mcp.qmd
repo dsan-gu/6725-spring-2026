@@ -1,0 +1,75 @@
+---
+title: "Week 4: Model Context Protocol (MCP) Servers"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## Model Context Protocol (MCP)
+
+### Overview
+
+- **What is MCP?**: A protocol for connecting AI models with external tools and data sources
+- **Why MCP?**: Standardize how AI agents interact with tools, APIs, and services
+- **Key Benefits**:
+  - Tool integration framework
+  - Consistent interface for AI-tool communication
+  - Secure and scalable architecture
+
+## MCP Architecture
+
+### Core Components
+
+- **MCP Server**: Exposes tools and resources to AI models
+- **MCP Client**: Consumes MCP servers (typically an AI agent/application)
+- **Protocol**: JSON-RPC based communication
+- **Transport**: Multiple transport options (stdio, HTTP, WebSocket)
+
+## Building MCP Servers
+
+### Key Concepts
+
+- **Tools**: Functions that the AI can call
+- **Resources**: Data sources the AI can access
+- **Prompts**: Pre-defined prompt templates
+- **Authentication**: Securing MCP servers
+
+## MCP Server Examples
+
+### Common Use Cases
+
+- **API Wrappers**: Wrapping external APIs as MCP tools
+- **Database Connections**: Querying databases via MCP
+- **File System Access**: Safe file operations
+- **Custom Business Logic**: Domain-specific tools
+
+## Deployment Patterns
+
+### Local vs Remote
+
+- **Local MCP Servers**: Running on the same machine as the client
+- **Remote MCP Servers**: Deployed as cloud services
+- **Hybrid Approaches**: Mix of local and remote servers
+
+## Hands-on Lab
+
+### Building Your First MCP Server
+
+*Practical exercise and demonstration*
+
+- Setting up an MCP server
+- Defining tools and resources
+- Testing with an AI client
+- Deployment best practices
+
+---
+
+*Content placeholder - detailed MCP server implementation coming soon*
