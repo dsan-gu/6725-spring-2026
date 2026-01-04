@@ -1,0 +1,345 @@
+### Course Description
+
+Applied Generative AI for developers is a graduate-level course that provides students with a deep understanding of building generative AI applications. This course is designed for AI developers aiming to build cutting-edge Generative AI (GenAI) applications. Focusing on the applied side of AI, students will explore key techniques such as in-context learning (ICL), retrieval-augmented generation (RAG), AI agents, and responsible AI principles. The course covers advanced tools and methods, including embedding models, inference optimizations (e.g., quantization, multi-adapter swapping), fine-tuning of pre-trained models and benchmarking LLMs. Students will gain hands-on experience with open-source tools like LangChain, LlamaIndex, and platforms such as AWS, applying their skills in practical GenAI applications. The course culminates in a capstone project, preparing participants to deploy scalable, optimized AI systems in real-world scenarios. This course bridges the gap between data science knowledge and applied AI development, empowering students to solve industry-level challenges.
+
+### Learning Objectives
+
+By the end of this course, students will be able to:
+
+1. Build GenAI applications with prompt engineering, RAG and AI Agents
+1. Fine-tune LLMs
+1. Responsible AI
+1. Optimize inference for deploying apps at scale
+1. Capstone project
+
+### Pre-requisites
+
+-   Experience with Python and invoking REST APIs.
+-   Experience with git and GitHub
+
+Some tutorials to brush up on these skills:
+
+-   [git - the simple guide](http://rogerdudler.github.io/git-guide/)
+-   [Python and REST APIs: Interacting With Web Services](https://realpython.com/api-integration-in-python/)
+-   [Nico Riedmann's Learn git concepts, not commands](https://dev.to/unseenwizzard/learn-git-concepts-not-commands-4gjc)
+-   [Python course](https://github.com/gitdagray/python-course/tree/main)
+
+
+!!! note "Communication"
+The primary mode of communication would Slack, please join the class Slack channel [here](https://join.slack.com/t/6725-spring-2026/shared_invite/zt-2wgaprts7-i7aLYPKUXkFZfZKc5oJexQ)
+
+## Books, Software and Cloud Resources
+
+### Readings (for assigned readings)
+
+There is no required textbook for the course. However, you can consider the following if you like.  
+
+- [Hands-On Large Language Models: Language Understanding and Generation ](https://www.amazon.com/Hands-Large-Language-Models-Understanding/dp/1098150961/ref=sr_1_1?crid=2L8JBIHIZUKO1&dib=eyJ2IjoiMSJ9.y8jTOKNtfaF-RUePWCWwsdnAIo4v5YE_XE2TIlLVQCBGA6Q716R03HVJHfrq-uS1.J-n8l0ZZvrzb7ARZx8p_xTnaPW7Za1bED91saKrAKlE&dib_tag=se&keywords=Hands-On+Large+Language+Models%3A+Language+Understanding+and+Generation&qid=1734626165&s=books&sprefix=hands-on+large+language+models+language+understanding+and+generation+%2Cstripbooks%2C98&sr=1-1)
+- [Generative AI Foundations in Python: Discover key techniques and navigate modern challenges in LLMs](https://www.amazon.com/Generative-Foundations-Python-techniques-challenges/dp/1835460828) chapters 5, 6, 7 and 8.
+
+We may also provide supplemental materials (articles, links, videos, etc.) to complement the readings.
+
+**You must read assigned readings prior to the lectures.**
+
+### Cloud Resources
+
+You will use cloud resources on [Amazon Web Services](http://aws.amazon.com).
+We will discuss how to setup your accounts and environments in class and lab within the first couple of weeks.
+You will get credits on both platforms that will be enough to support your coursework throughout the semester.
+
+!!! warning "Managing cloud resources"
+**IT IS YOUR RESPONSIBILITY TO MANAGE THE CREDITS AND RESOURCES PROVIDED TO YOU. YOU MUST SHUT DOWN YOUR CLOUD RESOURCES WHEN NOT IN USE.**
+
+### Modules
+
+| Week  | Module                                               | Details                                                                                                  |
+|-------|------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| 1     | Introduction to Generative AI and Applications  | Overview of course objectives and an introduction to GenAI                    |
+| 2     | In-context Learning.                           | Introduction to prompt engineering |
+| 3     | Retrieval Augmented Generation (RAG)         | Build a Q&A using a vector db and a FM              |
+| 4     | Advanced RAG Techniques (Graph RAG, Memory-Augmented Systems)                     | Explore structured and unstructured data sources, chunking strategies, query rewrites, graph db etc.
+| 5     | Agent-Based Architectures - Part 1                                  | Tool usage, build agents LangChain, LlamaIndex and Amazon Bedrock      |
+| 5     | Agent-Based Architectures - Part 2                                  | Multi-agent collaboration,       |
+| 6     | Fine-tuning Generative AI models         | Fine-tune LLMs with custom data            |
+| 7     | Responsible AI                      | Data security, guardrails, ethics                             |
+| 8     | Embeddings Models and Representation Learning                                        | Background on vector embeddings, fine-tuning embeddings models
+| 9     | Model serving                                            | Inference servers & engines          |
+| 10    | Model serving Optimizations                                     | Speculative decoding, quantization, distillation, adapter swapping        |
+| 11    | Benchmarking and Evaluation of Generative Models        | Price, performance and accuracy benchmarking using open-source tools |
+| 12    | Gen AI app best practices                                   | Best practices for deploying GenAI apps in production           |
+| 13    | Gen AI platform design, open-discussion            | How to build a platform and not just apps     |
+| 14    | Project presentation, open-discussion                             | Final project presentations and open discussion on course topics.                                        |
+
+
+
+## Learning Activities, Communication and Evaluation
+
+This is a hands-on, practical, workshop style course that provides opportunities to use the tools and techniques discussed in class.
+Although this is not a programming course per se, but there is lot of programming involved.
+
+### Lectures and Labs
+
+This course is split into a lecture/lab format, where every class session will have a lecture portion, and most sessions will have an in-class lab portion:
+
+-   During the lecture, we will discuss the concepts and techniques for building Gen AI apps on cloud platforms.
+-   During the lab sessions, you will be completing exercises and following examples which are designed to show you how to implement the ideas and concepts with various tools. We will start the labs in class but we will not finish. It is your responsibility to complete the labs (**which is part of the grade**) and will enable your learning.
+
+Lectures may not cover all the material and some topics will be introduced in the lab or through readings/assignments.
+
+### Office Hours
+
+Instructors and TAs will hold recurring office hours to answer questions, review material, and support your learning.
+The times, dates, and location of office hours will be announced via Canvas and Slack in advance.
+
+### Readings
+
+On certain weeks, readings will be assigned to prepare you for the lecture material being presented.
+These readings should take an hour or less per week.
+
+### Online Quizzes
+
+Quizzes will be given a few times during the semester during lab or lecture at random intervals and times.
+Quizzes ensure you are keeping up with the material presented in the class.
+Quizzes are meant to be brief and low-stress with a time limit of 5-10 minutes.
+The material will be drawn from lectures, labs, and readings.
+
+### Lab Deliverables
+
+Each lab will have a deliverable.
+It is essential that you learn the skills presented in the labs so that you can effectively complete the assignments and the big data project.
+The lab deliverables can sometimes be completed during lab, however, it is your responsibility to complete the deliverable as part of your work outside of lecture/lab time.
+
+### Homework Assignments
+
+You will be several homework assignments for roughly half of the semester.
+The goal of these problem sets is to hone your big data skills by answering some questions about large datasets.
+The problem sets will build on the labs and will be much more in-depth.
+Deliverables from the assignment will usually include code written for your programs and the output produced.
+
+!!! warning "Start early on the assignments"
+
+**Please start assignments as soon as they are posted. These assignments can take several hours to complete depending on your familiarity with the material. You will not complete the assignments on time if you start the day they are due.**
+
+!!! note "Solutions to problem sets"
+We reuse problem set questions, we expect students not to copy, refer to, or look at the solutions in preparing their answers.
+Since this is a graduate-level class, we expect students to want to learn and not search online for answers.
+See Academic Integrity section.
+
+### Capstone project
+
+Details _coming soon_.
+
+## Grading and Evaluation
+
+-   Group project : 40%
+-   Assignments : 30%
+-   Lab completions : 20%
+-   Quizzes : 10%
+
+Total is 100%.
+We have no plans to curve the final grade, and the final letter grade will be:
+
+-   A: \>= 92.5
+-   A-: 89.5 - 92.49
+-   B+: 87.99 - 89.49
+-   B: 81.5 - 87.98
+-   B-: 79.5 - 81.49
+
+
+## Submitting your work
+
+### GitHub classroom
+
+We use GitHub Classroom for all class deliverables: assignments, labs, and the final project. Submitting your work is the process of committing your files and results to your local repository **and** then pushing it to GitHub.
+
+#### Use the `final-submission` commit message
+
+When you are ready for your work to be evaluated, you **MUST** use the commit message `final-submission`. If you do not use the commit message `final-submission` we will assume that you are still working in the repository and we will only grade what is present. By submitting that commit message, you are stating that you are finished with the assignment and are ready for feedback.
+
+
+In case you need to make a correction after your `final-submission` **and** the submission deadline has not yet passed, then you can *amend* your previous commit.  See [amending a commit](https://www.atlassian.com/git/tutorials/rewriting-history) for instructions. **Do not change the commit message,** it should continue say "final-submission" after the amend.
+
+!!! warning "No modifications after final-submission"
+**No further edits to your GitHub repository are allowed after using the `final-submission` commit message.**
+
+!!! note "How we detect late submissions"
+We will use **commit datetime** and **commit message** to assess lateness. 
+
+
+### Late policy
+
+In lieu of extensions, there is a tiered deduction scale if a deliverable is late. Late penalties only apply to labs and assignments. 
+
+We will assess exceptional circumstances on a case-by-case basis, and only if we are made aware before a deliverable's deadline, not after.
+
+- A late penalty of 10% per day, up to 4 days, will be assessed for assignments and labs that are submitted with a `final-submission` commit message after the deadline. You may still submit a missed lab or assignment up until the last day of class with a maximum possible grade of 60%.
+- Missed in-class quizzes cannot be made up and will receive a grade of zero.
+- Project deadlines are fixed and have no extensions or late penalty. A missed project deliverable will receive a grade of zero.
+
+
+## Other course policies
+
+### Attendance and punctuality
+
+Attendance is mandatory and will be taken. Given the technical nature of this course, and the breadth of topics discussed, you are expected to attend each class, to complete all readings, and to participate actively in lectures, discussions and exercises. We understand there may be times you may need to miss class, please inform us in advance if you are not able to attend class for any reason. However, it is up to you to keep up.
+
+### Participation
+
+We love participation. Read. Raise your hand. Ask questions. Make comments. Challenge us. Acknowledge us. If we speak for three hours to a silent classroom, it is a lot more boring and tiring for everyone.
+
+### Laptop and phone use
+
+You must bring your laptop to class to work on labs. No phone use is allowed during lecture. You may use your laptop during lecture to take notes, but please refrain from other activities. We reserve the right to ask you to put your phones and laptops away. You may not use your computer or phone while your peers or guest speakers are presenting.
+
+### Communication and Slack Rules
+-   All announcements will be posted on Canvas and Slack
+-   Use Slack for any question you may have about the course, about assignments or any technical issue. This way everyone can learn from each others questions. We will be monitoring and providing answers on a regular basis. **Make sure you understand [what is allowed in Slack.](#what-is-allowed)**
+-   Individual emails containing any course question that is not personal will not be answered
+-   Slack DMs are not to be used **unless** we DM you first and you can respond to our message. Students may not initiate DMs. 
+-   Keep an eye on the questions posted in Slack. Use the search function. It's very possible that we have already answered a question, and we reserve the right to point you to the syllabus, previous Slack messages, or other document containing the information requested
+-   Assignment, lab and project questions will only be answered on Slack up to 12 hours before something is due
+
+### Open Door Policy
+
+Please approach or get in touch with us if something is not working for you regarding the class, methods, etc. Our pledge to you is to provide the best learning experience possible. If you have any issue please do not wait until the last minute to speak with us. You will find that we are fair, reasonable, and flexible and we care deeply about your learning and success.
+
+ 
+## Academic Integrity
+
+As a Jesuit, Catholic university, committed to the education of the whole person, Georgetown expects all members of the academic community, students and faculty, to strive for excellence in scholarship and in character.The University spells out the specific minimum standards for academic integrity in its Honor Code, as well as the procedures to be followed if academic dishonesty is suspected.
+
+Over and above the honor code, in this course we will seek to create an engaged and passionate learning environment, characterized by respect and courtesy in both our discourse and our ways of paying attention to one another.
+
+The code of academic integrity applies to all courses at Georgetown University. Please become familiar with the code. All students are expected to maintain the highest level of academic integrity throughout the course of the semester.Please note that acts of academic dishonesty during the course will be prosecuted and harsh penalties may be sought for such acts. Students are responsible for knowing what acts constitute academic dishonesty. The code may be found at [https://bulletin.georgetown.edu/regulations/honor/.](https://bulletin.georgetown.edu/regulations/honor/)
+
+!!! warning "Zero tolerance for lack of academic integrity"
+**We have a ZERO TOLERANCE POLICY and students found to be in violation will be reported and penalized. The consequences of any violation may include: additional points penalty, getting a grade of zero, automatically failing the course, and suspension or expulsion from the program.**
+
+
+### Definition of collaboration
+
+In the spirit of fostering a collective and inclusive learning environment, we acknowledge that you will work and study with your peers. We also acknowledge that you use web resources (code examples specifically), and that in writing a program many of you will most likely use the same libraries, functions and other similar instructions in your scripts. However:
+
+* **You must write your own code.** This will be verified for every assignment against every submission, and any similarity greater than 60% between students on a given assignment will be considered to be unauthorized collaboration.
+* **You must do your individual work in your own cloud resources.** This will be verified for every assignment. We know the fingerprint of your cloud account and subscriptions and we can tell.
+
+### What is allowed
+
+* Collaborating with other students during in-class labs to facilitate collective learning
+* Using Slack for helping one-another as long as:
+    * You do not provide answers directly but only discuss potential approaches
+    * You only share up to a few lines of code for everyone's benefit for the resolution of a specific question or issue 
+* Using anything (code, resources, tips, approaches, etc.) provided by the instructional team
+
+### What is forbidden
+
+The following actions are **not permitted in any way** and are considered a violation of academic integrity:
+
+* Copying and sharing code _between students_ in **individual** assignments or _across goups_ in the **group project**
+* Sharing anything on any individual assignment
+* Using code snippets found online (stack overflow, etc.) and not commenting the source
+* Plagiarism of any kind
+* Using any [Generative Artificial Intelligence](#use-of-generative-ai-tools) tool without acknowledging it
+* Using someone else's cloud resources
+* Making your private GitHub repos public
+* Sharing or posting any course materials anywhere
+* Faking or tampering with git commit dates or messages
+
+## Use of Generative AI tools
+
+We recognize the recent availability of very powerful generative AI tools like Chat-GPT, GitHub Copilot, and others. These tools can help us be more effective and we embrace their use.
+
+!!! note "Use of Gen AI tools"
+You are allowed to use GAI tools in a _non substantial_ way. 
+
+What does _non substantial_ mean? 
+
+**It means that whatever is generated by GAI must not make up the majority of the work you do.**
+
+Any use of these tools must abide to the following rules:
+
+- You must acknowledge the use of GAI tools
+- You must comment which code blocks were generated by GAI
+- You must note which written sections were generated by GAI
+- If you used a prompt to ask the GAI tool to do something, you must include it
+
+
+For this course, valid uses of gen-ai can be:
+
+- Generating a code snippet or single function to perform a task. It’s likely you’ll need to modify it anyway
+- Commenting code
+- Using it as a writing aid (spelling, grammar, word choice, limited phrase translation) on content created by you, not the actual writing. Note: non-native English speakers cannot use gen-ai to fully translate content written in another language.
+- Generating visualization starter code (you can accelerate the generation of the starting point, but you still need to customize the viz with all the best practices learned in this course)
+ 
+
+!!! warning "Academic integrity"
+Any deviation from these rules is considered a violation of [academic integrity](#academic-integrity) and will be acted on.
+
+You typically KNOW when you are crossing the line into un-ethical territory. As a general rule, If you feel like you might be crossing a line, then you probably are!
+
+In addition to what we are stating here, please take a look at the [Data Science and Analytics Program’s ChatGPT usage guidelines](https://gu-dsan.github.io/5200-spring-2024/site-page-content/DSAN-ChatGPT-usage-guidelines.pdf).
+
+## Georgetown Univrsity resources and policies
+
+### Georgetown University’s Plagiarism Policy 
+
+Plagiarism or academic dishonesty in any form will not be tolerated and may result in a failing grade. All Honor Code violations will be submitted to the Honor Council. 
+
+Academic integrity is central to the learning and teaching process. Students are expected to conduct themselves in a manner that will contribute to the maintenance of academic integrity by making all reasonable efforts to prevent the occurrence of academic dishonesty. Academic dishonesty includes (but is not limited to) obtaining or giving aid on an examination, having unauthorized prior knowledge of an examination, doing work for another student, and plagiarism of all types, including copying code. 
+
+Plagiarism is the intentional or unintentional presentation of another person’s idea or product as one’s own. Plagiarism includes, but is not limited to the following: copying verbatim all or part of another’s written work; using phrases, charts, figures, illustrations, code, or mathematical/scientific solutions without citing the source; paraphrasing ideas, conclusions, or research without citing the source; and using all or part of a literary plot, poem, film, musical score, or other artistic product without attributing the work to its creator. Students can avoid unintentional plagiarism by following carefully accepted scholarly practices. Notes taken for papers and research projects should accurately record sources cited, quoted, paraphrased, or summarized sources and articles should be acknowledged in footnotes. 
+
+### Honor System
+
+All students are expected to maintain the highest standards of academic and personal integrity in pursuit of their education at Georgetown. Academic dishonesty, including plagiarism, in any form, is a serious offense, and students found in violation are subject to academic penalties that include, but are not limited to, failure of the course, termination from the program, and revocation of degrees already conferred. All students are held to the Georgetown University Honor Code. For more information about the Honor Code [http://gervaseprograms.georgetown.edu/honor/](http://gervaseprograms.georgetown.edu/honor/) 
+
+### Academic Integrity and Courtesy 
+
+As a Jesuit, Catholic university committed to the education of the whole person, Georgetown expects all members of the academic community, students and faculty, to strive for excellence in scholarship and in character. The University spells out the specific minimum standards for academic integrity in its Honor Code and the procedures to be followed if academic dishonesty is suspected. Over and above the honor code, in this course, we will seek to create an engaged and passionate learning environment characterized by respect and courtesy in both our discourse and our ways of paying attention to one another. 
+
+### Academic Resource Center
+
+[The Academic Resource Center (ARC)](https://academicsupport.georgetown.edu/) is the campus office responsible for reviewing medical documentation and determining reasonable accommodations for students with disabilities. You can reach the ARC via email at [arc@georgetown.edu.](mailto::arc@georgetown.edu)
+
+### Counseling and Psychiatric Services (CAPS) 
+
+As Georgetown faculty, you are among the most important individuals in some of the students’ lives. They may turn to you when they are struggling and in times of need, or you may be one of the first to notice when they are distressed. 
+
+The CAPS website has tips for faculty on how to deal with struggling or distressed students. 
+202.687.6985 or after hours, call (833) 960-3006 to reach Fonemed, a telehealth service; individuals may ask for the on-call CAPS clinician. 
+
+### Emergency Preparedness and HOYAlert
+We encourage all faculty to become familiar with Georgetown’s Office of Emergency Management and sign up for HOYAlert to receive important safety and University operating status updates. Faculty teaching at the Georgetown Downtown campus might also want to sign up for AlertDC to obtain safety and traffic updates. 
+
+### Office of Institutional Compliance and Ethics
+
+The Office of Institutional Compliance and Ethics supports and coordinates many compliance-related activities the University undertakes. With the endorsement and assistance of the University’s senior leadership, this Office is responsible for leading the development, implementation, and operation of the Georgetown Institutional Compliance and Ethics Program. 
+
+### Office of Institutional Diversity, Equity and Affirmative Action (IDEAA)
+
+The mission of IDEAA is to promote a deep understanding and appreciation among the diverse members of the University community to result in justice and equality in educational, employment, and contracting opportunities, as well as to lead efforts to create an inclusive academic and work environment. 
+
+### Title IX/Sexual Misconduct 
+
+Georgetown University and its faculty are committed to supporting survivors and those impacted by sexual misconduct, which includes sexual assault, sexual harassment, relationship violence, and stalking. Georgetown requires faculty members unless otherwise designated as confidential, to report all disclosures of sexual misconduct to the University Title IX Coordinator or a Deputy Title IX Coordinator. Suppose you disclose an incident of sexual misconduct to a professor in or outside of the classroom (except disclosures in papers). In that case, that faculty member must report the incident to the Title IX Coordinator or Deputy Title IX Coordinator. The coordinator will, in turn, reach out to the student to provide support, resources, and the option to meet—[Please note that the student is not required to meet with the Title IX coordinator.]. More information about reporting options and resources can be found on the [Sexual Misconduct Website.](https://sexualassault.georgetown.edu/resourcecenter)
+
+If you would prefer to speak to someone confidentially, Georgetown has a number of fully confidential professional resources that can provide support and assistance. These resources include:
+
+* Health Education Services for Sexual Assault Response and Prevention: confidential email sarp@georgetown.edu
+* Counseling and Psychiatric Services (CAPS): 202.687.6985 or after hours, call (833) 960-3006 to reach Fonemed, a telehealth service; individuals may ask for the on-call CAPS clinician 
+
+_Title IX Sexual Misconduct Statement_ Please know that as faculty members, we are committed to supporting survivors of sexual misconduct, including relationship violence and sexual assault. However, university policy also requires us to report any disclosures about sexual misconduct to the Title IX Coordinator, whose role is to coordinate the University’s response to sexual misconduct. 
+
+Georgetown has a number of fully confidential professional resources who can provide support and assistance to survivors of sexual assault and other forms of sexual misconduct. These resources include:
+
+* [Getting Help](https://sexualassault.georgetown.edu/get-help/#)
+* Jen Schweer, MA, LPC<br/>Associate Director of Health Education Services for Sexual Assault Response and Prevention (202) 687-032<br/>[jls242@georgetown.edu](mailto:jls242@georgetown.edu) 
+* Erica Shirley, Trauma Specialist<br/>Counseling and Psychiatric Services (CAPS)<br/>(202) 687-6985<br/>[els54@georgetown.edu](mailto:els54@georgetown.edu) 
+
+### Threat Assessment
+
+Georgetown University established its Threat Assessment program as part of an extensive emergency planning initiative. The program at Georgetown has been developed and implemented to meet current best practices and national standards for hazard planning in higher education institutions and workplace violence prevention. 
+
+### Special Accommodations 
+
+If you believe that you have a disability that will affect your performance in this class, don’t hesitate to get in touch with the [Academic Resource Center](mailto:arc@georgetown.edu) for further information. The center is located in the Leavey Center, Suite 335. The Academic Resource Center is the campus office responsible for reviewing documentation provided by students with disabilities and determining reasonable accommodations according to the Americans with Disabilities Act (ADA) and University policies. 

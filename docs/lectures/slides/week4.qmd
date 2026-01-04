@@ -1,0 +1,371 @@
+---
+title: "Week 4: Retrieval Augumented Generation (RAG) - Part 2"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## **Review: Introduction to RAG & Architecture**
+
+### **What is RAG?**
+- Retrieval-Augmented Generation (RAG) combines information retrieval with text generation to enhance response accuracy.
+- Provides **up-to-date** context, **reduces hallucinations**, supports **private data**, and offers **source attribution**.
+
+### **RAG Architecture**
+1. **Document Processing**: Convert raw documents into chunks and create embeddings.
+2. **Vector Storage**: Store document embeddings for similarity search.
+3. **Query Processing**: Transform user queries into embeddings and retrieve relevant documents.
+4. **Response Generation**: Combine retrieved context with an LLM for accurate responses.
+
+---
+
+## **Review: Introduction to RAG & Architecture**
+
+### **Building a Basic RAG App**
+1. **Prepare documents** → Clean and preprocess content.
+2. **Create embeddings** → Use models like BGE, OpenAI, Titan, Cohere.
+3. **Store in vector DB** → Pinecone, FAISS, Weaviate, etc.
+4. **Retrieve relevant context** → Use similarity search.
+5. **Generate response** → Combine retrieved content with LLM prompts.
+
+---
+
+## **Review: Key Techniques & RAG Ecosystem**
+
+### **Key Techniques in RAG**
+- **Chunking Strategies**: Fixed-size, semantic, paragraph-based; balance size and overlap (10-20%).
+- **Embeddings Considerations**: Model selection (accuracy, cost, multilingual), dimensionality trade-offs, fine-tuning for domains.
+- **Query Processing**: Query rewriting, hybrid search (semantic + lexical), entity extraction.
+- **Evaluation Metrics**: MRR, Precision, Recall, NDGC.
+
+### **Vector Databases**
+- **Popular options**: Pinecone, Weaviate, FAISS, Milvus, Qdrant, RedisAI.
+- **Selection criteria**: Scalability, latency, dimensionality support, metadata filtering.
+
+---
+
+## **Review: Key Techniques & RAG Ecosystem**
+
+
+### **RAG Pipelines & Tools**
+- **LangChain, LlamaIndex, Haystack**: Modular frameworks for building RAG applications.
+- **Amazon Bedrock Knowledge Bases**: Managed service for scalable RAG deployment.
+
+---
+
+## Moving beyond semantic similarity
+
+- **Retrieval-Augmented Generation (RAG)** enhances LLM responses by retrieving external knowledge.
+- Three primary approaches:
+  - **Vector Database RAG** (Vector RAG)
+  - **Graph-based RAG** (Graph RAG)
+  - **Structured Data RAG** (SQL RAG).
+
+---
+
+## Vector DB RAG: Overview
+
+- Stores knowledge as **high-dimensional vectors**
+- Uses **embedding-based similarity search**
+- Common libraries: FAISS, ChromaDB, Weaviate
+- Strengths:
+  - Fast approximate nearest neighbor (ANN) search
+  - Scales well with large corpora
+  - Ideal for **unstructured text retrieval**
+
+---
+
+## Graph RAG: Overview
+
+- Represents knowledge as **entities and relationships**
+- Uses **graph traversal and structured queries**
+- Common tools: Neo4j, Memgraph
+- Strengths:
+  - Captures **contextual relationships**
+  - Enables **logical reasoning** over data
+  - Ideal for **structured, interconnected knowledge**
+
+---
+
+## Key Differences
+
+| Feature          | Vector DB RAG               | Graph RAG                 |
+|-----------------|----------------------------|---------------------------|
+| **Storage**     | Dense embeddings (vectors) | Nodes & relationships     |
+| **Retrieval**   | Nearest neighbor search    | Graph traversal queries   |
+| **Scalability** | Efficient for large text   | More complex, depends on structure |
+| **Context**     | Semantic similarity only   | Rich, structured context  |
+| **Use Case**    | Unstructured knowledge     | Structured reasoning      |
+
+---
+
+## When to Use Which?
+
+### **Use Vector DB RAG When:**
+
+- ✅ Dealing with **unstructured text** (articles, docs)
+- ✅ Need **fast similarity search**
+- ✅ No need for explicit relationships
+
+### **Use Graph RAG When:**
+- ✅ Need **explicit relationships & context**
+- ✅ Want to model **causality & dependencies**
+- ✅ Working with **structured knowledge graphs**
+
+---
+
+## Key Benefits of Graph RAG Over Vector RAG
+
+- Let's explore this with an example, consider the Wikipedia entry for [`Niels Bohr`](https://en.wikipedia.org/wiki/Niels_Bohr). 
+- This page has a lot of highly connected data such as where was Bohr born, where did he study, what did he discover, whom did he collaborate with.
+- Using a vector db to find related information is not efficient.
+
+![Bohr](img/bohr.png)
+
+--- 
+
+## Graph RAG with an example
+
+- ✅ 1. Structured, Relationship-Based Knowledge Retrieval
+  - Graph RAG: Directly retrieves meaningful relationships instead of relying on semantic similarity.
+  - Example: "Who were Bohr’s collaborators, and what did they work on together?"
+  - Graph: `MATCH (p:Person {id: "Bohr"})-[:COLLABORATED_WITH]->(collaborator) RETURN collaborator.id`
+  - Vector DB: Needs indirect keyword-based similarity, making it less precise.
+
+- ✅ 2. Multi-Hop Reasoning for Deep Context
+  - Graph RAG: Finds indirect connections across multiple hops.
+  - Example: "Who was Bohr’s mentor's mentor?"
+  - Graph: `MATCH (p:Person {id: "Bohr"})-[:STUDY_UNDER*2]->(mentor) RETURN mentor.id`
+  - Vector DB: Needs recursive similarity searches, which are inefficient.
+
+--- 
+
+## Graph RAG with an example
+
+- ✅ 3. More Explainable and Trustworthy
+  - Graph RAG: Results can be traced back to explicit relationships.
+  - Vector RAG: Results are based on black-box similarity (hard to explain why a result was retrieved).
+  - Example: If asked, “Why was this document retrieved?”, Graph RAG can explicitly show relationships.
+
+- ✅ 4. Query Flexibility: More Than Just Similarity
+  - Graph RAG: Supports specific, structured queries (e.g., "Who studied at the same university as Bohr?").
+  - Vector RAG: Can only find conceptually similar documents, not structured relationships.
+
+- ✅ 5. More Efficient for Small, Highly Connected Datasets
+   - Graph RAG: Efficient when data has explicit relationships (e.g., scientific collaboration networks).
+   - Vector RAG: More useful for large, unstructured text collections (e.g., generic documents, news).
+
+---
+
+## Example: Finding Relevant Information
+
+The vector search for this would have to include potentially several chunks of text and may still not get all the collaborators whereas the graph retrieval would be deterministic and more accurate.
+
+### **Vector DB RAG Query** (FAISS)
+```python
+retriever = vectorstore.as_retriever()
+retriever.get_relevant_documents("Who all did Bohr collaborate with?")
+```
+
+### **Graph RAG Query** (Cypher for Memgraph)
+
+```cypher
+MATCH (p:Person {id: "Bohr"})-[:COLLABORATED_WITH]->(collaborator)
+ RETURN collaborator.id;
+```
+
+
+---
+
+## SQL RAG: Structured Data Retrieval
+
+- Uses **relational databases (e.g., MySQL, PostgreSQL)** as the knowledge base.
+- Retrieves information using **SQL queries** instead of vector similarity or graph traversal.
+- Best for **highly structured, tabular data**.
+- Example query: we want to find the average trip distance on a given day from our favorite NYC TLC dataset, now this is a question that neither a vector db nor a graph db can answer.
+
+```{.python}
+SELECT AVG(trip_distance) AS avg_trip_distance
+FROM nyc_taxi_data
+WHERE DATE(tpep_pickup_datetime) = '2024-12-11';
+
+```
+
+- Works well when LLMs can generate SQL queries dynamically based on natural language input.
+
+## LangChain Connectors for SQL Databases
+
+- **LangChain** provides integrations for querying SQL databases with LLMs.
+- Supported databases:
+  - MySQL
+  - PostgreSQL
+  - SQLite
+  - Microsoft SQL Server
+
+---
+
+## LangChain Connectors for SQL Databases
+
+
+```python
+from langchain.sql_database import SQLDatabase
+from langchain.chains import SQLDatabaseChain
+from langchain_aws import ChatBedrockConverse
+import boto3
+
+# Initialize Bedrock client
+bedrock = boto3.client(
+    service_name='bedrock-runtime',
+    region_name='us-east-1'  # replace with your region
+)
+
+# Initialize the LLM
+llm = ChatBedrockConverse(
+    model_id="anthropic.claude-3-sonnet-20240229",  # or your preferred Claude model
+    client=bedrock,
+    model_kwargs={"temperature": 0}
+)
+
+# Connect to database
+db = SQLDatabase.from_uri("sqlite:///example.db")
+
+# Create the chain
+sql_chain = SQLDatabaseChain.from_llm(llm=llm, database=db, verbose=True)
+
+# Run the query
+sql_chain.run("What are the top 5 research topics?")
+```
+
+- Enables **natural language to SQL translation** for intelligent retrieval from structured datasets.
+
+---
+
+## Summary of different types of RAG on text data
+
+- **Vector DB RAG** → Best for **scalable, unstructured text search**
+- **Graph RAG** → Best for **structured reasoning & entity relationships**
+- **SQL RAG** → Best for **highly structured, tabular data**
+- **Hybrid RAG** → Best of all approaches!
+
+---
+
+## Multimodal RAG: Beyond Text
+
+### What is Multimodal RAG?
+
+- Traditional RAG (Retrieval-Augmented Generation) enhances LLM responses by retrieving relevant text documents
+- Multimodal RAG extends this to include images, audio, video, and other data formats
+- Enables LLMs to ground responses in multi-format knowledge sources
+
+---
+
+## Multimodal RAG: Key Components
+
+### Vector Stores
+- Specialized embeddings for different modalities
+- Cross-modal similarity search
+- Efficient indexing of heterogeneous data
+
+### Embedding Models
+- CLIP for image-text embeddings
+- Whisper for audio-text conversion
+- Domain-specific models for specialized data types
+
+---
+
+## Architecture Deep Dive
+
+```mermaid
+graph TD
+    A[Input Query] --> B[Query Encoder]
+    B --> C[Cross-Modal Vector Search]
+    D[Image Database] --> C
+    E[Text Database] --> C
+    F[Audio Database] --> C
+    C --> G[Context Assembly]
+    G --> H[LLM]
+    H --> I[Enhanced Response]
+```
+
+## Implementation Challenges
+
+1. Modal Alignment
+   - Ensuring coherent representation across modalities
+   - Handling modality-specific nuances
+   - Balancing retrieval across different data types
+
+2. Performance Considerations
+   - Embedding computation overhead
+   - Storage requirements for multi-modal vectors
+   - Retrieval latency management
+
+---
+
+## Real-World Applications
+
+### Healthcare
+- Medical imaging + clinical notes
+- Patient history + diagnostic images
+- Treatment protocols + procedural videos
+
+### E-commerce
+- Product images + descriptions
+- Customer reviews + product photos
+- Usage tutorials + documentation
+
+---
+
+## Best Practices
+
+1. Data Preprocessing
+   - Standardize input formats
+   - Quality filters for each modality
+   - Balanced representation
+
+2. Retrieval Strategy
+   - Modal-specific relevance scoring
+   - Hybrid retrieval approaches
+   - Context window optimization
+
+---
+
+## Evaluation Metrics
+
+| Metric | Description |
+|--------|-------------|
+| Cross-Modal Relevance | Alignment between retrieved items across modalities |
+| Response Coherence | Integration of multi-modal information in outputs |
+| Retrieval Latency | Time to fetch and process multi-modal context |
+| Memory Usage | Resource requirements for different modalities |
+
+---
+
+## Future Directions
+
+### Research Opportunities
+- Zero-shot cross-modal transfer
+- Efficient multi-modal indexing
+- Context compression techniques
+
+### Emerging Applications
+- Multimodal reasoning
+- Cross-modal fact verification
+- Interactive learning systems
+
+---
+
+## References
+1. [Talk to your slide deck: AWS blog post](https://aws.amazon.com/blogs/machine-learning/talk-to-your-slide-deck-using-multimodal-foundation-models-hosted-on-amazon-bedrock-and-amazon-sagemaker-part-1/)
+1. [Retrieve data and generate AI responses with Amazon Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html)
+1. [Course Bookmarks repo: links for RAG](https://github.com/gu-dsan6725/bookmarks/tree/main?tab=readme-ov-file#rag)
+1. [Multimodal Few-Shot Learning with Frozen Language Models (2023)](https://arxiv.org/pdf/2106.13884)
+1. [Learning Transferable Visual Models From Natural Language Supervision](https://cdn.openai.com/papers/Learning_Transferable_Visual_Models_From_Natural_Language.pdf)
+1. [Multimodal Chain-of-Thought Reasoning in Language Models](https://arxiv.org/pdf/2302.00923)

@@ -1,0 +1,297 @@
+---
+title: "Week 4: Agentic AI - Part 1"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+
+## Need for Agents
+
+- In-context learning alone is not sufficient
+  - Limited to input token size
+  - No ability to retain context beyond a single session
+- Why RAG (Retrieval-Augmented Generation) is not sufficient
+  - Primarily enhances knowledge retrieval
+  - Lacks decision-making and action-taking capabilities
+- Agents extend LLMs by enabling them to interact with external tools and maintain long-term context
+
+---
+
+## The progression to Agents
+
+![progression to agents](https://miro.medium.com/v2/resize:fit:1100/format:webp/0*5dWPE7IUOXB2f6ap.png)
+
+Source: [Mongodb](https://www.mongodb.com/pt-br/library/resources/ai-agents?x=inokiP)
+
+
+## Tool Usage and Function Calling
+
+- Agents leverage tool usage (aka function calling) to interact with external systems
+- Function calling allows LLMs to:
+  - Retrieve real-time data (APIs, databases)
+  - Execute operations (calculations, file manipulations, etc.)
+  - Make multi-step decisions by chaining function calls
+
+---
+
+
+## Introduction to AI Agents
+
+*   AI agents are autonomous programs.
+*   They observe their environment, make decisions, and take actions to achieve specific goals.
+*   Growing rapidly due to demand for automation and advances in NLP.
+
+## AI Agent Processing Cycle
+
+*   **[Input](pplx://action/followup):** Gather and process information from the environment.
+*   **[Decision](pplx://action/followup):** Evaluate inputs against objectives using ML models (NLP, sentiment analysis, etc.).
+*   **[Action](pplx://action/followup):** Execute actions through output interfaces.
+*   **[Learning](pplx://action/followup):** Improve performance over time through feedback loops and learning mechanisms.
+
+## [Types of AI Agents](pplx://action/followup)
+
+*   Simple Reflex Agents
+*   Model-Based Reflex Agents
+*   Goal-Based Agents
+*   Learning Agents
+*   Utility-Based Agents
+*   Hierarchical Agents
+*   Multi-Agent Systems
+
+## [Simple Reflex Agents](pplx://action/followup)
+
+*   Decisions based solely on current sensory input.
+*   Respond immediately to environmental stimuli.
+*   Governed by condition-action rules.
+
+### [Key Components](pplx://action/followup)
+
+*   **[Sensors](pplx://action/followup):** Gather environmental information.
+*   **[Condition-Action Rules](pplx://action/followup):** Predefined responses to specific inputs.
+*   **[Actuators](pplx://action/followup):** Execute decisions.
+
+### [Use Cases](pplx://action/followup)
+
+*   Industrial safety sensors
+*   Automated sprinkler systems
+*   Email auto-responders
+
+## [Model-Based Reflex Agents](pplx://action/followup)
+
+*   Maintain an internal model of the world.
+*   Infer unobserved aspects of the current state.
+*   Use the world model to make better decisions.
+
+### [Key Components](pplx://action/followup)
+
+*   **[State Tracker](pplx://action/followup):** Maintains information about the current state.
+*   **[World Model](pplx://action/followup):** Contains knowledge of how the environment evolves.
+*   **[Reasoning Component](pplx://action/followup):** Determines actions based on the world model.
+
+### [Use Cases](pplx://action/followup)
+
+*   Smart home security systems
+*   Quality control systems
+*   Network monitoring tools
+
+## [Goal-Based Agents](pplx://action/followup)
+
+*   Pursue specific objectives.
+*   Plan sequences of actions to achieve desired outcomes.
+*   Use search and planning algorithms.
+
+### [Key Components](pplx://action/followup)
+
+*   **[Goal State](pplx://action/followup):** A clear description of the agent's aim.
+*   **[Planning Mechanism](pplx://action/followup):** Searches possible action sequences.
+*   **[State Evaluation](pplx://action/followup):** Assesses potential future states.
+*   **[Action Selection](pplx://action/followup):** Chooses actions based on their contribution to reaching the goal.
+*   **[World Model](pplx://action/followup):** Understanding of how actions change the environment.
+
+### [Use Cases](pplx://action/followup)
+
+*   Industrial robots
+*   Automated warehouse systems
+*   Smart heating systems
+*   Inventory management systems
+*   Task scheduling systems
+
+## [Learning Agents](pplx://action/followup)
+
+*   Improve behavior over time through experience.
+*   Modify behavior based on feedback.
+*   Learn how to achieve goals through experience.
+
+### [Key Components](pplx://action/followup)
+
+*   **[Performance Element](pplx://action/followup):** Selects external actions.
+*   **[Critic](pplx://action/followup):** Provides feedback on performance.
+*   **[Learning Element](pplx://action/followup):** Improves the performance element.
+*   **[Problem Generator](pplx://action/followup):** Suggests exploratory actions.
+
+### [Use Cases](pplx://action/followup)
+
+*   Industrial process control
+*   Energy management systems
+*   Customer service chatbots
+*   Quality control systems
+
+## [Utility-Based Agents](pplx://action/followup)
+
+*   Make decisions by evaluating potential outcomes.
+*   Choose actions that maximize overall utility.
+*   Handle tradeoffs between competing goals.
+
+### [Key Components](pplx://action/followup)
+
+*   **[Utility Function](pplx://action/followup):** Maps states to numerical values.
+*   **[State Evaluation](pplx://action/followup):** Assesses states in terms of their utility.
+*   **[Decision Mechanism](pplx://action/followup):** Selects actions to maximize utility.
+*   **[Environment Model](pplx://action/followup):** Understanding of how actions affect utility.
+
+### [Use Cases](pplx://action/followup)
+
+*   Resource allocation systems
+*   Smart building management
+*   Scheduling systems
+
+## [Hierarchical Agents](pplx://action/followup)
+
+*   Structured in a tiered system.
+*   Higher-level agents manage lower-level agents.
+*   Breaks down complex tasks into subtasks.
+
+### [Key Components](pplx://action/followup)
+
+*   **[Task Decomposition](pplx://action/followup):** Breaks down complex tasks.
+*   **[Command Hierarchy](pplx://action/followup):** Defines control flow.
+*   **[Coordination Mechanisms](pplx://action/followup):** Ensures agents work together.
+*   **[Goal Delegation](pplx://action/followup):** Translates objectives into tasks.
+
+### [Use Cases](pplx://action/followup)
+
+*   Manufacturing control systems
+*   Building automation
+*   Robotic task planning
+
+## [Multi-Agent Systems (MAS)](pplx://action/followup)
+
+*   Multiple autonomous agents interacting in a shared environment.
+*   Work independently or cooperatively.
+*   Focus on relatively simple agents interacting through basic protocols.
+
+### [Types of MAS](pplx://action/followup)
+
+*   **[Cooperative](pplx://action/followup):** Agents share information to achieve common goals.
+*   **[Competitive](pplx://action/followup):** Agents compete for resources.
+*   **[Mixed](pplx://action/followup):** Combines cooperative and competitive behaviors.
+
+### [Key Components](pplx://action/followup)
+
+*   **[Communication Protocols](pplx://action/followup):** Define information exchange.
+*   **[Interaction Rules](pplx://action/followup):** Specify how agents can interact.
+*   **[Resource Management](pplx://action/followup):** Handles shared resources.
+*   **[Coordination Mechanisms](pplx://action/followup):** Organizes agent activities.
+
+### [Use Cases](pplx://action/followup)
+
+*   Warehouse management
+*   Basic manufacturing
+*   Resource allocation
+
+---
+
+## Short-term vs. Long-term Memory
+
+- **Short-term memory**: Stored during an active session (e.g., chat history)
+- **Long-term memory**: Persisted across multiple sessions (e.g., user preferences, embeddings in a vector database)
+- Agents utilize memory to enhance contextual understanding and improve decision-making
+
+---
+
+## Maintaining State and Session Information
+
+- Techniques used by agents to manage state:
+  - Context window retention (short-term memory)
+  - Vector databases for retrieving past interactions
+  - External storage (e.g., databases, knowledge graphs)
+- Enables multi-tool collaboration and seamless user interactions
+
+---
+
+## Multi-Agent Collaboration
+
+- Agents can work together to solve complex problems
+- Examples:
+  - One agent retrieves data while another analyzes it
+  - Different agents specializing in distinct tasks (e.g., research, summarization, coding)
+- Requires a shared state or communication mechanism
+
+## Multi-Agent Collaboration
+
+![MAC](https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2024/12/31/image002-3.png)
+
+---
+
+## Agent Frameworks - Open Source
+
+- LangChain
+- LlamaIndex
+- AutoGPT
+- CrewAI
+
+## Agent Frameworks - AWS Solutions
+
+- Amazon Bedrock Agents
+- Step Functions + LLMs for orchestration
+
+---
+
+## Deploying Agents
+
+- Agents can be exposed as APIs for integration into applications
+- Key considerations:
+  - Hosting (serverless, containers, on-premise)
+  - Security (authentication, authorization)
+  - Scalability and cost management
+- Example: Deploying a customer support agent via API
+
+---
+
+## AI Agents stack
+
+![Agent stack](https://miro.medium.com/v2/resize:fit:1100/format:webp/1*zdZ4yNFu9f5r7mj-pVurcA.png)
+
+Source: [letta](https://www.letta.com/blog/ai-agents-stack)
+
+## Summary
+
+- Agents extend LLM capabilities by enabling tool usage, maintaining memory, and collaborating
+- Different types of agents exist, each suited for specific tasks
+- Memory and state management are crucial for effective agent performance
+- Multi-agent collaboration allows for more sophisticated problem-solving
+- Various frameworks and deployment strategies exist to implement agents in real-world applications
+
+---
+
+## References
+
+- AutoGPT: https://github.com/Torantulino/Auto-GPT
+- BabyAGI: https://github.com/yoheinakajima/babyagi
+- LangChain: https://github.com/hwchase17/langchain
+- LlamaIndex: https://github.com/run-llama/llama_index
+- CrewAI: https://github.com/crewAI/crewAI
+- AWS Bedrock Agents: https://aws.amazon.com/bedrock/
+- AWS Step Functions: https://aws.amazon.com/step-functions/
+- https://aws.amazon.com/blogs/machine-learning/unlocking-complex-problem-solving-with-multi-agent-collaboration-on-amazon-bedrock/
+- https://medium.com/@vipra_singh/ai-agents-introduction-part-1-fbec7edb857d
+- https://www.letta.com/blog/ai-agents-stack

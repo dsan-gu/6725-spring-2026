@@ -1,0 +1,390 @@
+---
+title: "Week 2: In-context learning (ICL)"
+subtitle: "Applied Generative AI for AI Developers"
+author: "Amit Arora"
+format:
+  revealjs:
+    theme: custom.scss
+    slide-number: true
+    show-slide-number: print
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-copy: true
+---
+
+## What is In-Context Learning (ICL)?
+
+- **Definition**: A paradigm where models learn to perform tasks by being provided examples or instructions directly in the input (context).
+- **Impact**: Reduces or eliminates the need for fine-tuning on specific tasks.
+- **Analogy**: Teaching by showing examples without altering the student's core knowledge.
+- **Key Feature**: Enables models to generalize without retraining.
+
+---
+
+## Why Use In-Context Learning?
+
+- **Advantages**:
+  - No need for model retraining or additional compute-intensive fine-tuning.
+  - Enables quick adaptation to novel tasks.
+- **Applications**:
+  - Rapid prototyping.
+  - Tasks with small or specialized datasets.
+
+---
+
+## Mechanism of ICL
+
+- **Few-Shot Approach**: The model is given examples of inputs and desired outputs as part of its prompt.
+- **Mechanism**:
+  - Uses the input examples to infer the pattern.
+  - Applies this pattern to new inputs.
+- **Key Insight**: Leverages the pre-trained knowledge of large language models.
+
+---
+
+## Hierarchy of Techniques
+
+1. **Prompt Engineering**:
+   - Easiest to implement.
+   - Iterative improvement of task instructions and examples.
+   - **When to use**: Small datasets, quick experiments.
+
+2. **Fine-Tuning**:
+   - Adjusts model weights for specific tasks.
+   - Requires more resources (compute, labeled data).
+   - **When to use**: High accuracy demands, domain-specific tasks.
+
+3. **Continued Pre-Training (cPT)**:
+   - Extends the pre-training phase with domain-specific data.
+   - **When to use**: Large shifts in domain or task requirements.
+
+---
+
+## Pros and Cons of Each Technique
+
+| Technique          | Pros                                | Cons                                   |
+|--------------------|-------------------------------------|----------------------------------------|
+| Prompt Engineering | Fast, low cost, no retraining.     | Limited accuracy, trial and error.    |
+| Fine-Tuning        | Improved task performance.         | Requires labeled data, costly.        |
+| cPT                | Handles major domain shifts well.  | Expensive, needs significant data.    |
+
+---
+
+## Prompt Engineering Overview
+
+- **Zero-Shot Learning**:
+  - No examples provided.
+  - Example: "Summarize the following paragraph."
+
+- **One-Shot Learning**:
+  - One example provided.
+  - Example: "Translate 'Bonjour' to English. Example: 'Hola -> Hello'. Translate 'Merci'."
+
+- **Few-Shot Learning**:
+  - Multiple examples provided.
+  - Example: "Classify these reviews: 'I love this movie!' -> Positive, 'I hate this book.' -> Negative. Classify: 'This product is amazing.'"
+
+---
+
+## Zero-Shot Learning Example
+
+- **Task**: Summarization.
+- **Prompt**:
+  - "Summarize the following text: 'Large language models are transforming AI.'"
+- **Models**:
+  - LLaMA3: Short and factual.
+  - Claude: Polished and coherent.
+  - Amazon Nova: Emphasizes conciseness.
+
+---
+
+## One-Shot Learning Example
+
+- **Task**: Question Answering.
+- **Prompt**:
+  - "Question: Who developed the theory of relativity?
+    Example: Question: Who invented the telephone? Answer: Alexander Graham Bell.
+    Answer:"
+- **Output**:
+  - LLaMA3: Albert Einstein.
+  - Claude: Einstein.
+  - Amazon Nova: Albert Einstein.
+
+---
+
+## Few-Shot Learning Example
+
+- **Task**: SQL Generation.
+- **Prompt**:
+  - "Examples:
+     Input: Find all employees hired after 2020.
+     Output: SELECT * FROM employees WHERE hire_date > '2020-01-01';
+     Input: Count the number of departments.
+     Output: SELECT COUNT(*) FROM departments;
+     Input: List all customers from New York."
+- **Output**:
+  - LLaMA3: SELECT * FROM customers WHERE city = 'New York';
+  - Claude: SELECT name FROM customers WHERE location = 'New York';
+  - Amazon Nova: SELECT * FROM customers WHERE city = 'NYC';
+
+---
+
+
+## Anatomy of a Prompt
+
+- **Structure**:
+  - System Message: Defines the model's role or behavior.
+  - User Message: Specifies the task or query.
+  - Assistant Message (optional): Provides context or prior responses.
+- **Examples**:
+  - System: "You are a helpful assistant."
+  - User: "Summarize the following text: 'Generative AI is a game changer.'"
+  - Assistant: "Generative AI is transformative."
+- **Key Idea**: Clear instructions improve response quality.
+
+---
+
+## The Messages API
+
+- **Components**:
+  - `system`: Sets the model's tone and scope.
+  - `user`: Contains the main prompt or task.
+  - `assistant`: Used for context in iterative tasks.
+- **Flow**:
+  - Messages are passed as a sequence.
+  - Each message builds upon the previous ones.
+- **Benefits**:
+  - Enhances multi-turn interactions.
+  - Allows dynamic context updates.
+
+
+---
+
+## Inference parameters
+
+the Messages API allows you to interact with the model in a conversational way. You can define the role of the message and the content. The role can be either system, assistant, or user. The system role is used to provide context to the model, and the user role is used to ask questions or provide input to the model.
+
+Users can get tailored responses for their use case using the following inference parameters while invoking foundation models:
+
+  - `temperature` – Temperature is a value between 0–1, and it regulates the creativity of the model's responses. Use a lower temperature if you want more deterministic responses, and use a higher temperature if you want more creative or different responses from the model.
+  - `top_k` – This is the number of most-likely candidates that the model considers for the next token. Choose a lower value to decrease the size of the pool and limit the options to more likely outputs. Choose a higher value to increase the size of the pool and allow the model to consider less likely outputs.
+  - `top_p` – Top-p is used to control the token choices made by the model during text generation. It works by considering only the most probable token options and ignoring the less probable ones, based on a specified probability threshold value (p). By setting the top-p value below 1.0, the model focuses on the most likely token choices, resulting in more stable and repetitive completions. This approach helps reduce the generation of unexpected or unlikely outputs, providing greater consistency and predictability in the generated text.
+
+---
+
+## Inference parameters (contd.)
+
+  - `stop sequences` – This refers to the parameter to control the stopping sequence for the model’s response to a user query. For Meta-Llama models this value can either be "<|start_header_id|>", "<|end_header_id|>", or "<|eot_id|>".
+
+
+---
+
+## Prompting Best Practices
+
+- **General Guidelines**:
+  - Be specific: "Translate this sentence" vs. "Translate."
+  - Avoid ambiguity: Use complete instructions.
+  - Provide examples for complex tasks.
+
+- **For GPT-4**:
+  - Use detailed instructions for creative tasks.
+  - Include constraints like word limits or tone.
+
+- **For Claude**:
+  - Prefers natural and conversational language.
+  - Excels at reasoning tasks when examples are provided.
+
+- **For LLaMA**:
+  - Keep prompts concise.
+  - Focus on factual and structured queries.
+
+---
+
+## Prompting Best Practices
+
+| Model family | Prompt Engineering Reference |
+|--------|---------------------------|
+| Amazon Nova | https://docs.aws.amazon.com/nova/latest/userguide/prompting.html |
+| Anthropic Claude | https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/ |
+| Meta LLaMA | https://www.llama.com/docs/how-to-guides/prompting/ |
+
+---
+
+## Example: Claude Messages API with Amazon Bedrock
+
+- **Task**: Summarize a document.
+
+```python
+import boto3
+
+# Initialize the Bedrock client
+bedrock = boto3.client('bedrock', region_name='us-west-2')
+
+# Define messages in the API format
+messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "Summarize the following text: 'Generative AI is transforming industries by automating creative tasks.'"}
+]
+
+# Call Claude via Bedrock
+response = bedrock.invoke_model(
+    modelId="anthropic.claude-v1",
+    body={"input": {"messages": messages}}
+)
+
+# Print the response
+print(response["output"])
+```
+
+---
+
+## Advanced Example: Few-Shot Learning with Claude
+
+- **Task**: Classify sentiment.
+
+```python
+messages = [
+    {"role": "system", "content": "You are a helpful assistant that classifies sentiment."},
+    {"role": "user", "content": "Examples:\nReview: 'I love this product!' -> Positive\nReview: 'This is the worst service ever.' -> Negative\nReview: 'The delivery was on time.' ->"}
+]
+
+response = bedrock.invoke_model(
+    modelId="anthropic.claude-v1",
+    body={"input": {"messages": messages}}
+)
+
+print(response["output"])
+```
+
+---
+
+## Multi-Modal In-Context Learning
+
+- **Definition**: Extending ICL to handle tasks across multiple data types (text, images, audio).
+- **Examples**:
+  - Text-to-Image generation: Providing prompts with descriptive instructions.
+  - Image Captioning: Few-shot examples pairing images with captions.
+- **Future Applications**:
+  - Interactive assistants.
+  - Cross-domain insights.
+
+
+
+---
+
+## Prompt engineering - examples
+
+Text to SQL prompt with Meta-LLaMA3
+
+```{.bash}
+messages = [
+{
+  "role": "system",
+  "content":
+    """You are a mysql query expert whose output is a valid sql query.
+       Only use the following tables:
+       It has the following schemas:
+       <table_schemas>
+       {table_schemas}
+       <table_schemas>
+       Always combine the database name and table name to build your queries. You must identify these two values before proving a valid SQL query.
+       Please construct a valid SQL statement to answer the following the question, return only the mysql query in between <sql></sql>.
+    """
+},
+{
+  "role": "user",
+  "content": "{question}"
+}]
+```
+
+---
+
+## Prompt engineering - examples - Few-shot prompting
+
+```{.bash}
+Extract the relevant information from the following parahrapgh and present it in a JSON format.
+
+Michael Doe, a 45-year-old teacher from Boston, Massachusetts, is an avid reader and enjoys gardening during his spare time.
+Example 1:
+Paragraph: "John Doe is a 32-year-old software engineer from San Francisco, California. He enjoys hiking and playing guitar in his free time."
+"employee": {
+    "fullname": "John Doe",
+    "city": "San Francisco",
+    "state": "California",
+    "occupation": "software engineer",
+    "hobbies": ["hiking", "playing guitar"],
+    "recentTravel": "not provided"
+},
+Example 2:
+Paragraph: "Emily Jax, a 27-year-old marketing manager from New York City, loves traveling and trying new cuisines. She recently visited Paris and enjoyed the city's rich cultural heritage."
+"employee": {
+    "fullname": "Emily Jax",
+    "city": "New York City",
+    "state": "New York",
+    "occupation": "marketing manager",
+    "hobbies": ["traveling", "trying new cuisines"],
+    "recentTravel": "Paris"
+}
+```
+This produces the following output
+
+```{.bashrc}
+{
+  "employee": {
+    "fullname": "Michael Doe",
+    "city": "Boston",
+    "state": "Massachusetts",
+    "occupation": "teacher",
+    "hobbies": [ "reading", "gardening"],
+    "recentTravel": "not provided"
+  }
+}
+```
+
+---
+
+## Prompt engineering - examples - Task decomposition
+
+```{.bashrc}
+
+Break down the task of planning a vacation into smaller, manageable steps.
+1. Choose a destination.
+2. Set a budget.
+3. Research accommodations.
+4. Plan activities.
+5. Book flights and accommodations.
+6. Pack and prepare for the trip.
+```
+
+---
+
+## Prompt engineering - examples - Chain of Thought
+
+```{.bashrc}
+Solve the following math problem step by step.
+
+If you have 10 apples and you give 3 apples to your friend,
+then buy 5 more apples, and finally eat 2 apples, 
+how many apples do you have left?
+```
+
+---
+
+## References and Further Reading
+
+- **Code samples**:
+  - https://github.com/NirDiamant/Prompt_Engineering/tree/main
+
+- **Important Papers**:
+  - Brown et al. (2020). "Language Models are Few-Shot Learners." [[GPT-3 Paper](https://arxiv.org/pdf/2005.14165)]
+  - Wei et al. (2022). "Chain of Thought Prompting Elicits Reasoning in Large Language Models." [link](https://arxiv.org/pdf/2201.11903)
+  - Min et al. (2022). "Rethinking the Role of Demonstrations: What Makes In-Context Learning Work?" [link](https://arxiv.org/pdf/2202.12837)
+
+
+- **Comparison Studies**:
+  - Fine-Tuning vs. In-Context Learning vs. cPT: "Prompting vs. Tuning: Which Approach Works Better for LLMs?" [Reddit thread](https://www.reddit.com/r/LocalLLaMA/comments/152s9ei/when_is_it_best_to_use_prompt_engineering_vs/)
+  - Touvron et al. (2023). "LLaMA: Open and Efficient Foundation Language Models." [link](https://arxiv.org/pdf/2302.13971)
+  - Ruoss, Pardo et al (2024) "LMAct: A Benchmark for In-Context Imitation Learning with Long Multimodal Demonstrations" [link](https://arxiv.org/html/2412.01441v1)
+
+
