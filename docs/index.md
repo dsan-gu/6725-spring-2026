@@ -19,7 +19,8 @@
         <p>Prof. Amit Arora<br>
         Office Hours: Wed 5-6 PM (virtual)</p>
         <h3>👨‍🏫 TA</h3>
-        <p>Yicheng Zhu, office hours: Mon 2-3pm, Fri 2-3 pm<br></p>
+        <p>Zixu "Michael" Hao (zh301@georgetown.edu)<br>
+        Office hours: Mon 2-3pm, Fri 2-3 pm</p>
     </div>
     <div class="info-card">
         <h3>📋 Quick Links</h3>
