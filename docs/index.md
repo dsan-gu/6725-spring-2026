@@ -1,9 +1,9 @@
-# Advanced Data Science Methods
+# Applied Generative AI for Developers
 
 <div class="hero">
     <img src="assets/images/logo.png" alt="Course Logo" style="max-width: 200px;">
     <h1>Applied Generative AI for developers</h1>
-    <p>Learn about building Gen AI apps, RAG, Agents, Guardrails, Benchmarking, Responsible AI, FM hosting, fine-tuning and more.</p>
+    <p>Learn about building Gen AI apps, RAG, MCP, Agents, Agent-to-Agent (A2A) collaboration, Observability, Guardrails, Benchmarking, Responsible AI, FM hosting, fine-tuning and more.</p>
 </div>
 
 ## Course Information
