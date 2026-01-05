@@ -1,56 +1,98 @@
-### Course Description
+# Syllabus - DSAN 6725 Applied Generative AI for Developers
 
-Applied Generative AI for developers is a graduate-level course that provides students with a deep understanding of building generative AI applications. This course is designed for AI developers aiming to build cutting-edge Generative AI (GenAI) applications. Focusing on the applied side of AI, students will explore key techniques such as in-context learning (ICL), retrieval-augmented generation (RAG), AI agents, and responsible AI principles. The course covers advanced tools and methods, including embedding models, inference optimizations (e.g., quantization, multi-adapter swapping), fine-tuning of pre-trained models and benchmarking LLMs. Students will gain hands-on experience with open-source tools like LangChain, LlamaIndex, and platforms such as AWS, applying their skills in practical GenAI applications. The course culminates in a capstone project, preparing participants to deploy scalable, optimized AI systems in real-world scenarios. This course bridges the gap between data science knowledge and applied AI development, empowering students to solve industry-level challenges.
+**Professor**: Amit Arora
+**Email**: TBD
+**Class Time**: Tuesdays 9:30 AM - 12:00 PM
+**Classroom**: Intercultural Center 107
+**First Class**: January 13, 2026, 9:30 AM - 12:00 PM
 
-### Learning Objectives
+**Office Hours**:
 
-By the end of this course, students will be able to:
+Professor's Office hours are by appointment only. Please use the following links to book appointments. If none of these times work for you, please email me to make appointments.
 
-1. Build GenAI applications with prompt engineering, RAG and AI Agents
-1. Fine-tune LLMs
-1. Responsible AI
-1. Optimize inference for deploying apps at scale
-1. Capstone project
+| Appointment | Day | Time | Link |
+|------------|-----|------|------|
+| Virtual | Wednesday | 5:00 PM - 6:00 PM | TBD |
 
-### Pre-requisites
+*This syllabus is subject to change at any time.*
 
--   Experience with Python and invoking REST APIs.
--   Experience with git and GitHub
+## Teaching Assistants (TA)
 
-Some tutorials to brush up on these skills:
+**Name**: Zixu "Michael" Hao
+**Email**: zh301@georgetown.edu
+**Office Hours**: Mondays 2:00 PM - 3:00 PM, Fridays 2:00 PM - 3:00 PM
 
--   [git - the simple guide](http://rogerdudler.github.io/git-guide/)
--   [Python and REST APIs: Interacting With Web Services](https://realpython.com/api-integration-in-python/)
--   [Nico Riedmann's Learn git concepts, not commands](https://dev.to/unseenwizzard/learn-git-concepts-not-commands-4gjc)
--   [Python course](https://github.com/gitdagray/python-course/tree/main)
+## Textbooks
 
+There is no required textbook for the course. However, you can consider the following if you like:
 
-!!! note "Communication"
-The primary mode of communication would Slack, please join the class Slack channel [here](https://join.slack.com/t/dsan6725appli-imy3613/shared_invite/zt-3mh6xismt-sKHNzqXmFrJV5ztgueAPbA)
-
-## Books, Software and Cloud Resources
-
-### Readings (for assigned readings)
-
-There is no required textbook for the course. However, you can consider the following if you like.  
-
-- [Hands-On Large Language Models: Language Understanding and Generation ](https://www.amazon.com/Hands-Large-Language-Models-Understanding/dp/1098150961/ref=sr_1_1?crid=2L8JBIHIZUKO1&dib=eyJ2IjoiMSJ9.y8jTOKNtfaF-RUePWCWwsdnAIo4v5YE_XE2TIlLVQCBGA6Q716R03HVJHfrq-uS1.J-n8l0ZZvrzb7ARZx8p_xTnaPW7Za1bED91saKrAKlE&dib_tag=se&keywords=Hands-On+Large+Language+Models%3A+Language+Understanding+and+Generation&qid=1734626165&s=books&sprefix=hands-on+large+language+models+language+understanding+and+generation+%2Cstripbooks%2C98&sr=1-1)
+- [Hands-On Large Language Models: Language Understanding and Generation](https://www.amazon.com/Hands-Large-Language-Models-Understanding/dp/1098150961/ref=sr_1_1?crid=2L8JBIHIZUKO1&dib=eyJ2IjoiMSJ9.y8jTOKNtfaF-RUePWCWwsdnAIo4v5YE_XE2TIlLVQCBGA6Q716R03HVJHfrq-uS1.J-n8l0ZZvrzb7ARZx8p_xTnaPW7Za1bED91saKrAKlE&dib_tag=se&keywords=Hands-On+Large+Language+Models%3A+Language+Understanding+and+Generation&qid=1734626165&s=books&sprefix=hands-on+large+language+models+language+understanding+and+generation+%2Cstripbooks%2C98&sr=1-1)
 - [Generative AI Foundations in Python: Discover key techniques and navigate modern challenges in LLMs](https://www.amazon.com/Generative-Foundations-Python-techniques-challenges/dp/1835460828) chapters 5, 6, 7 and 8.
 
 We may also provide supplemental materials (articles, links, videos, etc.) to complement the readings.
 
 **You must read assigned readings prior to the lectures.**
 
-### Cloud Resources
+## Prerequisites
 
-You will use cloud resources on [Amazon Web Services](http://aws.amazon.com).
-We will discuss how to setup your accounts and environments in class and lab within the first couple of weeks.
-You will get credits on both platforms that will be enough to support your coursework throughout the semester.
+- Experience with Python and invoking REST APIs.
+- Experience with git and GitHub
+
+Some tutorials to brush up on these skills:
+
+- [git - the simple guide](http://rogerdudler.github.io/git-guide/)
+- [Python and REST APIs: Interacting With Web Services](https://realpython.com/api-integration-in-python/)
+- [Nico Riedmann's Learn git concepts, not commands](https://dev.to/unseenwizzard/learn-git-concepts-not-commands-4gjc)
+- [Python course](https://github.com/gitdagray/python-course/tree/main)
+
+## Course Description
+
+Applied Generative AI for developers is a graduate-level course that provides students with a deep understanding of building generative AI applications. This course is designed for AI developers aiming to build cutting-edge Generative AI (GenAI) applications. Focusing on the applied side of AI, students will explore key techniques such as in-context learning (ICL), retrieval-augmented generation (RAG), AI agents, and responsible AI principles.
+
+The course covers advanced tools and methods, including embedding models, inference optimizations (e.g., quantization, multi-adapter swapping), fine-tuning of pre-trained models and benchmarking LLMs. Students will gain hands-on experience with open-source tools like LangChain, LlamaIndex, and platforms such as AWS, applying their skills in practical GenAI applications. The course culminates in a capstone project, preparing participants to deploy scalable, optimized AI systems in real-world scenarios. This course bridges the gap between data science knowledge and applied AI development, empowering students to solve industry-level challenges.
+
+## Technology Inventory
+
+This course uses Python as the primary programming language. Students will work with:
+
+- **Python 3.11+**: Primary development language
+- **Cloud Platforms**: Amazon Web Services (AWS) for cloud-based development and deployment
+- **Gen AI Tools**: LangChain, LlamaIndex, Amazon Bedrock
+- **Development Tools**: git, GitHub, Docker, uv (Python package manager)
+- **AI Models**: Large Language Models (LLMs), embedding models
+
+## Course Website
+
+*Please use Canvas for all class information, requirements, due dates, deliverables, and submissions.*
+
+Review all Announcements and Modules.
+
+The course will use Canvas, https://canvas.georgetown.edu/. Announcements, homework assignments and solutions, course material such as documentation, links, data sets and code will all be posted there. You can look up your grades, and online surveys will also be conducted here. Students in this course are required to visit this page once a day. Announcements will usually only appear on the webpage. You will also have to access data sets on the Internet and need to be comfortable with this.
+
+**In addition**: GitHub Classroom will be used for all assignment and lab submissions.
+
+**Communication**: The primary mode of communication is Slack. Please join the class Slack channel [here](https://join.slack.com/t/dsan6725appli-imy3613/shared_invite/zt-3mh6xismt-sKHNzqXmFrJV5ztgueAPbA).
+
+## Cloud Resources
+
+You will use cloud resources on [Amazon Web Services](http://aws.amazon.com). We will discuss how to set up your accounts and environments in class and lab within the first couple of weeks. You will get credits on both platforms that will be enough to support your coursework throughout the semester.
 
 !!! warning "Managing cloud resources"
 **IT IS YOUR RESPONSIBILITY TO MANAGE THE CREDITS AND RESOURCES PROVIDED TO YOU. YOU MUST SHUT DOWN YOUR CLOUD RESOURCES WHEN NOT IN USE.**
 
-### Modules
+## Course Calendar and Topics
+
+### Learning Objectives
+
+By the end of this course, students will be able to:
+
+1. Build GenAI applications with prompt engineering, RAG and AI Agents
+2. Fine-tune LLMs
+3. Apply Responsible AI principles
+4. Optimize inference for deploying apps at scale
+5. Complete a comprehensive capstone project
+
+A Google Spreadsheet overview of the course with topics, dates, and deliverables is available and will be updated along with the individual pages in Canvas.
 
 | Week  | Module                                               | Details                                                                                                  |
 |-------|------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
@@ -69,83 +111,92 @@ You will get credits on both platforms that will be enough to support your cours
 | 13    | Gen AI platform design, open-discussion            | How to build a platform and not just apps     |
 | 14    | Project presentation, open-discussion                             | Final project presentations and open discussion on course topics                                        |
 
+## Final Grades
 
+### Grading Weights
 
-## Learning Activities, Communication and Evaluation
+| Deliverable | Final Weight Percentage |
+|------------|------------------------|
+| Group Project | 40% |
+| Homework Assignments | 30% |
+| Lab Completions | 20% |
+| Quizzes | 10% |
 
-This is a hands-on, practical, workshop style course that provides opportunities to use the tools and techniques discussed in class.
-Although this is not a programming course per se, but there is lot of programming involved.
+**Total: 100%**
+
+### Grading Scale
+
+- A: >= 92.5
+- A-: 89.5 - 92.49
+- B+: 87.99 - 89.49
+- B: 81.5 - 87.98
+- B-: 79.5 - 81.49
+
+We have no plans to curve the final grade.
+
+## Learning Activities
+
+This is a hands-on, practical, workshop-style course that provides opportunities to use the tools and techniques discussed in class. Although this is not a programming course per se, there is a lot of programming involved.
 
 ### Lectures and Labs
 
-This course is split into a lecture/lab format, where every class session will have a lecture portion, and most sessions will have an in-class lab portion:
+The course is split into a lecture/lab format. During the lecture, we will discuss the concepts and techniques for building Gen AI apps on cloud platforms. During the lab sessions, you will be completing exercises and following examples which are designed to show you how to implement the ideas and concepts with various tools.
 
--   During the lecture, we will discuss the concepts and techniques for building Gen AI apps on cloud platforms.
--   During the lab sessions, you will be completing exercises and following examples which are designed to show you how to implement the ideas and concepts with various tools. We will start the labs in class but we will not finish. It is your responsibility to complete the labs (**which is part of the grade**) and will enable your learning.
-
-Lectures may not cover all the material and some topics will be introduced in the lab or through readings/assignments.
-
-### Office Hours
-
-Instructors and TAs will hold recurring office hours to answer questions, review material, and support your learning.
-The times, dates, and location of office hours will be announced via Canvas and Slack in advance.
+We will start the labs in class but we will not finish. It is your responsibility to complete the labs (which is part of the grade) and will enable your learning. Lectures may not cover all the material and some topics will be introduced in the lab or through readings/assignments.
 
 ### Readings
 
-On certain weeks, readings will be assigned to prepare you for the lecture material being presented.
-These readings should take an hour or less per week.
+On certain weeks, readings will be assigned to prepare you for the lecture material being presented. These readings should take an hour or less per week.
 
-### Online Quizzes
+### Quizzes
 
-Quizzes will be given a few times during the semester during lab or lecture at random intervals and times.
-Quizzes ensure you are keeping up with the material presented in the class.
-Quizzes are meant to be brief and low-stress with a time limit of 5-10 minutes.
-The material will be drawn from lectures, labs, and readings.
+There will be 6 quizzes per semester. Quizzes ensure you are keeping up with the material presented in the class. Quizzes are meant to be brief and low-stress with a time limit of 5-10 minutes. The material will be drawn from lectures, labs, and readings.
 
 ### Lab Deliverables
 
-Each lab will have a deliverable.
-It is essential that you learn the skills presented in the labs so that you can effectively complete the assignments and the big data project.
-The lab deliverables can sometimes be completed during lab, however, it is your responsibility to complete the deliverable as part of your work outside of lecture/lab time.
+Each lab will have a deliverable that is due by the next lecture. It is essential that you learn the skills presented in the labs so that you can effectively complete the assignments and the capstone project. Time will always be given for the lab deliverables to be completed during lab, however, it is your responsibility to complete the deliverable as part of your work outside of lecture/lab time.
 
 ### Homework Assignments
 
-You will be several homework assignments for roughly half of the semester.
-The goal of these problem sets is to hone your big data skills by answering some questions about large datasets.
-The problem sets will build on the labs and will be much more in-depth.
-Deliverables from the assignment will usually include code written for your programs and the output produced.
+You will be given several homework assignments for roughly half of the semester. The goal of these problem sets is to enhance your GenAI application development skills. The problem sets will build on the labs and will be much more in-depth. Deliverables from the assignment will usually include code written for your programs and the output produced.
+
+**Important Note**: We reuse problem set questions, we expect students not to copy, refer to, or look at the solutions in preparing their answers. Since this is a graduate-level class, we expect students to want to learn and not search online for answers. See Academic Integrity section.
 
 !!! warning "Start early on the assignments"
-
 **Please start assignments as soon as they are posted. These assignments can take several hours to complete depending on your familiarity with the material. You will not complete the assignments on time if you start the day they are due.**
 
-!!! note "Solutions to problem sets"
-We reuse problem set questions, we expect students not to copy, refer to, or look at the solutions in preparing their answers.
-Since this is a graduate-level class, we expect students to want to learn and not search online for answers.
-See Academic Integrity section.
+### Discussions
 
-### Capstone project
+There will be discussion posts where you communicate with your peers about course topics and your project. Individual project plans will be communicated and discussed on the discussions. You will communicate progress on your project to the discussion board and get feedback. This feedback will be incorporated into future discussion posts.
 
-Details _coming soon_.
+### Capstone Project
+
+The capstone project is a significant component of this course where students will apply the skills learned throughout the semester to build a production-ready GenAI application. Details will be provided in the first few weeks of class.
 
 ## Grading and Evaluation
 
--   Group project : 40%
--   Assignments : 30%
--   Lab completions : 20%
--   Quizzes : 10%
+Many of the assignments you will work on are open-ended. Grading is generally holistic, meaning that there will not always be specific point values for individual elements of a deliverable. Each deliverable submission is unique and will be compared to all other submissions.
 
-Total is 100%.
-We have no plans to curve the final grade, and the final letter grade will be:
+- If a deliverable exceeds the requirements and expectations, that is considered A level work.
+- If a deliverable just meets the requirements and expectations, that is considered A-/B+ level work.
+- If a deliverable does not meet the requirements, that is considered less than B level of work.
 
--   A: \>= 92.5
--   A-: 89.5 - 92.49
--   B+: 87.99 - 89.49
--   B: 81.5 - 87.98
--   B-: 79.5 - 81.49
+All deliverables must meet the following general requirements, in addition to the specific requirements of each deliverable:
 
+If your submission meets or exceeds the requirements, is creative, is well thought-out, has proper presentation and grammar, and is at the graduate student level, then the submission will get full credit. Otherwise, partial credit will be given and deductions may be made for any of the following reasons:
 
-## Submitting your work
+**Points will be deducted for any of the following reasons:**
+
+- The instructions are not followed
+- There are missing sections of the deliverable
+- The overall presentation and/or writing is sloppy
+- There are no comments in your code
+- There are files in the repository other than those requested
+- There are absolute filename links in your code
+- The repository structure is altered in any way
+- Files are named incorrectly (wrong extensions, wrong case, etc.)
+
+## Submission Details
 
 ### GitHub classroom
 
@@ -165,120 +216,84 @@ In case you need to make a correction after your `final-submission` **and** the 
 We will use **commit datetime** and **commit message** to assess lateness. 
 
 
-### Late policy
+### Late Policy
 
-In lieu of extensions, there is a tiered deduction scale if a deliverable is late. Late penalties only apply to labs and assignments. 
+There are no extensions to due dates unless there are extraordinary circumstances, and those will be determined on a case-by-case basis. If you miss a deliverable entirely, you will receive a grade of 0 (zero).
 
-We will assess exceptional circumstances on a case-by-case basis, and only if we are made aware before a deliverable's deadline, not after.
+We realize life gets in the way sometimes and you may not be able to complete an assignment on time. Therefore, all deliverables can be up to 24 hours late with NO PENALTY (24 hours grace period for submission). That means students (groups) can upload the assignment up to 24 hours later than the posted due date and will receive credit for correct answers without any point reductions (only up to 24hrs after the due date/time). Any assignment submitted after the grace period will result in reduction of points as follows.
 
-- A late penalty of 10% per day, up to 4 days, will be assessed for assignments and labs that are submitted with a `final-submission` commit message after the deadline. You may still submit a missed lab or assignment up until the last day of class with a maximum possible grade of 60%.
-- Missed in-class quizzes cannot be made up and will receive a grade of zero.
-- Project deadlines are fixed and have no extensions or late penalty. A missed project deliverable will receive a grade of zero.
+**After 24 hours, the penalty is set at the following schedule:**
 
+- Homework Assignments: -5% per day for up to 5 days
+- Lab Deliverables: -5% per day for up to 5 days
+- Discussions: -10% per day for up to 5 days
+- Project Intermediate Assignments: -15% per day for up to 5 days
 
-## Other course policies
+**This does not apply to the final project.** The final project presentation and deliverables CANNOT be late for any reason.
 
-### Attendance and punctuality
-
-Attendance is mandatory and will be taken. Given the technical nature of this course, and the breadth of topics discussed, you are expected to attend each class, to complete all readings, and to participate actively in lectures, discussions and exercises. We understand there may be times you may need to miss class, please inform us in advance if you are not able to attend class for any reason. However, it is up to you to keep up.
-
-### Participation
-
-We love participation. Read. Raise your hand. Ask questions. Make comments. Challenge us. Acknowledge us. If we speak for three hours to a silent classroom, it is a lot more boring and tiring for everyone.
-
-### Laptop and phone use
-
-You must bring your laptop to class to work on labs. No phone use is allowed during lecture. You may use your laptop during lecture to take notes, but please refrain from other activities. We reserve the right to ask you to put your phones and laptops away. You may not use your computer or phone while your peers or guest speakers are presenting.
-
-### Communication and Slack Rules
--   All announcements will be posted on Canvas and Slack
--   Use Slack for any question you may have about the course, about assignments or any technical issue. This way everyone can learn from each others questions. We will be monitoring and providing answers on a regular basis. **Make sure you understand [what is allowed in Slack.](#what-is-allowed)**
--   Individual emails containing any course question that is not personal will not be answered
--   Slack DMs are not to be used **unless** we DM you first and you can respond to our message. Students may not initiate DMs. 
--   Keep an eye on the questions posted in Slack. Use the search function. It's very possible that we have already answered a question, and we reserve the right to point you to the syllabus, previous Slack messages, or other document containing the information requested
--   Assignment, lab and project questions will only be answered on Slack up to 12 hours before something is due
-
-### Open Door Policy
-
-Please approach or get in touch with us if something is not working for you regarding the class, methods, etc. Our pledge to you is to provide the best learning experience possible. If you have any issue please do not wait until the last minute to speak with us. You will find that we are fair, reasonable, and flexible and we care deeply about your learning and success.
-
- 
-## Academic Integrity
-
-As a Jesuit, Catholic university, committed to the education of the whole person, Georgetown expects all members of the academic community, students and faculty, to strive for excellence in scholarship and in character.The University spells out the specific minimum standards for academic integrity in its Honor Code, as well as the procedures to be followed if academic dishonesty is suspected.
-
-Over and above the honor code, in this course we will seek to create an engaged and passionate learning environment, characterized by respect and courtesy in both our discourse and our ways of paying attention to one another.
-
-The code of academic integrity applies to all courses at Georgetown University. Please become familiar with the code. All students are expected to maintain the highest level of academic integrity throughout the course of the semester.Please note that acts of academic dishonesty during the course will be prosecuted and harsh penalties may be sought for such acts. Students are responsible for knowing what acts constitute academic dishonesty. The code may be found at [https://bulletin.georgetown.edu/regulations/honor/.](https://bulletin.georgetown.edu/regulations/honor/)
-
-!!! warning "Zero tolerance for lack of academic integrity"
-**We have a ZERO TOLERANCE POLICY and students found to be in violation will be reported and penalized. The consequences of any violation may include: additional points penalty, getting a grade of zero, automatically failing the course, and suspension or expulsion from the program.**
+**This does not apply to quizzes.** Missed in-class quizzes cannot be made up and will receive a grade of zero unless there is an extenuating circumstance.
 
 
-### Definition of collaboration
+## Class Communication
 
-In the spirit of fostering a collective and inclusive learning environment, we acknowledge that you will work and study with your peers. We also acknowledge that you use web resources (code examples specifically), and that in writing a program many of you will most likely use the same libraries, functions and other similar instructions in your scripts. However:
+Always use email or Slack as the primary communication methods.
 
-* **You must write your own code.** This will be verified for every assignment against every submission, and any similarity greater than 60% between students on a given assignment will be considered to be unauthorized collaboration.
-* **You must do your individual work in your own cloud resources.** This will be verified for every assignment. We know the fingerprint of your cloud account and subscriptions and we can tell.
+**Slack Guidelines:**
 
-### What is allowed
+- All announcements will be posted on Canvas and Slack
+- Use Slack for any question you may have about the course, about assignments or any technical issue. This way everyone can learn from each other's questions. We will be monitoring and providing answers on a regular basis.
+- Individual emails containing any course question that is not personal will not be answered
+- Slack DMs are not to be used **unless** we DM you first and you can respond to our message. Students may not initiate DMs.
+- Keep an eye on the questions posted in Slack. Use the search function. It's very possible that we have already answered a question, and we reserve the right to point you to the syllabus, previous Slack messages, or other document containing the information requested
+- Assignment, lab and project questions will only be answered on Slack up to 12 hours before something is due
 
-* Collaborating with other students during in-class labs to facilitate collective learning
-* Using Slack for helping one-another as long as:
-    * You do not provide answers directly but only discuss potential approaches
-    * You only share up to a few lines of code for everyone's benefit for the resolution of a specific question or issue 
-* Using anything (code, resources, tips, approaches, etc.) provided by the instructional team
+## Academic Integrity and Collaboration - ZERO TOLERANCE POLICY
 
-### What is forbidden
+All students are expected to maintain the highest standards of academic and personal integrity in pursuit of their education at Georgetown. Academic dishonesty in any form is a serious offense, and students found in violation are subject to academic penalties that include, but are not limited to, zero'ing out assignments, reduced grade, failure of the course, termination from the program, and revocation of degrees already conferred. All students are held to the Georgetown University Honor Code. For more information about the Honor Code see https://honorcouncil.georgetown.edu/.
 
-The following actions are **not permitted in any way** and are considered a violation of academic integrity:
+**We have a ZERO TOLERANCE POLICY and if students are found to be in violation there will be consequences and the students will be penalized and reported.**
 
-* Copying and sharing code _between students_ in **individual** assignments or _across goups_ in the **group project**
-* Sharing anything on any individual assignment
-* Using code snippets found online (stack overflow, etc.) and not commenting the source
-* Plagiarism of any kind
-* Using any [Generative Artificial Intelligence](#use-of-generative-ai-tools) tool without acknowledging it
-* Using someone else's cloud resources
-* Making your private GitHub repos public
-* Sharing or posting any course materials anywhere
-* Faking or tampering with git commit dates or messages
+### Rules
 
-## Use of Generative AI tools
+- All individual deliverables in this course are individual work, which means INDIVIDUAL.
+- All submitted code must be your own. This will be verified for every deliverable against every submission, and any similarity greater than 60% will be considered to be unauthorized collaboration.
+- We have had issues with students sharing code files with others and that are then submitted by multiple students as unique individual submissions. This is totally unacceptable and will result in penalties to all students involved.
+- If you have referred to lecture codes or resources on the internet please specify the references.
+- All other deliverables must be your own as well.
 
-We recognize the recent availability of very powerful generative AI tools like Chat-GPT, GitHub Copilot, and others. These tools can help us be more effective and we embrace their use.
+**The following collaboration and communication is allowed and encouraged in Canvas discussion Q&A boards, labs, and office hours:**
 
-!!! note "Use of Gen AI tools"
-You are allowed to use GAI tools in a _non substantial_ way. 
+- The discussion of ideas and approaches to problems
+- The discussion and resolution of any technical issue
 
-What does _non substantial_ mean? 
+## Use of Generative AI Tools
 
-**It means that whatever is generated by GAI must not make up the majority of the work you do.**
+We recognize the recent availability of very powerful generative AI tools like ChatGPT, GitHub Copilot, and others. These tools can help us be more effective and we embrace their use.
 
-Any use of these tools must abide to the following rules:
+**You are allowed to use GenAI tools in a non-substantial way.**
 
-- You must acknowledge the use of GAI tools
-- You must comment which code blocks were generated by GAI
-- You must note which written sections were generated by GAI
-- If you used a prompt to ask the GAI tool to do something, you must include it
+What does non-substantial mean? **It means that whatever is generated by GenAI must not make up the majority of the work you do.**
 
+Any use of these tools must abide by the following rules:
 
-For this course, valid uses of gen-ai can be:
+- You must acknowledge the use of GenAI tools
+- You must comment which code blocks were generated by GenAI
+- You must note which written sections were generated by GenAI
+- If you used a prompt to ask the GenAI tool to do something, you must include it
 
-- Generating a code snippet or single function to perform a task. It’s likely you’ll need to modify it anyway
+**For this course, valid uses of GenAI can be:**
+
+- Generating a code snippet or single function to perform a task (you'll likely need to modify it anyway)
 - Commenting code
-- Using it as a writing aid (spelling, grammar, word choice, limited phrase translation) on content created by you, not the actual writing. Note: non-native English speakers cannot use gen-ai to fully translate content written in another language.
-- Generating visualization starter code (you can accelerate the generation of the starting point, but you still need to customize the viz with all the best practices learned in this course)
- 
+- Using it as a writing aid (spelling, grammar, word choice, limited phrase translation) on content created by you, not the actual writing
+- Generating visualization starter code (you can accelerate the generation of the starting point, but you still need to customize it)
 
 !!! warning "Academic integrity"
-Any deviation from these rules is considered a violation of [academic integrity](#academic-integrity) and will be acted on.
+Any deviation from these rules is considered a violation of academic integrity and will be acted on. You typically KNOW when you are crossing the line into unethical territory. As a general rule, if you feel like you might be crossing a line, then you probably are!
 
-You typically KNOW when you are crossing the line into un-ethical territory. As a general rule, If you feel like you might be crossing a line, then you probably are!
+In addition to what we are stating here, please take a look at the [Data Science and Analytics Program's ChatGPT usage guidelines](https://gu-dsan.github.io/5200-spring-2024/site-page-content/DSAN-ChatGPT-usage-guidelines.pdf).
 
-In addition to what we are stating here, please take a look at the [Data Science and Analytics Program’s ChatGPT usage guidelines](https://gu-dsan.github.io/5200-spring-2024/site-page-content/DSAN-ChatGPT-usage-guidelines.pdf).
-
-## Georgetown Univrsity resources and policies
+## University Policies and Support Services
 
 ### Georgetown University’s Plagiarism Policy 
 
@@ -332,7 +347,7 @@ _Title IX Sexual Misconduct Statement_ Please know that as faculty members, we a
 Georgetown has a number of fully confidential professional resources who can provide support and assistance to survivors of sexual assault and other forms of sexual misconduct. These resources include:
 
 * [Getting Help](https://sexualassault.georgetown.edu/get-help/#)
-* Jen Schweer, MA, LPC<br/>Associate Director of Health Education Services for Sexual Assault Response and Prevention (202) 687-032<br/>[jls242@georgetown.edu](mailto:jls242@georgetown.edu) 
+* Jen Schweer, MA, LPC<br/>Associate Director of Health Education Services for Sexual Assault Response and Prevention (202) 687-0323<br/>[jls242@georgetown.edu](mailto:jls242@georgetown.edu) 
 * Erica Shirley, Trauma Specialist<br/>Counseling and Psychiatric Services (CAPS)<br/>(202) 687-6985<br/>[els54@georgetown.edu](mailto:els54@georgetown.edu) 
 
 ### Threat Assessment
