@@ -211,38 +211,149 @@ def get_course_assignments(course_id: int) -> list[dict]:
 
 
 def main():
-    """Main function to demonstrate Canvas API usage."""
+    """Main function with command-line interface."""
+    import argparse
     import json
+    import sys
 
-    logger.info("Starting Canvas API demo")
-
-    # Get user info
-    logger.info("\n=== User Information ===")
-    user_info = get_user_info()
-    print(json.dumps(user_info, indent=2, default=str))
+    parser = argparse.ArgumentParser(
+        description="Canvas API utility for managing course data",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+    # Get user information
+    uv run python scripts/canvas_api.py --action user
 
     # List all courses
-    logger.info("\n=== All Courses ===")
-    courses = list_courses()
-    print(json.dumps(courses[:5], indent=2, default=str))  # Show first 5
+    uv run python scripts/canvas_api.py --action courses
 
-    # Find DSAN 6725 course
-    logger.info("\n=== Finding DSAN 6725 Course ===")
-    dsan_course = find_course_by_name("6725")
-    if dsan_course:
-        print(json.dumps(dsan_course, indent=2, default=str))
+    # Find course by name
+    uv run python scripts/canvas_api.py --action find-course --course-name "6725"
 
-        # Get students from the course
-        logger.info("\n=== Course Students ===")
-        students = get_course_students(dsan_course["id"])
-        print(json.dumps(students, indent=2, default=str))
+    # Get students from a course
+    uv run python scripts/canvas_api.py --action students --course-id 203433
 
-        # Get assignments
-        logger.info("\n=== Course Assignments ===")
-        assignments = get_course_assignments(dsan_course["id"])
-        print(json.dumps(assignments[:5], indent=2, default=str))  # Show first 5
-    else:
-        logger.error("DSAN 6725 course not found")
+    # Get students from DSAN 6725
+    uv run python scripts/canvas_api.py --action students --course-name "6725"
+
+    # Get assignments from a course
+    uv run python scripts/canvas_api.py --action assignments --course-id 203433
+
+    # Run demo (all actions)
+    uv run python scripts/canvas_api.py --action demo
+        """,
+    )
+
+    parser.add_argument(
+        "--action",
+        type=str,
+        required=True,
+        choices=["user", "courses", "find-course", "students", "assignments", "demo"],
+        help="Action to perform",
+    )
+    parser.add_argument(
+        "--course-id",
+        type=int,
+        help="Canvas course ID (required for students and assignments actions)",
+    )
+    parser.add_argument(
+        "--course-name",
+        type=str,
+        help="Course name or code to search for",
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug logging",
+    )
+
+    args = parser.parse_args()
+
+    if args.debug:
+        logging.getLogger().setLevel(logging.DEBUG)
+
+    try:
+        if args.action == "user":
+            user_info = get_user_info()
+            print(json.dumps(user_info, indent=2, default=str))
+
+        elif args.action == "courses":
+            courses = list_courses()
+            print(json.dumps(courses, indent=2, default=str))
+
+        elif args.action == "find-course":
+            if not args.course_name:
+                parser.error("--course-name is required for find-course action")
+            course = find_course_by_name(args.course_name)
+            if course:
+                print(json.dumps(course, indent=2, default=str))
+            else:
+                logger.error(f"Course not found: {args.course_name}")
+                sys.exit(1)
+
+        elif args.action == "students":
+            course_id = args.course_id
+            if not course_id and args.course_name:
+                course = find_course_by_name(args.course_name)
+                if course:
+                    course_id = course["id"]
+                else:
+                    logger.error(f"Course not found: {args.course_name}")
+                    sys.exit(1)
+            elif not course_id:
+                parser.error(
+                    "--course-id or --course-name is required for students action"
+                )
+
+            students = get_course_students(course_id)
+            print(json.dumps(students, indent=2, default=str))
+
+        elif args.action == "assignments":
+            if not args.course_id:
+                parser.error("--course-id is required for assignments action")
+            assignments = get_course_assignments(args.course_id)
+            print(json.dumps(assignments, indent=2, default=str))
+
+        elif args.action == "demo":
+            logger.info("Starting Canvas API demo")
+
+            # Get user info
+            logger.info("\n=== User Information ===")
+            user_info = get_user_info()
+            print(json.dumps(user_info, indent=2, default=str))
+
+            # List all courses
+            logger.info("\n=== All Courses ===")
+            courses = list_courses()
+            print(json.dumps(courses[:5], indent=2, default=str))  # Show first 5
+
+            # Find DSAN 6725 course
+            logger.info("\n=== Finding DSAN 6725 Course ===")
+            dsan_course = find_course_by_name("6725")
+            if dsan_course:
+                print(json.dumps(dsan_course, indent=2, default=str))
+
+                # Get students from the course
+                logger.info("\n=== Course Students ===")
+                students = get_course_students(dsan_course["id"])
+                print(f"Found {len(students)} students")
+                print(json.dumps(students[:3], indent=2, default=str))  # Show first 3
+
+                # Get assignments
+                logger.info("\n=== Course Assignments ===")
+                assignments = get_course_assignments(dsan_course["id"])
+                print(f"Found {len(assignments)} assignments")
+                print(
+                    json.dumps(assignments[:3], indent=2, default=str)
+                )  # Show first 3
+            else:
+                logger.error("DSAN 6725 course not found")
+
+    except Exception as e:
+        logger.error(f"Error: {e}")
+        if args.debug:
+            raise
+        sys.exit(1)
 
 
 if __name__ == "__main__":
