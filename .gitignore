@@ -170,5 +170,9 @@ team.md
 # Slack tokens and credentials
 .slacktoken
 
+# Canvas tokens and credentials
+.canvastoken
+*.canvastoken.swp
+
 # Course member list
 members
