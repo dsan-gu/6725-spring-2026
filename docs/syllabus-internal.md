@@ -6,7 +6,6 @@ This document provides a comprehensive tabular reference of all lab and assignme
 
 | Lab # | Repository Name | Template Repo URL | GitHub Classroom Assignment ID | Description |
 |-------|----------------|-------------------|-------------------------------|-------------|
-| Lab 0 | sagemaker_setup | https://github.com/gu-dsan6725/sagemaker_setup | `lab-0-sagemaker_setup` | SageMaker setup and configuration |
 | Lab 01 | redditgpt | https://github.com/gu-dsan6725/redditgpt | `lab01-redditgpt` | Reddit GPT implementation |
 | Lab 02 | fm-inference | https://github.com/gu-dsan6725/fm-inference | `lab02-fm-inference` | Foundation model inference |
 | Lab 03 | basic-rag | https://github.com/gu-dsan6725/basic-rag | `lab03-basic-rag` | Basic RAG implementation |
@@ -24,7 +23,7 @@ This document provides a comprehensive tabular reference of all lab and assignme
 
 | Assignment # | Repository Name | Template Repo URL | GitHub Classroom Assignment ID | Description |
 |--------------|----------------|-------------------|-------------------------------|-------------|
-| A0 | TBD | TBD | `a0-spring-2025-a0` | Initial setup assignment |
+| A0 | hello-genai | https://github.com/gu-dsan6725/hello-genai | `a0-hello-genai` | Initial setup assignment |
 | A01 | playground | https://github.com/gu-dsan6725/playground | `a01-playground` | Playground and exploration |
 | A02 | prompt-engineering | https://github.com/gu-dsan6725/prompt-engineering | `a02-prompt-engineering` | Prompt engineering techniques |
 | A03 | rag-w-reddit | https://github.com/gu-dsan6725/rag-w-reddit | `a03-rag-w-reddit` | RAG with Reddit data |
