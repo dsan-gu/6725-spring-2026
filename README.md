@@ -37,6 +37,12 @@
     ./render_slides.sh
     ```
 
+1. To deploy the site to a custom domain (e.g., georgetown.domains), use `pscp` to upload the built site.
+
+    ```{.bash}
+    pscp -r site/ <username>@<subdomain>.georgetown.domains:/home/<username>/<sitename>.<subdomain>.georgetown.domains
+    ```
+
 1. To render the site locally run the following command. This will start a local website and provide a URL such as `http://127.0.0.1:8000/course/` for accessing the website.
 
     ```{.bash}
