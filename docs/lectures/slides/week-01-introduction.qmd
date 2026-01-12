@@ -50,10 +50,12 @@ _Source: https://news.mit.edu/2023/explained-generative-ai-1109_
    - Midjourney
 
 3. **Multimodal Models**
-   - Amazon Nova
-   - Meta Llama 3.2 and 3.3
-   - Gemini
-   - GPT-4
+   - Amazon Nova (Pro, Lite, Micro)
+   - Anthropic Claude (3.5 Sonnet, Opus 4)
+   - Meta Llama 3.3 and Llama 4
+   - Google Gemini 2.0
+   - OpenAI GPT-4o and o1
+   - Mistral Large
 
 # Transformer Architecture - Fundamental Concepts
 
@@ -141,9 +143,12 @@ _Source: https://news.mit.edu/2023/explained-generative-ai-1109_
 - **Memory Requirements**
   - Large models need significant computational resources
 - **Potential Mitigation Strategies**
+  - Flash Attention and Flash Attention 2
   - Sparse Attention
+  - Mixture of Experts (MoE) architectures
   - Efficient Transformer variants
   - Model distillation techniques
+  - Extended context windows (100K+ tokens now common)
 
 ## Practical Implications
 
@@ -181,6 +186,8 @@ _Source: https://news.mit.edu/2023/explained-generative-ai-1109_
    - [Hugging Face Transformer Documentation](https://huggingface.co/docs/transformers/en/index)
    - [Jay Alammar's "Illustrated Transformer"](https://jalammar.github.io/illustrated-transformer/)
    - [Stanford CS224N lectures on Transformers](https://www.youtube.com/watch?v=LWMzyfvuehA)
+   - [Anthropic Claude Documentation](https://docs.anthropic.com/)
+   - [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
 
 
 ## Next Week Preview
@@ -199,9 +206,12 @@ _Source: https://news.mit.edu/2023/explained-generative-ai-1109_
 - **Evolution of Development Tools**: From syntax highlighting to AI-powered code generation
 - **Modern Coding Assistants**:
   - GitHub Copilot
-  - Amazon CodeWhisperer / Q Developer
+  - Amazon Q Developer
   - Cursor
-  - Replit Ghostwriter
+  - Claude Code (Anthropic)
+  - Windsurf
+  - Aider
+  - Continue.dev
   - Tabnine
 
 ## How Coding Assistants Work
@@ -230,6 +240,33 @@ _Source: https://news.mit.edu/2023/explained-generative-ai-1109_
 - Context-aware code generation
 - Best practices for working with AI assistants
 
----
+## Agentic Coding: The Next Evolution
 
-*Content placeholder for detailed coding assistants module*
+### From Assistants to Agents
+
+- **Traditional Assistants**: Code completion, suggestions within IDE
+- **Agentic Coding Tools**: Autonomous multi-step task execution
+  - Claude Code: Terminal-based agentic coding
+  - Cursor Agent: IDE-integrated autonomous coding
+  - Aider: Git-aware AI pair programming
+- **Key Capabilities**:
+  - Read and understand entire codebases
+  - Execute multi-file refactoring autonomously
+  - Run tests and fix failures iteratively
+  - Interact with tools (git, terminal, APIs)
+
+## Reasoning Models
+
+### A New Paradigm in AI
+
+- **What are Reasoning Models?**
+  - Models that "think" before responding
+  - Extended inference time for complex problems
+- **Examples**:
+  - OpenAI o1 and o3
+  - Anthropic Claude with extended thinking
+  - DeepSeek-R1
+- **Use Cases**:
+  - Complex code generation and debugging
+  - Multi-step problem solving
+  - Mathematical and logical reasoning
