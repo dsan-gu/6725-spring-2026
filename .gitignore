@@ -179,3 +179,6 @@ members
 
 # Site upload script
 .siteupload
+
+# Quarto rendered HTML files in repo root
+/week*.html
