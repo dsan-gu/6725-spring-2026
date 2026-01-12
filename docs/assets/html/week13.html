@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="week-07-observability_files/libs/clipboard/clipboard.min.js"></script>
-<script src="week-07-observability_files/libs/quarto-html/tabby.min.js"></script>
-<script src="week-07-observability_files/libs/quarto-html/popper.min.js"></script>
-<script src="week-07-observability_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="week-07-observability_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="week-07-observability_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="week-07-observability_files/libs/quarto-html/quarto-syntax-highlighting-5efccf03a38e129e6e5ca76dade02d11.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="week-13-platforms_files/libs/clipboard/clipboard.min.js"></script>
+<script src="week-13-platforms_files/libs/quarto-html/tabby.min.js"></script>
+<script src="week-13-platforms_files/libs/quarto-html/popper.min.js"></script>
+<script src="week-13-platforms_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="week-13-platforms_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="week-13-platforms_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="week-13-platforms_files/libs/quarto-html/quarto-syntax-highlighting-5efccf03a38e129e6e5ca76dade02d11.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.6.40">
 
   <meta name="author" content="Amit Arora">
-  <title>Week 7: Gen AI App Best Practices and Observability</title>
+  <title>Applied Generative AI</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="week-07-observability_files/libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="week-07-observability_files/libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="week-13-platforms_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="week-13-platforms_files/libs/revealjs/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -29,11 +29,11 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="week-07-observability_files/libs/revealjs/dist/theme/quarto-138bffa59e0b8e1d219a851a91faec2e.css">
-  <link href="week-07-observability_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="week-07-observability_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="week-07-observability_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="week-07-observability_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="week-13-platforms_files/libs/revealjs/dist/theme/quarto-138bffa59e0b8e1d219a851a91faec2e.css">
+  <link href="week-13-platforms_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="week-13-platforms_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="week-13-platforms_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="week-13-platforms_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -121,14 +121,17 @@
       margin-right: 0; 
     }
   </style>
+  <script src="week-13-platforms_files/libs/quarto-diagram/mermaid.min.js"></script>
+  <script src="week-13-platforms_files/libs/quarto-diagram/mermaid-init.js"></script>
+  <link href="week-13-platforms_files/libs/quarto-diagram/mermaid.css" rel="stylesheet">
 </head>
 <body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Week 7: Gen AI App Best Practices and Observability</h1>
-  <p class="subtitle">Applied Generative AI for AI Developers</p>
+  <h1 class="title">Applied Generative AI</h1>
+  <p class="subtitle">Week 11: Generative AI Platforms - Architecture, Components, and Implementation</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -139,103 +142,254 @@ Amit Arora
 </div>
 
 </section>
-<section id="production-ready-genai-applications" class="slide level2">
-<h2>Production-Ready GenAI Applications</h2>
-<h3 id="overview">Overview</h3>
+<section id="agenda" class="slide level2">
+<h2>Agenda</h2>
 <ul>
-<li><strong>From Prototype to Production</strong>: Key considerations</li>
-<li><strong>Scalability</strong>: Handling increased load</li>
-<li><strong>Reliability</strong>: Ensuring consistent performance</li>
-<li><strong>Cost Management</strong>: Optimizing resource usage</li>
+<li>Why Do We Need Generative AI Platforms?</li>
+<li>Key Components of a GenAI Platform</li>
+<li>Reference Architectures</li>
+<li>Real-World Examples</li>
+<li>Implementation Considerations</li>
+<li>Future Trends</li>
 </ul>
 </section>
-<section id="best-practices-for-genai-apps" class="slide level2">
-<h2>Best Practices for GenAI Apps</h2>
-<h3 id="architecture-patterns">Architecture Patterns</h3>
+<section id="why-do-we-need-generative-ai-platforms" class="slide level2">
+<h2>Why Do We Need Generative AI Platforms?</h2>
+<div>
 <ul>
-<li><strong>Modular Design</strong>: Separation of concerns</li>
-<li><strong>Caching Strategies</strong>: Reducing API calls and costs</li>
-<li><strong>Error Handling</strong>: Graceful degradation</li>
-<li><strong>Rate Limiting</strong>: Managing API quotas</li>
+<li class="fragment"><strong>Complexity Management</strong>: LLMs require specialized infrastructure and workflows</li>
+<li class="fragment"><strong>Resource Optimization</strong>: Efficient utilization of compute resources</li>
+<li class="fragment"><strong>Governance &amp; Security</strong>: Control access, usage, and ensure compliance</li>
+<li class="fragment"><strong>Scalability</strong>: Handle variable workloads across the organization</li>
+<li class="fragment"><strong>Standardization</strong>: Create consistent development patterns</li>
+<li class="fragment"><strong>Cost Control</strong>: Manage and monitor cloud resource usage</li>
 </ul>
+</div>
 </section>
-<section id="observability-fundamentals" class="slide level2">
-<h2>Observability Fundamentals</h2>
-<h3 id="what-is-observability">What is Observability?</h3>
+<section id="the-challenge-without-a-platform" class="slide level2">
+<h2>The Challenge Without a Platform</h2>
+<p>Individual implementations lead to:</p>
+<div>
 <ul>
-<li><strong>Definition</strong>: Understanding system behavior through outputs</li>
-<li><strong>Three Pillars</strong>:
-<ul>
-<li>Metrics: Quantitative measurements</li>
-<li>Logs: Detailed event records</li>
-<li>Traces: Request flow tracking</li>
-</ul></li>
+<li class="fragment">Duplicated infrastructure</li>
+<li class="fragment">Inconsistent security practices</li>
+<li class="fragment">Lack of reusable components</li>
+<li class="fragment">No centralized monitoring</li>
+<li class="fragment">Variable user experiences</li>
+<li class="fragment">Higher overall costs</li>
+<li class="fragment">Knowledge silos</li>
 </ul>
+</div>
 </section>
-<section id="monitoring-genai-applications" class="slide level2">
-<h2>Monitoring GenAI Applications</h2>
-<h3 id="key-metrics">Key Metrics</h3>
+<section id="key-components-of-a-genai-platform" class="slide level2 smaller">
+<h2>Key Components of a GenAI Platform</h2>
+<div>
+<ol type="1">
+<li class="fragment"><strong>Model Management Layer</strong></li>
+<li class="fragment"><strong>Data Processing &amp; Orchestration</strong></li>
+<li class="fragment"><strong>Development Environments</strong></li>
+<li class="fragment"><strong>Security &amp; Governance</strong></li>
+<li class="fragment"><strong>Monitoring &amp; Observability</strong></li>
+<li class="fragment"><strong>User Interfaces &amp; APIs</strong></li>
+<li class="fragment"><strong>Infrastructure Management</strong></li>
+</ol>
+</div>
+</section>
+<section id="model-management-layer" class="slide level2 smaller">
+<h2>Model Management Layer</h2>
+<div>
 <ul>
-<li><strong>Latency</strong>: Response time tracking</li>
-<li><strong>Token Usage</strong>: Cost and performance monitoring</li>
-<li><strong>Error Rates</strong>: Failure tracking</li>
-<li><strong>User Satisfaction</strong>: Quality metrics</li>
+<li class="fragment"><strong>Model Repository</strong>: Version-controlled storage for models</li>
+<li class="fragment"><strong>Model Registry</strong>: Metadata, lineage, and deployment tracking</li>
+<li class="fragment"><strong>Model Serving</strong>: Scalable inference endpoints</li>
+<li class="fragment"><strong>Model Evaluation</strong>: Benchmarking and quality assessment</li>
+<li class="fragment"><strong>Model Selection</strong>: Optimal model routing based on task requirements</li>
+<li class="fragment"><strong>Multi-model Orchestration</strong>: Managing chains of models working together</li>
 </ul>
+</div>
 </section>
-<section id="logging-best-practices" class="slide level2">
-<h2>Logging Best Practices</h2>
-<h3 id="structured-logging">Structured Logging</h3>
+<section id="data-processing-orchestration" class="slide level2 smaller">
+<h2>Data Processing &amp; Orchestration</h2>
+<div>
 <ul>
-<li><strong>JSON Logging</strong>: Machine-readable logs</li>
-<li><strong>Context Enrichment</strong>: Adding metadata</li>
-<li><strong>Log Levels</strong>: Appropriate use of DEBUG, INFO, WARN, ERROR</li>
-<li><strong>Sensitive Data</strong>: PII and secret handling</li>
+<li class="fragment"><strong>Vector Databases</strong>: For retrieval-augmented generation (RAG)</li>
+<li class="fragment"><strong>Data Connectors</strong>: Integration with enterprise data sources</li>
+<li class="fragment"><strong>ETL Pipelines</strong>: Data preparation and transformation</li>
+<li class="fragment"><strong>Caching Layer</strong>: Response caching for efficiency</li>
+<li class="fragment"><strong>Workflow Management</strong>: Orchestrating complex LLM pipelines</li>
+<li class="fragment"><strong>Prompt Management</strong>: Version control and optimization for prompts</li>
 </ul>
+</div>
 </section>
-<section id="distributed-tracing" class="slide level2">
-<h2>Distributed Tracing</h2>
-<h3 id="understanding-request-flows">Understanding Request Flows</h3>
+<section id="development-environments" class="slide level2 smaller">
+<h2>Development Environments</h2>
+<div>
 <ul>
-<li><strong>Trace Context</strong>: Following requests across services</li>
-<li><strong>Span Analysis</strong>: Breaking down latency</li>
-<li><strong>Bottleneck Identification</strong>: Performance optimization</li>
+<li class="fragment"><strong>SDKs &amp; Libraries</strong>: Language-specific toolkits</li>
+<li class="fragment"><strong>Notebooks</strong>: Interactive development environments</li>
+<li class="fragment"><strong>IDE Integrations</strong>: Code completion, testing tools</li>
+<li class="fragment"><strong>Templates &amp; Patterns</strong>: Reusable architectural patterns</li>
+<li class="fragment"><strong>CI/CD Pipelines</strong>: Automated testing and deployment</li>
+<li class="fragment"><strong>Debugging Tools</strong>: LLM-specific debugging capabilities</li>
 </ul>
+</div>
 </section>
-<section id="evaluation-and-monitoring-tools" class="slide level2">
-<h2>Evaluation and Monitoring Tools</h2>
-<h3 id="popular-tools">Popular Tools</h3>
+<section id="security-governance" class="slide level2 smaller">
+<h2>Security &amp; Governance</h2>
+<div>
 <ul>
-<li><strong>OpenTelemetry</strong>: Standard for observability</li>
-<li><strong>Langfuse</strong>: LLM application monitoring</li>
-<li><strong>Weights &amp; Biases</strong>: Experiment tracking</li>
-<li><strong>Arize AI</strong>: ML observability platform</li>
-<li><strong>Phoenix</strong>: LLM evaluation and tracing</li>
+<li class="fragment"><strong>Authentication &amp; Authorization</strong>: Role-based access control</li>
+<li class="fragment"><strong>PII Detection &amp; Redaction</strong>: Protecting sensitive information</li>
+<li class="fragment"><strong>Prompt Injection Protection</strong>: Defending against attacks</li>
+<li class="fragment"><strong>Input/Output Filtering</strong>: Content moderation and safety</li>
+<li class="fragment"><strong>Audit Logging</strong>: Tracking all interactions</li>
+<li class="fragment"><strong>Compliance Frameworks</strong>: Industry-specific regulatory compliance</li>
 </ul>
+</div>
 </section>
-<section id="continuous-evaluation" class="slide level2">
-<h2>Continuous Evaluation</h2>
-<h3 id="production-monitoring">Production Monitoring</h3>
+<section id="monitoring-observability" class="slide level2 smaller">
+<h2>Monitoring &amp; Observability</h2>
+<div>
 <ul>
-<li><strong>Online Evaluation</strong>: Real-time quality assessment</li>
-<li><strong>A/B Testing</strong>: Comparing model versions</li>
-<li><strong>Feedback Loops</strong>: Learning from production</li>
-<li><strong>Alerting</strong>: Automated issue detection</li>
+<li class="fragment"><strong>Performance Metrics</strong>: Latency, throughput, availability</li>
+<li class="fragment"><strong>Cost Tracking</strong>: Per-model, per-endpoint, per-application</li>
+<li class="fragment"><strong>Quality Monitoring</strong>: Accuracy, relevance, hallucination rates</li>
+<li class="fragment"><strong>Usage Analytics</strong>: User patterns and common use cases</li>
+<li class="fragment"><strong>Drift Detection</strong>: Identifying model degradation</li>
+<li class="fragment"><strong>Alerting Systems</strong>: Proactive notification of issues</li>
 </ul>
+</div>
 </section>
-<section id="hands-on-lab" class="slide level2">
-<h2>Hands-on Lab</h2>
-<h3 id="implementing-observability">Implementing Observability</h3>
-<p><em>Practical exercise and demonstration</em></p>
+<section id="user-interfaces-apis" class="slide level2 smaller">
+<h2>User Interfaces &amp; APIs</h2>
+<div>
 <ul>
-<li>Setting up observability tools</li>
-<li>Instrumenting GenAI applications</li>
-<li>Creating dashboards and alerts</li>
-<li>Analyzing production traces</li>
+<li class="fragment"><strong>API Gateway</strong>: Unified API access with rate limiting</li>
+<li class="fragment"><strong>Web Interfaces</strong>: For non-technical users</li>
+<li class="fragment"><strong>CLI Tools</strong>: For developers and operations</li>
+<li class="fragment"><strong>Custom UX Components</strong>: Specialized interfaces for different use cases</li>
+<li class="fragment"><strong>Integration Points</strong>: Connections to existing enterprise systems</li>
+<li class="fragment"><strong>SDK Extensions</strong>: Custom connectors for business applications</li>
 </ul>
+</div>
 </section>
-<section class="slide level2">
-
-<p><em>Content placeholder - detailed observability implementation coming soon</em></p>
+<section id="infrastructure-management" class="slide level2 smaller">
+<h2>Infrastructure Management</h2>
+<div>
+<ul>
+<li class="fragment"><strong>Compute Resources</strong>: GPU provisioning</li>
+<li class="fragment"><strong>Auto-scaling</strong>: Adjusting resources based on demand</li>
+<li class="fragment"><strong>High Availability</strong>: Redundancy and failover</li>
+<li class="fragment"><strong>Network Optimization</strong>: Low-latency data transfer</li>
+<li class="fragment"><strong>Storage Management</strong>: Efficient data access patterns</li>
+<li class="fragment"><strong>Cost Optimization</strong>: Right-sizing and resource scheduling</li>
+</ul>
+</div>
+</section>
+<section id="reference-architecture-enterprise-genai-platform" class="slide level2 smaller">
+<h2>Reference Architecture: Enterprise GenAI Platform</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    subgraph "Foundation"
+      A[Compute Infrastructure] 
+      B[Storage &amp; Databases]
+      C[Networking]
+      D[Identity &amp; Access]
+    end
+    
+    subgraph "Model Management"
+      E[Model Registry]
+      F[Model Serving]
+      G[Model Monitoring]
+    end
+    
+    subgraph "Data Management"
+      H[Data Connectors]
+      I[Vector Stores]
+      J[Knowledge Bases]
+    end
+    
+    subgraph "Development Layer"
+      K[SDKs &amp; Libraries]
+      L[Workflow Orchestration]
+      M[Testing Framework]
+    end
+    
+    subgraph "Application Layer"
+      N[API Gateway]
+      O[Web Applications]
+      P[Chat Interfaces]
+      Q[Document Processing]
+    end
+    
+    subgraph "Governance"
+      R[Security Controls]
+      S[Audit &amp; Compliance]
+      T[Cost Management]
+    end
+    
+    A --&gt; E
+    E --&gt; K
+    K --&gt; N
+    H --&gt; I
+    I --&gt; K
+    R --&gt; all
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="real-world-example-intuit-genos" class="slide level2 smaller">
+<h2>Real-World Example: Intuit GenOS</h2>
+<p><a href="https://medium.com/intuit-engineering/how-to-accelerate-development-velocity-in-the-genai-era-build-a-genos-e71ac2e17b82">Medium blog: Intui GenOS</a> <img data-src="https://miro.medium.com/v2/resize:fit:1100/format:webp/1*VIKtfUQRHBb_BlXo3ZpK6g.png" style="width:75.0%" alt="GenOS Architecture"></p>
+</section>
+<section id="real-world-example-scale.com-gen-ai-platform" class="slide level2 smaller">
+<h2>Real-World Example: Scale.com Gen AI platform</h2>
+<p><a href="https://scale.com/genai-platform">Scale GenAI platform</a> <img data-src="https://scale.com/_next/image?url=https%3A%2F%2Fsite-assets.plasmic.app%2Fe45822d60c657617bf2c7211c0973655.png&amp;w=1920&amp;q=75" style="width:75.0%" alt="Scale GenAI platform"></p>
+</section>
+<section id="real-world-example-scale.com-gen-ai-platform-1" class="slide level2 smaller">
+<h2>Real-World Example: Scale.com Gen AI platform</h2>
+<p><a href="https://scale.com/genai-platform">Scale GenAI platform</a> <img data-src="https://scale.com/_next/image?url=https%3A%2F%2Fsite-assets.plasmic.app%2Fe45822d60c657617bf2c7211c0973655.png&amp;w=1920&amp;q=75" style="width:75.0%" alt="Scale GenAI platform"></p>
+</section>
+<section id="real-world-example-datastax-gen-ai-platform" class="slide level2 smaller">
+<h2>Real-World Example: DataStax Gen AI platform</h2>
+<p><a href="https://www.datastax.com/products/ai-platform-as-a-service-paas?">DataStax GenAI platform</a> <img data-src="https://cdn.sanity.io/images/bbnkhnhl/production/de33ad1b68461392ae5ee26d4d5f42b04dde5f7c-1992x1202.png?w=3840&amp;q=75&amp;fit=clip&amp;auto=format" style="width:75.0%" alt="DataStax GenAI platform"></p>
+</section>
+<section id="real-world-example-aibrix" class="slide level2 smaller">
+<h2>Real-World Example: AiBrix</h2>
+<p><a href="https://github.com/vllm-project/aibrix/blob/main/docs/paper/AIBrix_White_Paper_0219_2026.pdf">AiBrix paper</a> <img data-src="img/aibrix.png" style="width:75.0%" alt="AiBrix"></p>
+</section>
+<section id="implementation-considerations" class="slide level2 smaller">
+<h2>Implementation Considerations</h2>
+<div>
+<ul>
+<li class="fragment"><strong>Buy vs.&nbsp;Build</strong>: Leveraging managed services vs.&nbsp;custom infrastructure</li>
+<li class="fragment"><strong>Centralized vs.&nbsp;Federated</strong>: Organization-wide vs.&nbsp;team-specific platforms</li>
+<li class="fragment"><strong>On-prem vs.&nbsp;Cloud</strong>: Data sovereignty and security requirements</li>
+<li class="fragment"><strong>Open vs.&nbsp;Closed Source</strong>: Model availability and customization needs</li>
+<li class="fragment"><strong>Specialized vs.&nbsp;General Purpose</strong>: Domain-specific optimization</li>
+<li class="fragment"><strong>Cost vs.&nbsp;Performance</strong>: Balancing budget and capabilities</li>
+</ul>
+</div>
+</section>
+<section id="key-takeaways" class="slide level2 smaller">
+<h2>Key Takeaways</h2>
+<div>
+<ol type="1">
+<li class="fragment">GenAI platforms must balance innovation with governance</li>
+<li class="fragment">Modular architecture enables flexibility and evolution</li>
+<li class="fragment">Integration with existing enterprise systems is critical</li>
+<li class="fragment">Security and compliance must be built in from the start</li>
+<li class="fragment">Observability is essential for maintaining quality and trust</li>
+<li class="fragment">Cost management becomes increasingly important at scale</li>
+</ol>
+</div>
 
 </section>
     </div>
@@ -246,19 +400,19 @@ Amit Arora
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="week-07-observability_files/libs/revealjs/dist/reveal.js"></script>
+  <script src="week-13-platforms_files/libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="week-07-observability_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="week-07-observability_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="week-07-observability_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="week-07-observability_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="week-07-observability_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="week-13-platforms_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="week-13-platforms_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="week-13-platforms_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="week-13-platforms_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="week-13-platforms_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="week-07-observability_files/libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="week-07-observability_files/libs/revealjs/plugin/search/search.js"></script>
-  <script src="week-07-observability_files/libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="week-07-observability_files/libs/revealjs/plugin/math/math.js"></script>
+  <script src="week-13-platforms_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="week-13-platforms_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="week-13-platforms_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="week-13-platforms_files/libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>
