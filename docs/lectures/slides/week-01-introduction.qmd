@@ -23,6 +23,64 @@ format:
   - Introduction to AI coding assistants
   - Gain insights into practical applications
 
+## Course Structure
+
+### Key Components
+
+- **Syllabus**: Course policies, grading, schedule
+- **Weekly Lectures**: Slides and recordings
+- **Labs**: Hands-on exercises with GenAI tools
+- **Assignments**: Individual coding assignments
+- **Quizzes**: 6 quizzes throughout the semester
+- **Capstone Project**: Team-based GenAI application
+
+### Important Resources
+
+- [Course Repository](https://github.com/dsan-gu/6725-spring-2026)
+- [Bookmarks Repo](https://github.com/gu-dsan6725/bookmarks) - Curated GenAI links and resources
+
+## Capstone Project Overview
+
+### Project Guidelines
+
+- **Team Size**: 2-4 students per team
+- **Multiple teams can work on the same project idea**
+- Maintain a running list of project ideas throughout the semester
+- Project proposal due mid-semester
+- Final presentation and deliverable at end of semester
+
+### Deliverables
+
+1. Project proposal with problem statement
+2. Mid-project checkpoint
+3. Final presentation
+4. Code repository with documentation
+5. Written report
+
+## Project Ideas
+
+### Potential Areas to Explore
+
+- **Memory MCP Server for Coding Assistants**
+  - Persistent memory layer for AI coding tools
+  - Context retention across sessions
+
+- **Semantic Layer for Data**
+  - Natural language interface to databases
+  - Business logic abstraction for LLMs
+
+- **Agent Evaluations Framework**
+  - Benchmarking multi-step agent tasks
+  - Measuring tool use and reasoning
+
+- **Log File Analysis with GenAI**
+  - Automated anomaly detection
+  - Natural language log queries
+
+- **RAG-based Documentation Assistant**
+  - Domain-specific knowledge retrieval
+  - Multi-document synthesis
+
 ## What is Generative AI?
 
 - **Definition**: AI systems that can create new content
@@ -80,7 +138,8 @@ _Source: https://news.mit.edu/2023/explained-generative-ai-1109_
 
 1. Introduced in "Attention Is All You Need" (Google, 2017). [Paper](https://arxiv.org/abs/1706.03762), [Explainer video](https://www.youtube.com/watch?v=iDulhoQ2pro) and also [this video](https://www.youtube.com/watch?v=5MaWmXwxFNQ)
 
-1. **MUST READ**: [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) 
+1. **MUST READ**: [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+1. **Interactive Tool**: [Transformer Explainer](https://poloclub.github.io/transformer-explainer/) - Visual, interactive exploration of transformer architecture 
 1. Key Building Blocks
 
     1. **Self-Attention Mechanism**
@@ -235,6 +294,7 @@ PagedAttention: [Block][Block][Block][Block][Block][Block][Block][Block]
 - [Anyscale: Continuous Batching Explained](https://www.anyscale.com/blog/continuous-batching-llm-inference)
 - [HuggingFace: Continuous Batching from First Principles](https://huggingface.co/blog/continuous_batching)
 - [vLLM Blog: Anatomy of High-Throughput LLM Inference](https://blog.vllm.ai/2025/09/05/anatomy-of-vllm.html)
+- [Baseten: Continuous vs Dynamic Batching](https://www.baseten.co/blog/continuous-vs-dynamic-batching-for-ai-inference/#continuous-batching-for-llm-inference-in-production)
 
 ## Continuous Batching: Three Key Techniques
 
