@@ -3,7 +3,7 @@
 # Array of week files with their descriptive names
 week_files=(
   "week-01-introduction"
-  "week-02-icl"
+  "week-02-icl-and-coding-assistants"
   "week-03-rag"
   "week-04-mcp"
   "week-05-agents-part1"

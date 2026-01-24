@@ -1,5 +1,5 @@
 ---
-title: "Week 2: In-context learning (ICL)"
+title: "Week 2: In-context learning (ICL) and AI Coding Assistants"
 subtitle: "Applied Generative AI for AI Developers"
 author: "Amit Arora"
 format:
@@ -368,6 +368,85 @@ If you have 10 apples and you give 3 apples to your friend,
 then buy 5 more apples, and finally eat 2 apples, 
 how many apples do you have left?
 ```
+
+---
+
+## AI Coding Assistants: The Landscape
+
+- **Evolution**: From OpenAI Codex & GitHub Copilot (autocomplete) to autonomous agents.
+- **Models**: Powered by GPT-4, Claude 3.5 Sonnet, Gemini 1.5 Pro.
+- **Main Categories**:
+  - **Plugin-based**: Extensions for existing IDEs (VS Code, JetBrains).
+  - **Agentic IDEs**: Standalone editors reimagined for AI collaboration.
+
+---
+
+## Category 1: Plugin-based Assistants
+
+- **Philosophy**: Enhance your existing environment (VS Code, IntelliJ, Terminal).
+- **Examples**:
+  - **GitHub Copilot**: The industry standard for autocomplete & chat.
+  - **Aider**: A CLI tool for pair programming; edits files directly via git.
+  - **Roo Code**: VS Code extension enabling autonomous task execution.
+  - **Claude Code**: Agentic CLI tool from Anthropic (often used alongside IDEs).
+
+---
+
+## Category 2: Agentic IDEs
+
+- **Philosophy**: Deeply integrated AI that "sees" the whole codebase and can drive the editor.
+- **Examples**:
+  - **Cursor**: A VS Code fork. Famous for "Composer" (multi-file edits) and "Tab" (prediction).
+  - **Windsurf**: By Codeium. Features "Cascade" flow and deep context awareness.
+  - **Antigravity**: Advanced agentic coding environment (Google).
+
+---
+
+## Comparative Analysis
+
+| Tool | Type | Key Strength | Link |
+|------|------|--------------|------|
+| **Cursor** | Agentic IDE | Best-in-class UI/UX, 'Composer' mode. | [cursor.com](https://cursor.com) |
+| **Windsurf** | Agentic IDE | Deep context 'Flow', 'Cascade' agent. | [codeium.com/windsurf](https://codeium.com/windsurf) |
+| **Antigravity** | Agentic IDE | Advanced autonomous agents. | [Google DeepMind](https://deepmind.google/) |
+| **Claude Code** | CLI / Plugin | Research-grade agentic capabilities. | [anthropic.com](https://anthropic.com) |
+| **Aider** | CLI Tool | Best for terminal users, git-aware. | [aider.chat](https://aider.chat) |
+| **Roo Code** | Plugin | Open-source, highly configurable agent. | [roocode.com](https://roocode.com) |
+
+---
+
+## Spotlight: Claude Code & Configuration
+
+- **What is it?**: A CLI-based agent that can traverse files, plan, and execute.
+- **Configuring the Agent** (Files in your repo):
+  - `claude.md`: **Project Context**. High-level architecture, style guides, and rules.
+  - `skills.md`: **Tool Definitions**. Custom scripts/commands the agent can run.
+  - `agent.md`: **Persona**. Defining the agent's role (e.g., "Senior Backend Engineer").
+- **Versatility**: These configuration patterns apply to many agentic tools, not just Claude.
+
+---
+
+## Technique: Spec-Driven Development
+
+- **The Problem**: Vague prompts lead to hallucinated or poor code.
+- **The Fix**: **Plan First / Code Later**.
+- **Process**:
+  1. **Draft a Spec**: Create a markdown file describing requirements (API, Data Models).
+  2. **Human Review**: You review the design.
+  3. **Agent Reflection**: Ask the LLM: *"Review this spec for edge cases or security flaws."*
+  4. **Execute**: Only generate code once the plan is solid.
+
+---
+
+## Technique: Team Persona
+
+- **Concept**: Simulate a full engineering team.
+- **Prompting Strategy**:
+  - "Act as a **Product Manager**: Are requirements clear?"
+  - "Act as a **Frontend Engineer**: Is the UI UX-friendly?"
+  - "Act as a **Backend Engineer**: Is the DB schema normalized?"
+  - "Act as **Infra/SRE**: How do we deploy this?"
+- **Benefit**: Catch issues across different concerns before writing code.
 
 ---
 
