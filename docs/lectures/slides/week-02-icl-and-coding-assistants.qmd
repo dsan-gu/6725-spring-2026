@@ -408,10 +408,63 @@ how many apples do you have left?
 |------|------|--------------|------|
 | **Cursor** | Agentic IDE | Best-in-class UI/UX, 'Composer' mode. | [cursor.com](https://cursor.com) |
 | **Windsurf** | Agentic IDE | Deep context 'Flow', 'Cascade' agent. | [codeium.com/windsurf](https://codeium.com/windsurf) |
-| **Antigravity** | Agentic IDE | Advanced autonomous agents. | [Google DeepMind](https://deepmind.google/) |
+| **Antigravity** | Agentic IDE | Multi-agent orchestration, **free** for individuals. | [antigravity.google](https://antigravity.google) |
 | **Claude Code** | CLI / Plugin | Research-grade agentic capabilities. | [anthropic.com](https://anthropic.com) |
 | **Aider** | CLI Tool | Best for terminal users, git-aware. | [aider.chat](https://aider.chat) |
 | **Roo Code** | Plugin | Open-source, highly configurable agent. | [roocode.com](https://roocode.com) |
+
+---
+
+## Spotlight: Google Antigravity
+
+- **What is it?**: An agent-first IDE from Google DeepMind (announced Nov 2025).
+- **Pricing**: **Free** for individuals with a personal Gmail account (public preview).
+  - Access to Gemini 3 Pro/Flash, Claude Sonnet/Opus 4.5, GPT-OSS-120b.
+  - Unlimited tab completions and generous weekly rate limits.
+- **Key Differentiator**: Multi-agent orchestration via "Agent Manager".
+
+---
+
+## Antigravity: Core Capabilities
+
+- **Agent-First Paradigm**: AI agents autonomously plan, execute, validate, and iterate.
+- **Multi-Agent Orchestration**: Spawn multiple agent threads working in parallel (e.g., refactor + test).
+- **Comprehensive Interaction**: Agents control editor, terminal, and browser.
+- **Artifacts for Trust**: Produces rich markdown, diagrams, browser recordings, and diffs for human review.
+- **VS Code Fork**: Familiar interface with an agent sidebar.
+
+---
+
+## MCP Integration with AI Coding Assistants
+
+- **What is MCP?**: Model Context Protocol (Anthropic) — an open standard for connecting LLMs to external data and tools.
+- **Why it Matters**: Transforms AI from static knowledge to dynamic agents with real-time context.
+- **Supported Tools**:
+  - **Claude Code**: Native MCP support for databases, APIs, and custom tools.
+  - **Cursor**: Configure MCP servers in settings to connect to external systems.
+  - **Antigravity**: Integrates with Google Workspace, GitHub, Slack via MCP-like connectors.
+
+---
+
+## MCP Use Cases in Development
+
+- **Database Queries**: AI can directly query your Postgres/MySQL via MCP servers (e.g., **Supabase MCP**, **Firebase MCP**).
+- **API Integration**: Connect to REST APIs, Slack, Notion, or GitHub for richer context (**GitHub MCP**, **Notion MCP**).
+- **Documentation Access**: **Context7 MCP** provides up-to-date, version-specific docs for ~20,000 libraries (prevents hallucinations).
+- **Design-to-Code**: **Figma MCP** extracts design context and generates code from Figma files.
+- **Browser Automation**: **Playwright MCP** and **Chrome DevTools MCP** enable AI to control browsers for testing and debugging.
+- **Custom Tools**: Build your own MCP servers to expose proprietary data or internal tools.
+
+---
+
+## Example MCP Workflow
+
+- **Scenario**: Developer asks: "Find all users who signed up last week."
+- **Steps**:
+  1. Claude Code (via **Supabase MCP**) queries the database and returns results.
+  2. Developer: "Generate a CSV export."
+  3. Agent writes the script and executes it.
+- **Benefit**: No context switching between IDE, database UI, and documentation.
 
 ---
 

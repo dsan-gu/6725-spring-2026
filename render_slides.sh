@@ -30,7 +30,7 @@ for week_file in "${week_files[@]}"; do
     echo "Rendering ${week_file}..."
     # Render to the slides directory first
     cd "${SCRIPT_DIR}/docs/lectures/slides"
-    quarto render "${week_file}.qmd" --output "$output_file"
+    quarto render "${week_file}.qmd" --output "$output_file" -M embed-resources=true
 
     # Move to the assets/html directory
     if [ -f "$output_file" ]; then
