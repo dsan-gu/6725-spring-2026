@@ -1287,20 +1287,23 @@ Amit Arora
 <li>Avoid ambiguity: Use complete instructions.</li>
 <li>Provide examples for complex tasks.</li>
 </ul></li>
-<li><strong>For GPT-4</strong>:
+<li><strong>For GPT-4o / o1</strong>:
 <ul>
 <li>Use detailed instructions for creative tasks.</li>
 <li>Include constraints like word limits or tone.</li>
+<li>o1 models: Let them reason; avoid “think step by step” (built-in).</li>
 </ul></li>
-<li><strong>For Claude</strong>:
+<li><strong>For Claude (Sonnet 4, Opus 4)</strong>:
 <ul>
-<li>Prefers natural and conversational language.</li>
+<li>Use XML tags to structure complex prompts.</li>
 <li>Excels at reasoning tasks when examples are provided.</li>
+<li>Supports extended thinking for complex problems.</li>
 </ul></li>
-<li><strong>For LLaMA</strong>:
+<li><strong>For LLaMA 4 / Mistral</strong>:
 <ul>
 <li>Keep prompts concise.</li>
 <li>Focus on factual and structured queries.</li>
+<li>Use system prompts for role definition.</li>
 </ul></li>
 </ul>
 </section>
@@ -1339,24 +1342,28 @@ Amit Arora
 <li><strong>Task</strong>: Summarize a document.</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href></a><span class="im">import</span> boto3</span>
-<span id="cb1-2"><a href></a></span>
-<span id="cb1-3"><a href></a><span class="co"># Initialize the Bedrock client</span></span>
-<span id="cb1-4"><a href></a>bedrock <span class="op">=</span> boto3.client(<span class="st">&#39;bedrock&#39;</span>, region_name<span class="op">=</span><span class="st">&#39;us-west-2&#39;</span>)</span>
-<span id="cb1-5"><a href></a></span>
-<span id="cb1-6"><a href></a><span class="co"># Define messages in the API format</span></span>
-<span id="cb1-7"><a href></a>messages <span class="op">=</span> [</span>
-<span id="cb1-8"><a href></a>    {<span class="st">&quot;role&quot;</span>: <span class="st">&quot;system&quot;</span>, <span class="st">&quot;content&quot;</span>: <span class="st">&quot;You are a helpful assistant.&quot;</span>},</span>
-<span id="cb1-9"><a href></a>    {<span class="st">&quot;role&quot;</span>: <span class="st">&quot;user&quot;</span>, <span class="st">&quot;content&quot;</span>: <span class="st">&quot;Summarize the following text: &#39;Generative AI is transforming industries by automating creative tasks.&#39;&quot;</span>}</span>
-<span id="cb1-10"><a href></a>]</span>
-<span id="cb1-11"><a href></a></span>
-<span id="cb1-12"><a href></a><span class="co"># Call Claude via Bedrock</span></span>
-<span id="cb1-13"><a href></a>response <span class="op">=</span> bedrock.invoke_model(</span>
-<span id="cb1-14"><a href></a>    modelId<span class="op">=</span><span class="st">&quot;anthropic.claude-v1&quot;</span>,</span>
-<span id="cb1-15"><a href></a>    body<span class="op">=</span>{<span class="st">&quot;input&quot;</span>: {<span class="st">&quot;messages&quot;</span>: messages}}</span>
-<span id="cb1-16"><a href></a>)</span>
-<span id="cb1-17"><a href></a></span>
-<span id="cb1-18"><a href></a><span class="co"># Print the response</span></span>
-<span id="cb1-19"><a href></a><span class="bu">print</span>(response[<span class="st">&quot;output&quot;</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href></a><span class="im">import</span> json</span>
+<span id="cb1-3"><a href></a></span>
+<span id="cb1-4"><a href></a><span class="co"># Initialize the Bedrock Runtime client</span></span>
+<span id="cb1-5"><a href></a>bedrock <span class="op">=</span> boto3.client(<span class="st">&#39;bedrock-runtime&#39;</span>, region_name<span class="op">=</span><span class="st">&#39;us-east-1&#39;</span>)</span>
+<span id="cb1-6"><a href></a></span>
+<span id="cb1-7"><a href></a><span class="co"># Define messages using the Converse API (recommended for 2026)</span></span>
+<span id="cb1-8"><a href></a>messages <span class="op">=</span> [</span>
+<span id="cb1-9"><a href></a>    {</span>
+<span id="cb1-10"><a href></a>        <span class="st">&quot;role&quot;</span>: <span class="st">&quot;user&quot;</span>,</span>
+<span id="cb1-11"><a href></a>        <span class="st">&quot;content&quot;</span>: [{<span class="st">&quot;text&quot;</span>: <span class="st">&quot;Summarize the following text: &#39;Generative AI is transforming industries by automating creative tasks.&#39;&quot;</span>}]</span>
+<span id="cb1-12"><a href></a>    }</span>
+<span id="cb1-13"><a href></a>]</span>
+<span id="cb1-14"><a href></a></span>
+<span id="cb1-15"><a href></a><span class="co"># Call Claude via Bedrock Converse API</span></span>
+<span id="cb1-16"><a href></a>response <span class="op">=</span> bedrock.converse(</span>
+<span id="cb1-17"><a href></a>    modelId<span class="op">=</span><span class="st">&quot;anthropic.claude-sonnet-4-20250514-v1:0&quot;</span>,</span>
+<span id="cb1-18"><a href></a>    messages<span class="op">=</span>messages,</span>
+<span id="cb1-19"><a href></a>    system<span class="op">=</span>[{<span class="st">&quot;text&quot;</span>: <span class="st">&quot;You are a helpful assistant.&quot;</span>}]</span>
+<span id="cb1-20"><a href></a>)</span>
+<span id="cb1-21"><a href></a></span>
+<span id="cb1-22"><a href></a><span class="co"># Print the response</span></span>
+<span id="cb1-23"><a href></a><span class="bu">print</span>(response[<span class="st">&quot;output&quot;</span>][<span class="st">&quot;message&quot;</span>][<span class="st">&quot;content&quot;</span>][<span class="dv">0</span>][<span class="st">&quot;text&quot;</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="advanced-example-few-shot-learning-with-claude" class="slide level2">
 <h2>Advanced Example: Few-Shot Learning with Claude</h2>
@@ -1364,16 +1371,22 @@ Amit Arora
 <li><strong>Task</strong>: Classify sentiment.</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href></a>messages <span class="op">=</span> [</span>
-<span id="cb2-2"><a href></a>    {<span class="st">&quot;role&quot;</span>: <span class="st">&quot;system&quot;</span>, <span class="st">&quot;content&quot;</span>: <span class="st">&quot;You are a helpful assistant that classifies sentiment.&quot;</span>},</span>
-<span id="cb2-3"><a href></a>    {<span class="st">&quot;role&quot;</span>: <span class="st">&quot;user&quot;</span>, <span class="st">&quot;content&quot;</span>: <span class="st">&quot;Examples:</span><span class="ch">\n</span><span class="st">Review: &#39;I love this product!&#39; -&gt; Positive</span><span class="ch">\n</span><span class="st">Review: &#39;This is the worst service ever.&#39; -&gt; Negative</span><span class="ch">\n</span><span class="st">Review: &#39;The delivery was on time.&#39; -&gt;&quot;</span>}</span>
-<span id="cb2-4"><a href></a>]</span>
-<span id="cb2-5"><a href></a></span>
-<span id="cb2-6"><a href></a>response <span class="op">=</span> bedrock.invoke_model(</span>
-<span id="cb2-7"><a href></a>    modelId<span class="op">=</span><span class="st">&quot;anthropic.claude-v1&quot;</span>,</span>
-<span id="cb2-8"><a href></a>    body<span class="op">=</span>{<span class="st">&quot;input&quot;</span>: {<span class="st">&quot;messages&quot;</span>: messages}}</span>
-<span id="cb2-9"><a href></a>)</span>
+<span id="cb2-2"><a href></a>    {</span>
+<span id="cb2-3"><a href></a>        <span class="st">&quot;role&quot;</span>: <span class="st">&quot;user&quot;</span>,</span>
+<span id="cb2-4"><a href></a>        <span class="st">&quot;content&quot;</span>: [{<span class="st">&quot;text&quot;</span>: <span class="st">&quot;&quot;&quot;Examples:</span></span>
+<span id="cb2-5"><a href></a><span class="st">Review: &#39;I love this product!&#39; -&gt; Positive</span></span>
+<span id="cb2-6"><a href></a><span class="st">Review: &#39;This is the worst service ever.&#39; -&gt; Negative</span></span>
+<span id="cb2-7"><a href></a><span class="st">Review: &#39;The delivery was on time.&#39; -&gt;&quot;&quot;&quot;</span>}]</span>
+<span id="cb2-8"><a href></a>    }</span>
+<span id="cb2-9"><a href></a>]</span>
 <span id="cb2-10"><a href></a></span>
-<span id="cb2-11"><a href></a><span class="bu">print</span>(response[<span class="st">&quot;output&quot;</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-11"><a href></a>response <span class="op">=</span> bedrock.converse(</span>
+<span id="cb2-12"><a href></a>    modelId<span class="op">=</span><span class="st">&quot;anthropic.claude-sonnet-4-20250514-v1:0&quot;</span>,</span>
+<span id="cb2-13"><a href></a>    messages<span class="op">=</span>messages,</span>
+<span id="cb2-14"><a href></a>    system<span class="op">=</span>[{<span class="st">&quot;text&quot;</span>: <span class="st">&quot;You are a helpful assistant that classifies sentiment.&quot;</span>}]</span>
+<span id="cb2-15"><a href></a>)</span>
+<span id="cb2-16"><a href></a></span>
+<span id="cb2-17"><a href></a><span class="bu">print</span>(response[<span class="st">&quot;output&quot;</span>][<span class="st">&quot;message&quot;</span>][<span class="st">&quot;content&quot;</span>][<span class="dv">0</span>][<span class="st">&quot;text&quot;</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="multi-modal-in-context-learning" class="slide level2">
 <h2>Multi-Modal In-Context Learning</h2>
@@ -1466,14 +1479,915 @@ Amit Arora
 <div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bashrc number-lines code-with-copy"><code class="sourceCode"><span id="cb7-1"><a href></a>Solve the following math problem step by step.</span>
 <span id="cb7-2"><a href></a></span>
 <span id="cb7-3"><a href></a>If you have 10 apples and you give 3 apples to your friend,</span>
-<span id="cb7-4"><a href></a>then buy 5 more apples, and finally eat 2 apples, </span>
+<span id="cb7-4"><a href></a>then buy 5 more apples, and finally eat 2 apples,</span>
 <span id="cb7-5"><a href></a>how many apples do you have left?</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section class="slide level2">
+
+</section>
+<section>
+<section id="from-prompt-engineering-to-context-engineering" class="title-slide slide level1 center">
+<h1>From Prompt Engineering to Context Engineering</h1>
+
+</section>
+<section id="the-evolution-prompt-engineering-is-dead" class="slide level2">
+<h2>The Evolution: Prompt Engineering is Dead?</h2>
+<h3 id="the-2025-2026-paradigm-shift">The 2025-2026 Paradigm Shift</h3>
+<ul>
+<li><strong>Gartner (July 2025)</strong>: “Context engineering is in, and prompt engineering is out”</li>
+<li><strong>The Problem with Prompts Alone</strong>:
+<ul>
+<li>LLMs have finite context windows (4K-200K tokens)</li>
+<li>Flooding with irrelevant instructions dilutes important information</li>
+<li>Longer/trickier prompts yield diminishing returns</li>
+<li>Prompts cannot compensate when model lacks situational data</li>
+</ul></li>
+</ul>
+<h3 id="key-insight">Key Insight</h3>
+<blockquote>
+<p>“Prompt engineering is what you do <strong>inside</strong> the context window. Context engineering is how you decide <strong>what fills</strong> the window.”</p>
+</blockquote>
+</section>
+<section id="what-is-context-engineering" class="slide level2">
+<h2>What is Context Engineering?</h2>
+<h3 id="definition-andrej-karpathy-2025">Definition (Andrej Karpathy, 2025)</h3>
+<blockquote>
+<p>“Context engineering is the delicate art and science of filling the context window with just the right information for each step.”</p>
+</blockquote>
+<h3 id="its-a-system-level-discipline">It’s a System-Level Discipline</h3>
+<ul>
+<li><strong>Not just prompts</strong> - Managing everything the model sees at runtime:
+<ul>
+<li>Retrieved documents (RAG)</li>
+<li>System state and memory</li>
+<li>Prior outputs and conversation history</li>
+<li>Tool definitions and schemas</li>
+<li>Results from external APIs</li>
+<li>User preferences and permissions</li>
+</ul></li>
+</ul>
+</section>
+<section id="why-context-engineering-emerged" class="slide level2">
+<h2>Why Context Engineering Emerged</h2>
+<h3 id="llm-limitations-drive-the-need">LLM Limitations Drive the Need</h3>
+<ol type="1">
+<li><strong>LLMs are Stateless</strong>
+<ul>
+<li>They don’t “remember” unless you reinsert memory into context</li>
+</ul></li>
+<li><strong>LLMs Hallucinate</strong>
+<ul>
+<li>Contextual grounding through external data reduces this</li>
+</ul></li>
+<li><strong>LLMs are Brittle</strong>
+<ul>
+<li>Prompt-only approaches don’t scale or generalize</li>
+</ul></li>
+</ol>
+<h3 id="industry-evidence-langchain-2025-report">Industry Evidence (LangChain 2025 Report)</h3>
+<ul>
+<li>57% of organizations have AI agents in production</li>
+<li>32% cite <strong>quality</strong> as top barrier</li>
+<li>Most failures traced to <strong>poor context management</strong>, not LLM capabilities</li>
+</ul>
+</section>
+<section id="context-engineering-core-components" class="slide level2">
+<h2>Context Engineering: Core Components</h2>
+<h3 id="the-context-stack">The Context Stack</h3>
+<ol type="1">
+<li><strong>System Instructions</strong> - Role, constraints, output format</li>
+<li><strong>Retrieved Knowledge</strong> - RAG, vector search results</li>
+<li><strong>Memory</strong> - Conversation history, user preferences</li>
+<li><strong>Tool Definitions</strong> - Available functions, API schemas</li>
+<li><strong>Examples</strong> - Few-shot demonstrations</li>
+<li><strong>Current Task</strong> - The actual user request</li>
+</ol>
+<h3 id="key-principle-context-is-a-resource">Key Principle: Context is a Resource</h3>
+<ul>
+<li>Treat context window like memory allocation</li>
+<li>Every token has a cost (latency, accuracy, price)</li>
+<li>Prioritize high-signal information</li>
+<li>Dynamically adjust based on task</li>
+</ul>
+</section>
+<section id="context-engineering-best-practices" class="slide level2">
+<h2>Context Engineering Best Practices</h2>
+<h3 id="design-principles">Design Principles</h3>
+<ol type="1">
+<li><strong>Relevance Filtering</strong>: Only include what’s needed for the current step</li>
+<li><strong>Recency Weighting</strong>: Recent context often more relevant</li>
+<li><strong>Compression</strong>: Summarize long histories</li>
+<li><strong>Chunking</strong>: Break large documents intelligently</li>
+<li><strong>Caching</strong>: Reuse computed context where possible</li>
+</ol>
+<h3 id="anti-patterns-to-avoid">Anti-Patterns to Avoid</h3>
+<ul>
+<li>Stuffing everything into context “just in case”</li>
+<li>Static prompts that don’t adapt to task</li>
+<li>Ignoring token limits until truncation occurs</li>
+<li>No separation between instruction and data</li>
+</ul>
+</section>
+<section id="context-engineering-resources" class="slide level2">
+<h2>Context Engineering Resources</h2>
+<h3 id="essential-reading">Essential Reading</h3>
+<ul>
+<li><a href="https://www.flowhunt.io/blog/context-engineering/">Context Engineering: The Definitive 2025 Guide</a></li>
+<li><a href="https://www.promptingguide.ai/guides/context-engineering-guide">Context Engineering Guide - Prompting Guide</a></li>
+<li><a href="https://www.ajeetraina.com/from-prompt-engineering-to-context-engineering/">From Prompt Engineering to Context Engineering</a></li>
+<li><a href="https://codeconductor.ai/blog/context-engineering/">Context Engineering: A Complete Guide 2026</a></li>
+<li><a href="https://dextralabs.com/blog/context-engineering-vs-prompt-engineering/">Context Engineering vs Prompt Engineering</a></li>
+</ul>
+<h3 id="key-figures">Key Figures</h3>
+<ul>
+<li><strong>Tobi Lütke</strong> (Shopify CEO): Popularized the term</li>
+<li><strong>Andrej Karpathy</strong>: “Delicate art and science” definition</li>
+</ul>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="ai-writing-its-own-prompts" class="title-slide slide level1 center">
+<h1>AI Writing Its Own Prompts</h1>
+
+</section>
+<section id="the-dspy-revolution" class="slide level2">
+<h2>The DSPy Revolution</h2>
+<h3 id="what-is-dspy">What is DSPy?</h3>
+<ul>
+<li><strong>Framework for programming—not prompting—language models</strong> (Stanford NLP)</li>
+<li>Abstracts prompts into modular Python code</li>
+<li><strong>Automatically optimizes prompts</strong> using ML techniques</li>
+</ul>
+<h3 id="the-core-idea">The Core Idea</h3>
+<p>Instead of:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href></a>prompt <span class="op">=</span> <span class="st">&quot;You are a helpful assistant. Please summarize...&quot;</span>  <span class="co"># Manual trial &amp; error</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>With DSPy:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href></a><span class="kw">class</span> Summarizer(dspy.Signature):</span>
+<span id="cb9-2"><a href></a>    <span class="co">&quot;&quot;&quot;Summarize the given text concisely.&quot;&quot;&quot;</span></span>
+<span id="cb9-3"><a href></a>    text <span class="op">=</span> dspy.InputField()</span>
+<span id="cb9-4"><a href></a>    summary <span class="op">=</span> dspy.OutputField()</span>
+<span id="cb9-5"><a href></a></span>
+<span id="cb9-6"><a href></a><span class="co"># Optimizer finds the best prompt automatically!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="how-dspy-optimization-works" class="slide level2">
+<h2>How DSPy Optimization Works</h2>
+<h3 id="the-process">The Process</h3>
+<ol type="1">
+<li><strong>Define Behavior Declaratively</strong> - Use Signatures to specify input/output</li>
+<li><strong>Provide Training Examples</strong> - Small set of examples with expected outputs</li>
+<li><strong>Define a Metric</strong> - How to measure success</li>
+<li><strong>Run Optimizer</strong> - AI automatically discovers optimal prompts</li>
+</ol>
+<h3 id="key-optimizers">Key Optimizers</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Optimizer</th>
+<th>Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>MIPROv2</strong></td>
+<td>Bayesian optimization over instruction space</td>
+</tr>
+<tr class="even">
+<td><strong>COPRO</strong></td>
+<td>Coordinate ascent hill-climbing</td>
+</tr>
+<tr class="odd">
+<td><strong>SIMBA</strong></td>
+<td>Self-reflective improvement from failures</td>
+</tr>
+<tr class="even">
+<td><strong>GEPA</strong></td>
+<td>Trajectory reflection and gap analysis</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dspy-real-results" class="slide level2">
+<h2>DSPy: Real Results</h2>
+<h3 id="automated-improvement">Automated Improvement</h3>
+<ul>
+<li>One optimizer raised evaluation from <strong>51.9% to 63.0%</strong> automatically</li>
+<li>HotPot QA: <strong>18.42% relative improvement</strong> without manual prompt editing</li>
+</ul>
+<h3 id="why-this-matters">Why This Matters</h3>
+<ul>
+<li><strong>Scales AI Development</strong>: Automates the most time-consuming aspect</li>
+<li><strong>Model Switching</strong>: Change from GPT-4 to Llama = config change + re-optimize</li>
+<li><strong>Reproducibility</strong>: Systematic optimization vs. ad-hoc prompt tweaking</li>
+</ul>
+<h3 id="resources">Resources</h3>
+<ul>
+<li><a href="https://dspy.ai/">DSPy Framework</a></li>
+<li><a href="https://github.com/stanfordnlp/dspy">GitHub: stanfordnlp/dspy</a></li>
+<li><a href="https://www.pondhouse-data.com/blog/dspy-build-better-ai-systems-with-automated-prompt-optimization/">DSPy Tutorial 2025</a></li>
+</ul>
+</section>
+<section id="modern-prompt-structures-2026" class="slide level2">
+<h2>Modern Prompt Structures (2026)</h2>
+<h3 id="beyond-simple-instructions">Beyond Simple Instructions</h3>
+<ol type="1">
+<li><strong>XML-Tagged Sections</strong> (Claude preferred)</li>
+</ol>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource xml number-lines code-with-copy"><code class="sourceCode xml"><span id="cb10-1"><a href></a>&lt;<span class="kw">context</span>&gt;You are analyzing customer feedback&lt;/<span class="kw">context</span>&gt;</span>
+<span id="cb10-2"><a href></a>&lt;<span class="kw">instructions</span>&gt;Classify sentiment and extract key themes&lt;/<span class="kw">instructions</span>&gt;</span>
+<span id="cb10-3"><a href></a>&lt;<span class="kw">examples</span>&gt;...&lt;/<span class="kw">examples</span>&gt;</span>
+<span id="cb10-4"><a href></a>&lt;<span class="kw">input</span>&gt;{{user_input}}&lt;/<span class="kw">input</span>&gt;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li><strong>Structured Output Enforcement</strong></li>
+</ol>
+<pre><code>Respond in JSON format:
+{&quot;sentiment&quot;: &quot;positive|negative|neutral&quot;, &quot;themes&quot;: [...]}</code></pre>
+<ol start="3" type="1">
+<li><strong>Chain-of-Thought Triggers</strong></li>
+</ol>
+<pre><code>Think step by step. Show your reasoning before the final answer.</code></pre>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="structured-outputs-function-calling" class="title-slide slide level1 center">
+<h1>Structured Outputs &amp; Function Calling</h1>
+
+</section>
+<section id="the-shift-to-structured-outputs-2025-2026" class="slide level2">
+<h2>The Shift to Structured Outputs (2025-2026)</h2>
+<h3 id="why-structured-outputs-matter">Why Structured Outputs Matter</h3>
+<ul>
+<li><strong>Reliability</strong>: Guarantees valid JSON/schema output every time</li>
+<li><strong>Integration</strong>: Direct parsing into application code</li>
+<li><strong>Validation</strong>: Schema enforcement prevents malformed responses</li>
+<li><strong>Industry Adoption</strong>: Every major API now supports this natively</li>
+</ul>
+<h3 id="the-problem-with-unstructured-output">The Problem with Unstructured Output</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href></a><span class="co"># Old approach - brittle parsing</span></span>
+<span id="cb13-2"><a href></a>response <span class="op">=</span> llm(<span class="st">&quot;Extract name and email from: John at john@example.com&quot;</span>)</span>
+<span id="cb13-3"><a href></a><span class="co"># Response: &quot;The name is John and email is john@example.com&quot;</span></span>
+<span id="cb13-4"><a href></a><span class="co"># Now you need regex or more LLM calls to parse this</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="structured-outputs-implementation" class="slide level2">
+<h2>Structured Outputs: Implementation</h2>
+<h3 id="openai-json-mode">OpenAI JSON Mode</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href></a><span class="im">from</span> openai <span class="im">import</span> OpenAI</span>
+<span id="cb14-2"><a href></a>client <span class="op">=</span> OpenAI()</span>
+<span id="cb14-3"><a href></a></span>
+<span id="cb14-4"><a href></a>response <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb14-5"><a href></a>    model<span class="op">=</span><span class="st">&quot;gpt-4o-2026-01-01&quot;</span>,</span>
+<span id="cb14-6"><a href></a>    response_format<span class="op">=</span>{<span class="st">&quot;type&quot;</span>: <span class="st">&quot;json_object&quot;</span>},</span>
+<span id="cb14-7"><a href></a>    messages<span class="op">=</span>[</span>
+<span id="cb14-8"><a href></a>        {<span class="st">&quot;role&quot;</span>: <span class="st">&quot;system&quot;</span>, <span class="st">&quot;content&quot;</span>: <span class="st">&quot;Extract data as JSON with keys: name, email&quot;</span>},</span>
+<span id="cb14-9"><a href></a>        {<span class="st">&quot;role&quot;</span>: <span class="st">&quot;user&quot;</span>, <span class="st">&quot;content&quot;</span>: <span class="st">&quot;John Smith can be reached at john@example.com&quot;</span>}</span>
+<span id="cb14-10"><a href></a>    ]</span>
+<span id="cb14-11"><a href></a>)</span>
+<span id="cb14-12"><a href></a><span class="co"># Guaranteed valid JSON: {&quot;name&quot;: &quot;John Smith&quot;, &quot;email&quot;: &quot;john@example.com&quot;}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h3 id="anthropic-tool-use-for-structured-output">Anthropic Tool Use for Structured Output</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href></a><span class="im">import</span> anthropic</span>
+<span id="cb15-2"><a href></a>client <span class="op">=</span> anthropic.Anthropic()</span>
+<span id="cb15-3"><a href></a></span>
+<span id="cb15-4"><a href></a>response <span class="op">=</span> client.messages.create(</span>
+<span id="cb15-5"><a href></a>    model<span class="op">=</span><span class="st">&quot;claude-sonnet-4-20250514&quot;</span>,</span>
+<span id="cb15-6"><a href></a>    max_tokens<span class="op">=</span><span class="dv">1024</span>,</span>
+<span id="cb15-7"><a href></a>    tools<span class="op">=</span>[{</span>
+<span id="cb15-8"><a href></a>        <span class="st">&quot;name&quot;</span>: <span class="st">&quot;extract_contact&quot;</span>,</span>
+<span id="cb15-9"><a href></a>        <span class="st">&quot;description&quot;</span>: <span class="st">&quot;Extract contact information&quot;</span>,</span>
+<span id="cb15-10"><a href></a>        <span class="st">&quot;input_schema&quot;</span>: {</span>
+<span id="cb15-11"><a href></a>            <span class="st">&quot;type&quot;</span>: <span class="st">&quot;object&quot;</span>,</span>
+<span id="cb15-12"><a href></a>            <span class="st">&quot;properties&quot;</span>: {</span>
+<span id="cb15-13"><a href></a>                <span class="st">&quot;name&quot;</span>: {<span class="st">&quot;type&quot;</span>: <span class="st">&quot;string&quot;</span>},</span>
+<span id="cb15-14"><a href></a>                <span class="st">&quot;email&quot;</span>: {<span class="st">&quot;type&quot;</span>: <span class="st">&quot;string&quot;</span>, <span class="st">&quot;format&quot;</span>: <span class="st">&quot;email&quot;</span>}</span>
+<span id="cb15-15"><a href></a>            },</span>
+<span id="cb15-16"><a href></a>            <span class="st">&quot;required&quot;</span>: [<span class="st">&quot;name&quot;</span>, <span class="st">&quot;email&quot;</span>]</span>
+<span id="cb15-17"><a href></a>        }</span>
+<span id="cb15-18"><a href></a>    }],</span>
+<span id="cb15-19"><a href></a>    tool_choice<span class="op">=</span>{<span class="st">&quot;type&quot;</span>: <span class="st">&quot;tool&quot;</span>, <span class="st">&quot;name&quot;</span>: <span class="st">&quot;extract_contact&quot;</span>},</span>
+<span id="cb15-20"><a href></a>    messages<span class="op">=</span>[{<span class="st">&quot;role&quot;</span>: <span class="st">&quot;user&quot;</span>, <span class="st">&quot;content&quot;</span>: <span class="st">&quot;Contact: John Smith, john@example.com&quot;</span>}]</span>
+<span id="cb15-21"><a href></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="function-calling-connecting-llms-to-tools" class="slide level2">
+<h2>Function Calling: Connecting LLMs to Tools</h2>
+<h3 id="what-is-function-calling">What is Function Calling?</h3>
+<ul>
+<li>LLM decides <strong>when</strong> to call a function and <strong>what arguments</strong> to pass</li>
+<li>You execute the function, return results to LLM</li>
+<li>LLM incorporates results into response</li>
+</ul>
+<h3 id="common-use-cases">Common Use Cases</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Use Case</th>
+<th>Function Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Database queries</td>
+<td><code>query_database(sql: str)</code></td>
+</tr>
+<tr class="even">
+<td>API calls</td>
+<td><code>get_weather(city: str)</code></td>
+</tr>
+<tr class="odd">
+<td>Calculations</td>
+<td><code>calculate_mortgage(principal, rate, years)</code></td>
+</tr>
+<tr class="even">
+<td>File operations</td>
+<td><code>read_file(path: str)</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="industry-reality">Industry Reality</h3>
+<ul>
+<li><strong>80%+ of production AI apps</strong> use function calling</li>
+<li>Foundation for all AI agents and assistants</li>
+<li>MCP (Model Context Protocol) builds on this pattern</li>
+</ul>
+</section>
+<section id="function-calling-amazon-bedrock-example" class="slide level2">
+<h2>Function Calling: Amazon Bedrock Example</h2>
+<h3 id="tool-definition-with-converse-api">Tool Definition with Converse API</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href></a><span class="im">import</span> boto3</span>
+<span id="cb16-2"><a href></a><span class="im">import</span> json</span>
+<span id="cb16-3"><a href></a></span>
+<span id="cb16-4"><a href></a>bedrock <span class="op">=</span> boto3.client(<span class="st">&#39;bedrock-runtime&#39;</span>, region_name<span class="op">=</span><span class="st">&#39;us-east-1&#39;</span>)</span>
+<span id="cb16-5"><a href></a></span>
+<span id="cb16-6"><a href></a>tools <span class="op">=</span> [{</span>
+<span id="cb16-7"><a href></a>    <span class="st">&quot;toolSpec&quot;</span>: {</span>
+<span id="cb16-8"><a href></a>        <span class="st">&quot;name&quot;</span>: <span class="st">&quot;get_stock_price&quot;</span>,</span>
+<span id="cb16-9"><a href></a>        <span class="st">&quot;description&quot;</span>: <span class="st">&quot;Get current stock price for a ticker symbol&quot;</span>,</span>
+<span id="cb16-10"><a href></a>        <span class="st">&quot;inputSchema&quot;</span>: {</span>
+<span id="cb16-11"><a href></a>            <span class="st">&quot;json&quot;</span>: {</span>
+<span id="cb16-12"><a href></a>                <span class="st">&quot;type&quot;</span>: <span class="st">&quot;object&quot;</span>,</span>
+<span id="cb16-13"><a href></a>                <span class="st">&quot;properties&quot;</span>: {</span>
+<span id="cb16-14"><a href></a>                    <span class="st">&quot;ticker&quot;</span>: {<span class="st">&quot;type&quot;</span>: <span class="st">&quot;string&quot;</span>, <span class="st">&quot;description&quot;</span>: <span class="st">&quot;Stock ticker symbol&quot;</span>}</span>
+<span id="cb16-15"><a href></a>                },</span>
+<span id="cb16-16"><a href></a>                <span class="st">&quot;required&quot;</span>: [<span class="st">&quot;ticker&quot;</span>]</span>
+<span id="cb16-17"><a href></a>            }</span>
+<span id="cb16-18"><a href></a>        }</span>
+<span id="cb16-19"><a href></a>    }</span>
+<span id="cb16-20"><a href></a>}]</span>
+<span id="cb16-21"><a href></a></span>
+<span id="cb16-22"><a href></a>response <span class="op">=</span> bedrock.converse(</span>
+<span id="cb16-23"><a href></a>    modelId<span class="op">=</span><span class="st">&quot;anthropic.claude-sonnet-4-20250514-v1:0&quot;</span>,</span>
+<span id="cb16-24"><a href></a>    messages<span class="op">=</span>[{<span class="st">&quot;role&quot;</span>: <span class="st">&quot;user&quot;</span>, <span class="st">&quot;content&quot;</span>: [{<span class="st">&quot;text&quot;</span>: <span class="st">&quot;What&#39;s Apple&#39;s stock price?&quot;</span>}]}],</span>
+<span id="cb16-25"><a href></a>    toolConfig<span class="op">=</span>{<span class="st">&quot;tools&quot;</span>: tools}</span>
+<span id="cb16-26"><a href></a>)</span>
+<span id="cb16-27"><a href></a><span class="co"># LLM returns: tool_use with {&quot;ticker&quot;: &quot;AAPL&quot;}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="prompt-caching-cost-optimization-at-scale" class="title-slide slide level1 center">
+<h1>Prompt Caching: Cost Optimization at Scale</h1>
+
+</section>
+<section id="the-economics-of-llm-calls" class="slide level2">
+<h2>The Economics of LLM Calls</h2>
+<h3 id="token-costs-add-up-fast">Token Costs Add Up Fast</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Input (per 1M tokens)</th>
+<th>Output (per 1M tokens)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude Sonnet 4</td>
+<td>$3.00</td>
+<td>$15.00</td>
+</tr>
+<tr class="even">
+<td>GPT-4o</td>
+<td>$2.50</td>
+<td>$10.00</td>
+</tr>
+<tr class="odd">
+<td>Claude Opus 4</td>
+<td>$15.00</td>
+<td>$75.00</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-caching-opportunity">The Caching Opportunity</h3>
+<ul>
+<li><strong>System prompts</strong> often 1000-5000 tokens</li>
+<li><strong>Repeated across every request</strong></li>
+<li>With 10,000 requests/day = massive waste</li>
+</ul>
+</section>
+<section id="anthropic-prompt-caching" class="slide level2">
+<h2>Anthropic Prompt Caching</h2>
+<h3 id="how-it-works">How It Works</h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href></a><span class="im">import</span> anthropic</span>
+<span id="cb17-2"><a href></a>client <span class="op">=</span> anthropic.Anthropic()</span>
+<span id="cb17-3"><a href></a></span>
+<span id="cb17-4"><a href></a>response <span class="op">=</span> client.messages.create(</span>
+<span id="cb17-5"><a href></a>    model<span class="op">=</span><span class="st">&quot;claude-sonnet-4-20250514&quot;</span>,</span>
+<span id="cb17-6"><a href></a>    max_tokens<span class="op">=</span><span class="dv">1024</span>,</span>
+<span id="cb17-7"><a href></a>    system<span class="op">=</span>[</span>
+<span id="cb17-8"><a href></a>        {</span>
+<span id="cb17-9"><a href></a>            <span class="st">&quot;type&quot;</span>: <span class="st">&quot;text&quot;</span>,</span>
+<span id="cb17-10"><a href></a>            <span class="st">&quot;text&quot;</span>: <span class="st">&quot;You are a customer service agent for Acme Corp...[long instructions]...&quot;</span>,</span>
+<span id="cb17-11"><a href></a>            <span class="st">&quot;cache_control&quot;</span>: {<span class="st">&quot;type&quot;</span>: <span class="st">&quot;ephemeral&quot;</span>}  <span class="co"># Cache this block</span></span>
+<span id="cb17-12"><a href></a>        }</span>
+<span id="cb17-13"><a href></a>    ],</span>
+<span id="cb17-14"><a href></a>    messages<span class="op">=</span>[{<span class="st">&quot;role&quot;</span>: <span class="st">&quot;user&quot;</span>, <span class="st">&quot;content&quot;</span>: <span class="st">&quot;How do I return an item?&quot;</span>}]</span>
+<span id="cb17-15"><a href></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h3 id="cost-savings">Cost Savings</h3>
+<ul>
+<li><strong>Cache write</strong>: 25% more than base input price</li>
+<li><strong>Cache read</strong>: <strong>90% discount</strong> on cached tokens</li>
+<li><strong>Break-even</strong>: ~2 requests with same cached content</li>
+<li><strong>TTL</strong>: 5 minutes (ephemeral), extendable with activity</li>
+</ul>
+</section>
+<section id="prompt-caching-strategies" class="slide level2">
+<h2>Prompt Caching Strategies</h2>
+<h3 id="what-to-cache">What to Cache</h3>
+<ol type="1">
+<li><strong>System instructions</strong> - Role definitions, rules, formatting</li>
+<li><strong>Few-shot examples</strong> - Consistent across requests</li>
+<li><strong>Retrieved documents</strong> - RAG results used multiple times</li>
+<li><strong>Tool definitions</strong> - Same tools across conversations</li>
+</ol>
+<h3 id="caching-architecture-pattern">Caching Architecture Pattern</h3>
+<pre><code>┌─────────────────────────────────────────┐
+│  Cached (5000 tokens) - $0.30/M reads   │
+│  ┌─────────────────────────────────┐    │
+│  │ System prompt + Rules           │    │
+│  │ Few-shot examples               │    │
+│  │ Tool definitions                │    │
+│  └─────────────────────────────────┘    │
+├─────────────────────────────────────────┤
+│  Dynamic (500 tokens) - Full price      │
+│  ┌─────────────────────────────────┐    │
+│  │ User message                    │    │
+│  │ Conversation history            │    │
+│  └─────────────────────────────────┘    │
+└─────────────────────────────────────────┘</code></pre>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="evaluating-and-testing-prompts" class="title-slide slide level1 center">
+<h1>Evaluating and Testing Prompts</h1>
+
+</section>
+<section id="the-evaluation-gap" class="slide level2">
+<h2>The Evaluation Gap</h2>
+<h3 id="why-this-matters-1">Why This Matters</h3>
+<ul>
+<li><strong>58% of AI teams</strong> lack systematic prompt evaluation (2025 survey)</li>
+<li>“Vibe checking” doesn’t scale</li>
+<li>Production failures often traced to untested prompt changes</li>
+</ul>
+<h3 id="what-to-evaluate">What to Evaluate</h3>
+<ol type="1">
+<li><strong>Accuracy</strong>: Does it produce correct outputs?</li>
+<li><strong>Consistency</strong>: Same input → same output quality?</li>
+<li><strong>Edge cases</strong>: How does it handle unusual inputs?</li>
+<li><strong>Safety</strong>: Does it follow guardrails?</li>
+<li><strong>Cost</strong>: Token usage within budget?</li>
+</ol>
+</section>
+<section id="prompt-testing-frameworks" class="slide level2">
+<h2>Prompt Testing Frameworks</h2>
+<h3 id="unit-testing-prompts">Unit Testing Prompts</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href></a><span class="im">import</span> pytest</span>
+<span id="cb19-2"><a href></a><span class="im">from</span> your_llm_client <span class="im">import</span> generate_response</span>
+<span id="cb19-3"><a href></a></span>
+<span id="cb19-4"><a href></a><span class="kw">class</span> TestSentimentPrompt:</span>
+<span id="cb19-5"><a href></a>    <span class="co">&quot;&quot;&quot;Test suite for sentiment classification prompt&quot;&quot;&quot;</span></span>
+<span id="cb19-6"><a href></a></span>
+<span id="cb19-7"><a href></a>    <span class="kw">def</span> test_positive_sentiment(<span class="va">self</span>):</span>
+<span id="cb19-8"><a href></a>        result <span class="op">=</span> generate_response(<span class="st">&quot;I absolutely love this product!&quot;</span>)</span>
+<span id="cb19-9"><a href></a>        <span class="cf">assert</span> result[<span class="st">&quot;sentiment&quot;</span>] <span class="op">==</span> <span class="st">&quot;positive&quot;</span></span>
+<span id="cb19-10"><a href></a>        <span class="cf">assert</span> result[<span class="st">&quot;confidence&quot;</span>] <span class="op">&gt;</span> <span class="fl">0.8</span></span>
+<span id="cb19-11"><a href></a></span>
+<span id="cb19-12"><a href></a>    <span class="kw">def</span> test_negative_sentiment(<span class="va">self</span>):</span>
+<span id="cb19-13"><a href></a>        result <span class="op">=</span> generate_response(<span class="st">&quot;This is the worst experience ever&quot;</span>)</span>
+<span id="cb19-14"><a href></a>        <span class="cf">assert</span> result[<span class="st">&quot;sentiment&quot;</span>] <span class="op">==</span> <span class="st">&quot;negative&quot;</span></span>
+<span id="cb19-15"><a href></a></span>
+<span id="cb19-16"><a href></a>    <span class="kw">def</span> test_neutral_edge_case(<span class="va">self</span>):</span>
+<span id="cb19-17"><a href></a>        result <span class="op">=</span> generate_response(<span class="st">&quot;The product arrived on Tuesday&quot;</span>)</span>
+<span id="cb19-18"><a href></a>        <span class="cf">assert</span> result[<span class="st">&quot;sentiment&quot;</span>] <span class="op">==</span> <span class="st">&quot;neutral&quot;</span></span>
+<span id="cb19-19"><a href></a></span>
+<span id="cb19-20"><a href></a>    <span class="kw">def</span> test_empty_input_handling(<span class="va">self</span>):</span>
+<span id="cb19-21"><a href></a>        result <span class="op">=</span> generate_response(<span class="st">&quot;&quot;</span>)</span>
+<span id="cb19-22"><a href></a>        <span class="cf">assert</span> <span class="st">&quot;error&quot;</span> <span class="kw">in</span> result <span class="kw">or</span> result[<span class="st">&quot;sentiment&quot;</span>] <span class="op">==</span> <span class="st">&quot;unknown&quot;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="evaluation-metrics-and-tools" class="slide level2">
+<h2>Evaluation Metrics and Tools</h2>
+<h3 id="key-metrics">Key Metrics</h3>
+<table class="caption-top">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 46%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>What It Measures</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Exact Match</strong></td>
+<td>Output == expected</td>
+<td>Classification, extraction</td>
+</tr>
+<tr class="even">
+<td><strong>F1 Score</strong></td>
+<td>Precision + Recall</td>
+<td>Multi-label tasks</td>
+</tr>
+<tr class="odd">
+<td><strong>BLEU/ROUGE</strong></td>
+<td>Text similarity</td>
+<td>Summarization, translation</td>
+</tr>
+<tr class="even">
+<td><strong>LLM-as-Judge</strong></td>
+<td>Quality rating by another LLM</td>
+<td>Open-ended generation</td>
+</tr>
+<tr class="odd">
+<td><strong>Human Eval</strong></td>
+<td>Expert assessment</td>
+<td>Final validation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="popular-tools-2026">Popular Tools (2026)</h3>
+<ul>
+<li><strong>Promptfoo</strong>: Open-source prompt testing and evaluation</li>
+<li><strong>LangSmith</strong>: LangChain’s evaluation platform</li>
+<li><strong>Braintrust</strong>: Continuous evaluation for AI products</li>
+<li><strong>Humanloop</strong>: Prompt management with built-in evals</li>
+</ul>
+<h3 id="resources-1">Resources</h3>
+<ul>
+<li><a href="https://www.promptfoo.dev/">Promptfoo Documentation</a></li>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/evaluation">Anthropic Evaluation Guide</a></li>
+</ul>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="guardrails-and-safety-in-prompting" class="title-slide slide level1 center">
+<h1>Guardrails and Safety in Prompting</h1>
+
+</section>
+<section id="why-guardrails-matter" class="slide level2">
+<h2>Why Guardrails Matter</h2>
+<h3 id="the-risks">The Risks</h3>
+<ul>
+<li><strong>Prompt injection</strong>: Malicious inputs that hijack model behavior</li>
+<li><strong>Jailbreaking</strong>: Bypassing safety guidelines</li>
+<li><strong>Data leakage</strong>: Exposing sensitive information in outputs</li>
+<li><strong>Harmful content</strong>: Generating inappropriate or dangerous responses</li>
+</ul>
+<h3 id="industry-reality-1">Industry Reality</h3>
+<ul>
+<li><strong>Every production AI system needs guardrails</strong></li>
+<li>Regulatory requirements increasing (EU AI Act, state laws)</li>
+<li>Reputational risk from AI failures</li>
+</ul>
+</section>
+<section id="input-guardrails" class="slide level2">
+<h2>Input Guardrails</h2>
+<h3 id="techniques">Techniques</h3>
+<ol type="1">
+<li><strong>Input Validation</strong></li>
+</ol>
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href></a><span class="kw">def</span> validate_input(user_input: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">bool</span>:</span>
+<span id="cb20-2"><a href></a>    <span class="co"># Length limits</span></span>
+<span id="cb20-3"><a href></a>    <span class="cf">if</span> <span class="bu">len</span>(user_input) <span class="op">&gt;</span> <span class="dv">10000</span>:</span>
+<span id="cb20-4"><a href></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb20-5"><a href></a></span>
+<span id="cb20-6"><a href></a>    <span class="co"># Known injection patterns</span></span>
+<span id="cb20-7"><a href></a>    injection_patterns <span class="op">=</span> [<span class="st">&quot;ignore previous&quot;</span>, <span class="st">&quot;disregard instructions&quot;</span>, <span class="st">&quot;system:&quot;</span>]</span>
+<span id="cb20-8"><a href></a>    <span class="cf">if</span> <span class="bu">any</span>(pattern <span class="kw">in</span> user_input.lower() <span class="cf">for</span> pattern <span class="kw">in</span> injection_patterns):</span>
+<span id="cb20-9"><a href></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb20-10"><a href></a></span>
+<span id="cb20-11"><a href></a>    <span class="cf">return</span> <span class="va">True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li><strong>Content Classification</strong></li>
+</ol>
+<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href></a><span class="co"># Use a classifier model to check input safety</span></span>
+<span id="cb21-2"><a href></a>safety_check <span class="op">=</span> classifier.predict(user_input)</span>
+<span id="cb21-3"><a href></a><span class="cf">if</span> safety_check[<span class="st">&quot;harmful_probability&quot;</span>] <span class="op">&gt;</span> <span class="fl">0.8</span>:</span>
+<span id="cb21-4"><a href></a>    <span class="cf">return</span> <span class="st">&quot;I cannot process this request&quot;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="output-guardrails" class="slide level2">
+<h2>Output Guardrails</h2>
+<h3 id="techniques-1">Techniques</h3>
+<ol type="1">
+<li><strong>Schema Validation</strong></li>
+</ol>
+<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href></a><span class="im">from</span> pydantic <span class="im">import</span> BaseModel, validator</span>
+<span id="cb22-2"><a href></a></span>
+<span id="cb22-3"><a href></a><span class="kw">class</span> SafeResponse(BaseModel):</span>
+<span id="cb22-4"><a href></a>    answer: <span class="bu">str</span></span>
+<span id="cb22-5"><a href></a></span>
+<span id="cb22-6"><a href></a>    <span class="at">@validator</span>(<span class="st">&#39;answer&#39;</span>)</span>
+<span id="cb22-7"><a href></a>    <span class="kw">def</span> no_pii(cls, v):</span>
+<span id="cb22-8"><a href></a>        <span class="co"># Check for patterns like SSN, credit cards</span></span>
+<span id="cb22-9"><a href></a>        <span class="cf">if</span> re.search(<span class="vs">r&#39;\d</span><span class="sc">{3}</span><span class="vs">-\d</span><span class="sc">{2}</span><span class="vs">-\d</span><span class="sc">{4}</span><span class="vs">&#39;</span>, v):</span>
+<span id="cb22-10"><a href></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;Response contains potential PII&quot;</span>)</span>
+<span id="cb22-11"><a href></a>        <span class="cf">return</span> v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li><strong>Amazon Bedrock Guardrails</strong></li>
+</ol>
+<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href></a>response <span class="op">=</span> bedrock.invoke_model(</span>
+<span id="cb23-2"><a href></a>    modelId<span class="op">=</span><span class="st">&quot;anthropic.claude-sonnet-4-20250514-v1:0&quot;</span>,</span>
+<span id="cb23-3"><a href></a>    guardrailIdentifier<span class="op">=</span><span class="st">&quot;your-guardrail-id&quot;</span>,</span>
+<span id="cb23-4"><a href></a>    guardrailVersion<span class="op">=</span><span class="st">&quot;1&quot;</span>,</span>
+<span id="cb23-5"><a href></a>    body<span class="op">=</span>json.dumps({<span class="st">&quot;messages&quot;</span>: messages})</span>
+<span id="cb23-6"><a href></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="defense-in-depth-the-guardrail-stack" class="slide level2">
+<h2>Defense in Depth: The Guardrail Stack</h2>
+<h3 id="layered-protection">Layered Protection</h3>
+<pre><code>┌─────────────────────────────────────────┐
+│  Layer 1: Input Validation              │
+│  - Length limits, format checks         │
+├─────────────────────────────────────────┤
+│  Layer 2: Content Moderation            │
+│  - Pre-flight safety classification     │
+├─────────────────────────────────────────┤
+│  Layer 3: System Prompt Hardening       │
+│  - Clear boundaries, role definitions   │
+├─────────────────────────────────────────┤
+│  Layer 4: Model-Level Safety            │
+│  - Built-in model guardrails            │
+├─────────────────────────────────────────┤
+│  Layer 5: Output Validation             │
+│  - Schema enforcement, PII detection    │
+├─────────────────────────────────────────┤
+│  Layer 6: Human Review                  │
+│  - High-stakes decisions flagged        │
+└─────────────────────────────────────────┘</code></pre>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="long-context-strategies" class="title-slide slide level1 center">
+<h1>Long Context Strategies</h1>
+
+</section>
+<section id="the-long-context-era-2026" class="slide level2">
+<h2>The Long Context Era (2026)</h2>
+<h3 id="available-context-windows">Available Context Windows</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Max Context</th>
+<th>Effective Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude Opus 4</td>
+<td>200K tokens</td>
+<td>~150K reliable</td>
+</tr>
+<tr class="even">
+<td>Gemini 2.0 Pro</td>
+<td>2M tokens</td>
+<td>~1.5M reliable</td>
+</tr>
+<tr class="odd">
+<td>GPT-4o</td>
+<td>128K tokens</td>
+<td>~100K reliable</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-challenge">The Challenge</h3>
+<ul>
+<li><strong>Having</strong> long context ≠ <strong>Using</strong> it effectively</li>
+<li>“Lost in the middle” phenomenon still exists</li>
+<li>More context = more cost, more latency</li>
+</ul>
+</section>
+<section id="long-context-best-practices" class="slide level2">
+<h2>Long Context Best Practices</h2>
+<h3 id="strategies-for-effective-use">Strategies for Effective Use</h3>
+<ol type="1">
+<li><strong>Put Critical Information at Start and End</strong></li>
+</ol>
+<pre><code>&lt;critical_instructions&gt;
+[Most important rules here - model attends strongly]
+&lt;/critical_instructions&gt;
+
+&lt;context&gt;
+[Supporting documents, examples, background]
+&lt;/context&gt;
+
+&lt;task&gt;
+[Current request - model attends strongly]
+&lt;/task&gt;</code></pre>
+<ol start="2" type="1">
+<li><strong>Use Explicit Section Markers</strong></li>
+</ol>
+<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource xml number-lines code-with-copy"><code class="sourceCode xml"><span id="cb26-1"><a href></a>&lt;<span class="kw">document</span><span class="ot"> id=</span><span class="st">&quot;1&quot;</span><span class="ot"> relevance=</span><span class="st">&quot;high&quot;</span>&gt;...&lt;/<span class="kw">document</span>&gt;</span>
+<span id="cb26-2"><a href></a>&lt;<span class="kw">document</span><span class="ot"> id=</span><span class="st">&quot;2&quot;</span><span class="ot"> relevance=</span><span class="st">&quot;medium&quot;</span>&gt;...&lt;/<span class="kw">document</span>&gt;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="3" type="1">
+<li><strong>Summarize When Possible</strong></li>
+</ol>
+<ul>
+<li>Don’t dump 50 pages when a 2-page summary suffices</li>
+<li>Use hierarchical summarization for very long documents</li>
+</ul>
+</section>
+<section id="when-to-use-long-context-vs.-rag" class="slide level2">
+<h2>When to Use Long Context vs. RAG</h2>
+<h3 id="decision-framework">Decision Framework</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>Long Context</th>
+<th>RAG</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Document size</strong></td>
+<td>&lt; 100K tokens</td>
+<td>&gt; 100K tokens</td>
+</tr>
+<tr class="even">
+<td><strong>Update frequency</strong></td>
+<td>Static/rare updates</td>
+<td>Frequent updates</td>
+</tr>
+<tr class="odd">
+<td><strong>Precision needed</strong></td>
+<td>“Consider everything”</td>
+<td>“Find the needle”</td>
+</tr>
+<tr class="even">
+<td><strong>Cost sensitivity</strong></td>
+<td>Lower volume</td>
+<td>Higher volume</td>
+</tr>
+<tr class="odd">
+<td><strong>Latency requirements</strong></td>
+<td>Flexible</td>
+<td>Strict</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hybrid-approach-best-of-both">Hybrid Approach (Best of Both)</h3>
+<ol type="1">
+<li><strong>RAG for retrieval</strong>: Find relevant chunks</li>
+<li><strong>Long context for reasoning</strong>: Include full retrieved documents</li>
+<li><strong>Result</strong>: Precise retrieval + comprehensive understanding</li>
+</ol>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="industry-case-studies" class="title-slide slide level1 center">
+<h1>Industry Case Studies</h1>
+
+</section>
+<section id="case-study-1-stripe---structured-outputs-for-payments" class="slide level2">
+<h2>Case Study 1: Stripe - Structured Outputs for Payments</h2>
+<h3 id="the-challenge-1">The Challenge</h3>
+<ul>
+<li>Payment data extraction from diverse invoice formats</li>
+<li>99.9% accuracy required for financial data</li>
+</ul>
+<h3 id="the-solution">The Solution</h3>
+<ul>
+<li>Structured outputs with strict JSON schemas</li>
+<li>Multi-stage validation pipeline</li>
+<li>Human review for low-confidence extractions</li>
+</ul>
+<h3 id="results">Results</h3>
+<ul>
+<li>94% automation rate on invoice processing</li>
+<li>$2M+ annual savings in manual processing</li>
+<li>Sub-second response times</li>
+</ul>
+</section>
+<section id="case-study-2-notion---context-engineering-for-ai-assistant" class="slide level2">
+<h2>Case Study 2: Notion - Context Engineering for AI Assistant</h2>
+<h3 id="the-challenge-2">The Challenge</h3>
+<ul>
+<li>AI needs to understand user’s entire workspace</li>
+<li>Millions of documents per organization</li>
+<li>Real-time relevance required</li>
+</ul>
+<h3 id="the-solution-1">The Solution</h3>
+<ul>
+<li>Hierarchical context architecture</li>
+<li>Dynamic context selection based on task type</li>
+<li>Aggressive caching of workspace structure</li>
+</ul>
+<h3 id="results-1">Results</h3>
+<ul>
+<li>60% improvement in answer relevance</li>
+<li>3x reduction in API costs through caching</li>
+<li>User satisfaction up 40%</li>
+</ul>
+</section>
+<section id="case-study-3-cursor---agentic-code-generation" class="slide level2">
+<h2>Case Study 3: Cursor - Agentic Code Generation</h2>
+<h3 id="the-challenge-3">The Challenge</h3>
+<ul>
+<li>Multi-file code changes with consistency</li>
+<li>Understanding entire codebase context</li>
+<li>Developer trust and verification</li>
+</ul>
+<h3 id="the-solution-2">The Solution</h3>
+<ul>
+<li>“Composer” mode with diff-based output</li>
+<li>Codebase indexing for context retrieval</li>
+<li>Iterative refinement with human feedback</li>
+</ul>
+<h3 id="results-2">Results</h3>
+<ul>
+<li>500K+ active developers</li>
+<li>40% of code accepted without modification</li>
+<li>$400M valuation (2025)</li>
+</ul>
+</section>
+<section id="advanced-prompting-techniques-2026" class="slide level2">
+<h2>Advanced Prompting Techniques (2026)</h2>
+<h3 id="self-consistency">Self-Consistency</h3>
+<ul>
+<li>Generate multiple responses with temperature &gt; 0</li>
+<li>Take majority vote or aggregate answers</li>
+<li>Reduces hallucination on reasoning tasks</li>
+</ul>
+<h3 id="tree-of-thoughts-tot">Tree of Thoughts (ToT)</h3>
+<ul>
+<li>Explore multiple reasoning paths</li>
+<li>Evaluate and prune branches</li>
+<li>Backtrack when stuck</li>
+</ul>
+<h3 id="reflection-prompting">Reflection Prompting</h3>
+<pre><code>First, provide your answer.
+Then, critically evaluate your answer for errors.
+Finally, provide your corrected final answer.</code></pre>
+<h3 id="meta-prompting">Meta-Prompting</h3>
+<ul>
+<li>Use one LLM call to generate/improve prompts for another</li>
+<li>“Write a prompt that would help an LLM solve this type of problem”</li>
+</ul>
+</section>
+<section id="the-future-agentic-context-engineering" class="slide level2">
+<h2>The Future: Agentic Context Engineering</h2>
+<h3 id="ace-agentic-context-engineering">ACE (Agentic Context Engineering)</h3>
+<ul>
+<li><strong>Latest research direction</strong> (2025-2026)</li>
+<li>Context evolves like a “playbook” that self-updates</li>
+<li>Models autonomously refine their prompts and memory</li>
+</ul>
+<h3 id="key-trends">Key Trends</h3>
+<ol type="1">
+<li><strong>Dynamic Context</strong>: Adapts in real-time based on task</li>
+<li><strong>Self-Improving Systems</strong>: Learn from failures automatically</li>
+<li><strong>Multi-Agent Context Sharing</strong>: Agents coordinate context</li>
+<li><strong>Context as Code</strong>: Version-controlled, testable, reviewable</li>
+</ol>
+<h3 id="industry-impact">Industry Impact</h3>
+<ul>
+<li>Enterprise AI spending: <strong>$37B in 2025</strong> (up from $11.5B in 2024)</li>
+<li>Organizations with robust context architectures see:
+<ul>
+<li>50% improvement in response times</li>
+<li>40% higher quality outputs</li>
+</ul></li>
+</ul>
 </section>
 <section id="ai-coding-assistants-the-landscape" class="slide level2">
 <h2>AI Coding Assistants: The Landscape</h2>
 <ul>
 <li><strong>Evolution</strong>: From OpenAI Codex &amp; GitHub Copilot (autocomplete) to autonomous agents.</li>
-<li><strong>Models</strong>: Powered by GPT-4, Claude 3.5 Sonnet, Gemini 1.5 Pro.</li>
+<li><strong>Models</strong>: Powered by GPT-4o, Claude Sonnet 4, Claude Opus 4, Gemini 2.0 Pro.</li>
 <li><strong>Main Categories</strong>:
 <ul>
 <li><strong>Plugin-based</strong>: Extensions for existing IDEs (VS Code, JetBrains).</li>
@@ -1678,7 +2592,7 @@ Amit Arora
 </ul></li>
 </ul>
 
-</section>
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">

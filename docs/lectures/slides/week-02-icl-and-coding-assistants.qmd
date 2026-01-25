@@ -187,17 +187,20 @@ Users can get tailored responses for their use case using the following inferenc
   - Avoid ambiguity: Use complete instructions.
   - Provide examples for complex tasks.
 
-- **For GPT-4**:
+- **For GPT-4o / o1**:
   - Use detailed instructions for creative tasks.
   - Include constraints like word limits or tone.
+  - o1 models: Let them reason; avoid "think step by step" (built-in).
 
-- **For Claude**:
-  - Prefers natural and conversational language.
+- **For Claude (Sonnet 4, Opus 4)**:
+  - Use XML tags to structure complex prompts.
   - Excels at reasoning tasks when examples are provided.
+  - Supports extended thinking for complex problems.
 
-- **For LLaMA**:
+- **For LLaMA 4 / Mistral**:
   - Keep prompts concise.
   - Focus on factual and structured queries.
+  - Use system prompts for role definition.
 
 ---
 
@@ -217,24 +220,28 @@ Users can get tailored responses for their use case using the following inferenc
 
 ```python
 import boto3
+import json
 
-# Initialize the Bedrock client
-bedrock = boto3.client('bedrock', region_name='us-west-2')
+# Initialize the Bedrock Runtime client
+bedrock = boto3.client('bedrock-runtime', region_name='us-east-1')
 
-# Define messages in the API format
+# Define messages using the Converse API (recommended for 2026)
 messages = [
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "Summarize the following text: 'Generative AI is transforming industries by automating creative tasks.'"}
+    {
+        "role": "user",
+        "content": [{"text": "Summarize the following text: 'Generative AI is transforming industries by automating creative tasks.'"}]
+    }
 ]
 
-# Call Claude via Bedrock
-response = bedrock.invoke_model(
-    modelId="anthropic.claude-v1",
-    body={"input": {"messages": messages}}
+# Call Claude via Bedrock Converse API
+response = bedrock.converse(
+    modelId="anthropic.claude-sonnet-4-20250514-v1:0",
+    messages=messages,
+    system=[{"text": "You are a helpful assistant."}]
 )
 
 # Print the response
-print(response["output"])
+print(response["output"]["message"]["content"][0]["text"])
 ```
 
 ---
@@ -245,16 +252,22 @@ print(response["output"])
 
 ```python
 messages = [
-    {"role": "system", "content": "You are a helpful assistant that classifies sentiment."},
-    {"role": "user", "content": "Examples:\nReview: 'I love this product!' -> Positive\nReview: 'This is the worst service ever.' -> Negative\nReview: 'The delivery was on time.' ->"}
+    {
+        "role": "user",
+        "content": [{"text": """Examples:
+Review: 'I love this product!' -> Positive
+Review: 'This is the worst service ever.' -> Negative
+Review: 'The delivery was on time.' ->"""}]
+    }
 ]
 
-response = bedrock.invoke_model(
-    modelId="anthropic.claude-v1",
-    body={"input": {"messages": messages}}
+response = bedrock.converse(
+    modelId="anthropic.claude-sonnet-4-20250514-v1:0",
+    messages=messages,
+    system=[{"text": "You are a helpful assistant that classifies sentiment."}]
 )
 
-print(response["output"])
+print(response["output"]["message"]["content"][0]["text"])
 ```
 
 ---
@@ -580,6 +593,530 @@ Think step by step. Show your reasoning before the final answer.
 
 ---
 
+# Structured Outputs & Function Calling
+
+## The Shift to Structured Outputs (2025-2026)
+
+### Why Structured Outputs Matter
+
+- **Reliability**: Guarantees valid JSON/schema output every time
+- **Integration**: Direct parsing into application code
+- **Validation**: Schema enforcement prevents malformed responses
+- **Industry Adoption**: Every major API now supports this natively
+
+### The Problem with Unstructured Output
+
+```python
+# Old approach - brittle parsing
+response = llm("Extract name and email from: John at john@example.com")
+# Response: "The name is John and email is john@example.com"
+# Now you need regex or more LLM calls to parse this
+```
+
+---
+
+## Structured Outputs: Implementation
+
+### OpenAI JSON Mode
+
+```python
+from openai import OpenAI
+client = OpenAI()
+
+response = client.chat.completions.create(
+    model="gpt-4o-2026-01-01",
+    response_format={"type": "json_object"},
+    messages=[
+        {"role": "system", "content": "Extract data as JSON with keys: name, email"},
+        {"role": "user", "content": "John Smith can be reached at john@example.com"}
+    ]
+)
+# Guaranteed valid JSON: {"name": "John Smith", "email": "john@example.com"}
+```
+
+### Anthropic Tool Use for Structured Output
+
+```python
+import anthropic
+client = anthropic.Anthropic()
+
+response = client.messages.create(
+    model="claude-sonnet-4-20250514",
+    max_tokens=1024,
+    tools=[{
+        "name": "extract_contact",
+        "description": "Extract contact information",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "name": {"type": "string"},
+                "email": {"type": "string", "format": "email"}
+            },
+            "required": ["name", "email"]
+        }
+    }],
+    tool_choice={"type": "tool", "name": "extract_contact"},
+    messages=[{"role": "user", "content": "Contact: John Smith, john@example.com"}]
+)
+```
+
+---
+
+## Function Calling: Connecting LLMs to Tools
+
+### What is Function Calling?
+
+- LLM decides **when** to call a function and **what arguments** to pass
+- You execute the function, return results to LLM
+- LLM incorporates results into response
+
+### Common Use Cases
+
+| Use Case | Function Example |
+|----------|------------------|
+| Database queries | `query_database(sql: str)` |
+| API calls | `get_weather(city: str)` |
+| Calculations | `calculate_mortgage(principal, rate, years)` |
+| File operations | `read_file(path: str)` |
+
+### Industry Reality
+
+- **80%+ of production AI apps** use function calling
+- Foundation for all AI agents and assistants
+- MCP (Model Context Protocol) builds on this pattern
+
+---
+
+## Function Calling: Amazon Bedrock Example
+
+### Tool Definition with Converse API
+
+```python
+import boto3
+import json
+
+bedrock = boto3.client('bedrock-runtime', region_name='us-east-1')
+
+tools = [{
+    "toolSpec": {
+        "name": "get_stock_price",
+        "description": "Get current stock price for a ticker symbol",
+        "inputSchema": {
+            "json": {
+                "type": "object",
+                "properties": {
+                    "ticker": {"type": "string", "description": "Stock ticker symbol"}
+                },
+                "required": ["ticker"]
+            }
+        }
+    }
+}]
+
+response = bedrock.converse(
+    modelId="anthropic.claude-sonnet-4-20250514-v1:0",
+    messages=[{"role": "user", "content": [{"text": "What's Apple's stock price?"}]}],
+    toolConfig={"tools": tools}
+)
+# LLM returns: tool_use with {"ticker": "AAPL"}
+```
+
+---
+
+# Prompt Caching: Cost Optimization at Scale
+
+## The Economics of LLM Calls
+
+### Token Costs Add Up Fast
+
+| Model | Input (per 1M tokens) | Output (per 1M tokens) |
+|-------|----------------------|------------------------|
+| Claude Sonnet 4 | $3.00 | $15.00 |
+| GPT-4o | $2.50 | $10.00 |
+| Claude Opus 4 | $15.00 | $75.00 |
+
+### The Caching Opportunity
+
+- **System prompts** often 1000-5000 tokens
+- **Repeated across every request**
+- With 10,000 requests/day = massive waste
+
+---
+
+## Anthropic Prompt Caching
+
+### How It Works
+
+```python
+import anthropic
+client = anthropic.Anthropic()
+
+response = client.messages.create(
+    model="claude-sonnet-4-20250514",
+    max_tokens=1024,
+    system=[
+        {
+            "type": "text",
+            "text": "You are a customer service agent for Acme Corp...[long instructions]...",
+            "cache_control": {"type": "ephemeral"}  # Cache this block
+        }
+    ],
+    messages=[{"role": "user", "content": "How do I return an item?"}]
+)
+```
+
+### Cost Savings
+
+- **Cache write**: 25% more than base input price
+- **Cache read**: **90% discount** on cached tokens
+- **Break-even**: ~2 requests with same cached content
+- **TTL**: 5 minutes (ephemeral), extendable with activity
+
+---
+
+## Prompt Caching Strategies
+
+### What to Cache
+
+1. **System instructions** - Role definitions, rules, formatting
+2. **Few-shot examples** - Consistent across requests
+3. **Retrieved documents** - RAG results used multiple times
+4. **Tool definitions** - Same tools across conversations
+
+### Caching Architecture Pattern
+
+```
+┌─────────────────────────────────────────┐
+│  Cached (5000 tokens) - $0.30/M reads   │
+│  ┌─────────────────────────────────┐    │
+│  │ System prompt + Rules           │    │
+│  │ Few-shot examples               │    │
+│  │ Tool definitions                │    │
+│  └─────────────────────────────────┘    │
+├─────────────────────────────────────────┤
+│  Dynamic (500 tokens) - Full price      │
+│  ┌─────────────────────────────────┐    │
+│  │ User message                    │    │
+│  │ Conversation history            │    │
+│  └─────────────────────────────────┘    │
+└─────────────────────────────────────────┘
+```
+
+---
+
+# Evaluating and Testing Prompts
+
+## The Evaluation Gap
+
+### Why This Matters
+
+- **58% of AI teams** lack systematic prompt evaluation (2025 survey)
+- "Vibe checking" doesn't scale
+- Production failures often traced to untested prompt changes
+
+### What to Evaluate
+
+1. **Accuracy**: Does it produce correct outputs?
+2. **Consistency**: Same input → same output quality?
+3. **Edge cases**: How does it handle unusual inputs?
+4. **Safety**: Does it follow guardrails?
+5. **Cost**: Token usage within budget?
+
+---
+
+## Prompt Testing Frameworks
+
+### Unit Testing Prompts
+
+```python
+import pytest
+from your_llm_client import generate_response
+
+class TestSentimentPrompt:
+    """Test suite for sentiment classification prompt"""
+
+    def test_positive_sentiment(self):
+        result = generate_response("I absolutely love this product!")
+        assert result["sentiment"] == "positive"
+        assert result["confidence"] > 0.8
+
+    def test_negative_sentiment(self):
+        result = generate_response("This is the worst experience ever")
+        assert result["sentiment"] == "negative"
+
+    def test_neutral_edge_case(self):
+        result = generate_response("The product arrived on Tuesday")
+        assert result["sentiment"] == "neutral"
+
+    def test_empty_input_handling(self):
+        result = generate_response("")
+        assert "error" in result or result["sentiment"] == "unknown"
+```
+
+---
+
+## Evaluation Metrics and Tools
+
+### Key Metrics
+
+| Metric | What It Measures | When to Use |
+|--------|------------------|-------------|
+| **Exact Match** | Output == expected | Classification, extraction |
+| **F1 Score** | Precision + Recall | Multi-label tasks |
+| **BLEU/ROUGE** | Text similarity | Summarization, translation |
+| **LLM-as-Judge** | Quality rating by another LLM | Open-ended generation |
+| **Human Eval** | Expert assessment | Final validation |
+
+### Popular Tools (2026)
+
+- **Promptfoo**: Open-source prompt testing and evaluation
+- **LangSmith**: LangChain's evaluation platform
+- **Braintrust**: Continuous evaluation for AI products
+- **Humanloop**: Prompt management with built-in evals
+
+### Resources
+
+- [Promptfoo Documentation](https://www.promptfoo.dev/)
+- [Anthropic Evaluation Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/evaluation)
+
+---
+
+# Guardrails and Safety in Prompting
+
+## Why Guardrails Matter
+
+### The Risks
+
+- **Prompt injection**: Malicious inputs that hijack model behavior
+- **Jailbreaking**: Bypassing safety guidelines
+- **Data leakage**: Exposing sensitive information in outputs
+- **Harmful content**: Generating inappropriate or dangerous responses
+
+### Industry Reality
+
+- **Every production AI system needs guardrails**
+- Regulatory requirements increasing (EU AI Act, state laws)
+- Reputational risk from AI failures
+
+---
+
+## Input Guardrails
+
+### Techniques
+
+1. **Input Validation**
+```python
+def validate_input(user_input: str) -> bool:
+    # Length limits
+    if len(user_input) > 10000:
+        return False
+
+    # Known injection patterns
+    injection_patterns = ["ignore previous", "disregard instructions", "system:"]
+    if any(pattern in user_input.lower() for pattern in injection_patterns):
+        return False
+
+    return True
+```
+
+2. **Content Classification**
+```python
+# Use a classifier model to check input safety
+safety_check = classifier.predict(user_input)
+if safety_check["harmful_probability"] > 0.8:
+    return "I cannot process this request"
+```
+
+---
+
+## Output Guardrails
+
+### Techniques
+
+1. **Schema Validation**
+```python
+from pydantic import BaseModel, validator
+
+class SafeResponse(BaseModel):
+    answer: str
+
+    @validator('answer')
+    def no_pii(cls, v):
+        # Check for patterns like SSN, credit cards
+        if re.search(r'\d{3}-\d{2}-\d{4}', v):
+            raise ValueError("Response contains potential PII")
+        return v
+```
+
+2. **Amazon Bedrock Guardrails**
+```python
+response = bedrock.invoke_model(
+    modelId="anthropic.claude-sonnet-4-20250514-v1:0",
+    guardrailIdentifier="your-guardrail-id",
+    guardrailVersion="1",
+    body=json.dumps({"messages": messages})
+)
+```
+
+---
+
+## Defense in Depth: The Guardrail Stack
+
+### Layered Protection
+
+```
+┌─────────────────────────────────────────┐
+│  Layer 1: Input Validation              │
+│  - Length limits, format checks         │
+├─────────────────────────────────────────┤
+│  Layer 2: Content Moderation            │
+│  - Pre-flight safety classification     │
+├─────────────────────────────────────────┤
+│  Layer 3: System Prompt Hardening       │
+│  - Clear boundaries, role definitions   │
+├─────────────────────────────────────────┤
+│  Layer 4: Model-Level Safety            │
+│  - Built-in model guardrails            │
+├─────────────────────────────────────────┤
+│  Layer 5: Output Validation             │
+│  - Schema enforcement, PII detection    │
+├─────────────────────────────────────────┤
+│  Layer 6: Human Review                  │
+│  - High-stakes decisions flagged        │
+└─────────────────────────────────────────┘
+```
+
+---
+
+# Long Context Strategies
+
+## The Long Context Era (2026)
+
+### Available Context Windows
+
+| Model | Max Context | Effective Use |
+|-------|-------------|---------------|
+| Claude Opus 4 | 200K tokens | ~150K reliable |
+| Gemini 2.0 Pro | 2M tokens | ~1.5M reliable |
+| GPT-4o | 128K tokens | ~100K reliable |
+
+### The Challenge
+
+- **Having** long context ≠ **Using** it effectively
+- "Lost in the middle" phenomenon still exists
+- More context = more cost, more latency
+
+---
+
+## Long Context Best Practices
+
+### Strategies for Effective Use
+
+1. **Put Critical Information at Start and End**
+```
+<critical_instructions>
+[Most important rules here - model attends strongly]
+</critical_instructions>
+
+<context>
+[Supporting documents, examples, background]
+</context>
+
+<task>
+[Current request - model attends strongly]
+</task>
+```
+
+2. **Use Explicit Section Markers**
+```xml
+<document id="1" relevance="high">...</document>
+<document id="2" relevance="medium">...</document>
+```
+
+3. **Summarize When Possible**
+- Don't dump 50 pages when a 2-page summary suffices
+- Use hierarchical summarization for very long documents
+
+---
+
+## When to Use Long Context vs. RAG
+
+### Decision Framework
+
+| Factor | Long Context | RAG |
+|--------|--------------|-----|
+| **Document size** | < 100K tokens | > 100K tokens |
+| **Update frequency** | Static/rare updates | Frequent updates |
+| **Precision needed** | "Consider everything" | "Find the needle" |
+| **Cost sensitivity** | Lower volume | Higher volume |
+| **Latency requirements** | Flexible | Strict |
+
+### Hybrid Approach (Best of Both)
+
+1. **RAG for retrieval**: Find relevant chunks
+2. **Long context for reasoning**: Include full retrieved documents
+3. **Result**: Precise retrieval + comprehensive understanding
+
+---
+
+# Industry Case Studies
+
+## Case Study 1: Stripe - Structured Outputs for Payments
+
+### The Challenge
+- Payment data extraction from diverse invoice formats
+- 99.9% accuracy required for financial data
+
+### The Solution
+- Structured outputs with strict JSON schemas
+- Multi-stage validation pipeline
+- Human review for low-confidence extractions
+
+### Results
+- 94% automation rate on invoice processing
+- $2M+ annual savings in manual processing
+- Sub-second response times
+
+---
+
+## Case Study 2: Notion - Context Engineering for AI Assistant
+
+### The Challenge
+- AI needs to understand user's entire workspace
+- Millions of documents per organization
+- Real-time relevance required
+
+### The Solution
+- Hierarchical context architecture
+- Dynamic context selection based on task type
+- Aggressive caching of workspace structure
+
+### Results
+- 60% improvement in answer relevance
+- 3x reduction in API costs through caching
+- User satisfaction up 40%
+
+---
+
+## Case Study 3: Cursor - Agentic Code Generation
+
+### The Challenge
+- Multi-file code changes with consistency
+- Understanding entire codebase context
+- Developer trust and verification
+
+### The Solution
+- "Composer" mode with diff-based output
+- Codebase indexing for context retrieval
+- Iterative refinement with human feedback
+
+### Results
+- 500K+ active developers
+- 40% of code accepted without modification
+- $400M valuation (2025)
+
+---
+
 ## Advanced Prompting Techniques (2026)
 
 ### Self-Consistency
@@ -636,7 +1173,7 @@ Finally, provide your corrected final answer.
 ## AI Coding Assistants: The Landscape
 
 - **Evolution**: From OpenAI Codex & GitHub Copilot (autocomplete) to autonomous agents.
-- **Models**: Powered by GPT-4, Claude 3.5 Sonnet, Gemini 1.5 Pro.
+- **Models**: Powered by GPT-4o, Claude Sonnet 4, Claude Opus 4, Gemini 2.0 Pro.
 - **Main Categories**:
   - **Plugin-based**: Extensions for existing IDEs (VS Code, JetBrains).
   - **Agentic IDEs**: Standalone editors reimagined for AI collaboration.
