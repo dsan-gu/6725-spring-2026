@@ -182,3 +182,6 @@ members
 
 # Quarto rendered HTML files in repo root
 /week*.html
+
+# Quarto slide support files
+docs/lectures/slides/*_files/

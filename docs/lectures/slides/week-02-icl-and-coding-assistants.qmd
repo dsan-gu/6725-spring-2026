@@ -365,9 +365,271 @@ Break down the task of planning a vacation into smaller, manageable steps.
 Solve the following math problem step by step.
 
 If you have 10 apples and you give 3 apples to your friend,
-then buy 5 more apples, and finally eat 2 apples, 
+then buy 5 more apples, and finally eat 2 apples,
 how many apples do you have left?
 ```
+
+---
+
+# From Prompt Engineering to Context Engineering
+
+## The Evolution: Prompt Engineering is Dead?
+
+### The 2025-2026 Paradigm Shift
+
+- **Gartner (July 2025)**: "Context engineering is in, and prompt engineering is out"
+- **The Problem with Prompts Alone**:
+  - LLMs have finite context windows (4K-200K tokens)
+  - Flooding with irrelevant instructions dilutes important information
+  - Longer/trickier prompts yield diminishing returns
+  - Prompts cannot compensate when model lacks situational data
+
+### Key Insight
+
+> "Prompt engineering is what you do **inside** the context window. Context engineering is how you decide **what fills** the window."
+
+---
+
+## What is Context Engineering?
+
+### Definition (Andrej Karpathy, 2025)
+
+> "Context engineering is the delicate art and science of filling the context window with just the right information for each step."
+
+### It's a System-Level Discipline
+
+- **Not just prompts** - Managing everything the model sees at runtime:
+  - Retrieved documents (RAG)
+  - System state and memory
+  - Prior outputs and conversation history
+  - Tool definitions and schemas
+  - Results from external APIs
+  - User preferences and permissions
+
+---
+
+## Why Context Engineering Emerged
+
+### LLM Limitations Drive the Need
+
+1. **LLMs are Stateless**
+   - They don't "remember" unless you reinsert memory into context
+
+2. **LLMs Hallucinate**
+   - Contextual grounding through external data reduces this
+
+3. **LLMs are Brittle**
+   - Prompt-only approaches don't scale or generalize
+
+### Industry Evidence (LangChain 2025 Report)
+
+- 57% of organizations have AI agents in production
+- 32% cite **quality** as top barrier
+- Most failures traced to **poor context management**, not LLM capabilities
+
+---
+
+## Context Engineering: Core Components
+
+### The Context Stack
+
+1. **System Instructions** - Role, constraints, output format
+2. **Retrieved Knowledge** - RAG, vector search results
+3. **Memory** - Conversation history, user preferences
+4. **Tool Definitions** - Available functions, API schemas
+5. **Examples** - Few-shot demonstrations
+6. **Current Task** - The actual user request
+
+### Key Principle: Context is a Resource
+
+- Treat context window like memory allocation
+- Every token has a cost (latency, accuracy, price)
+- Prioritize high-signal information
+- Dynamically adjust based on task
+
+---
+
+## Context Engineering Best Practices
+
+### Design Principles
+
+1. **Relevance Filtering**: Only include what's needed for the current step
+2. **Recency Weighting**: Recent context often more relevant
+3. **Compression**: Summarize long histories
+4. **Chunking**: Break large documents intelligently
+5. **Caching**: Reuse computed context where possible
+
+### Anti-Patterns to Avoid
+
+- Stuffing everything into context "just in case"
+- Static prompts that don't adapt to task
+- Ignoring token limits until truncation occurs
+- No separation between instruction and data
+
+---
+
+## Context Engineering Resources
+
+### Essential Reading
+
+- [Context Engineering: The Definitive 2025 Guide](https://www.flowhunt.io/blog/context-engineering/)
+- [Context Engineering Guide - Prompting Guide](https://www.promptingguide.ai/guides/context-engineering-guide)
+- [From Prompt Engineering to Context Engineering](https://www.ajeetraina.com/from-prompt-engineering-to-context-engineering/)
+- [Context Engineering: A Complete Guide 2026](https://codeconductor.ai/blog/context-engineering/)
+- [Context Engineering vs Prompt Engineering](https://dextralabs.com/blog/context-engineering-vs-prompt-engineering/)
+
+### Key Figures
+
+- **Tobi Lütke** (Shopify CEO): Popularized the term
+- **Andrej Karpathy**: "Delicate art and science" definition
+
+---
+
+# AI Writing Its Own Prompts
+
+## The DSPy Revolution
+
+### What is DSPy?
+
+- **Framework for programming—not prompting—language models** (Stanford NLP)
+- Abstracts prompts into modular Python code
+- **Automatically optimizes prompts** using ML techniques
+
+### The Core Idea
+
+Instead of:
+```python
+prompt = "You are a helpful assistant. Please summarize..."  # Manual trial & error
+```
+
+With DSPy:
+```python
+class Summarizer(dspy.Signature):
+    """Summarize the given text concisely."""
+    text = dspy.InputField()
+    summary = dspy.OutputField()
+
+# Optimizer finds the best prompt automatically!
+```
+
+---
+
+## How DSPy Optimization Works
+
+### The Process
+
+1. **Define Behavior Declaratively** - Use Signatures to specify input/output
+2. **Provide Training Examples** - Small set of examples with expected outputs
+3. **Define a Metric** - How to measure success
+4. **Run Optimizer** - AI automatically discovers optimal prompts
+
+### Key Optimizers
+
+| Optimizer | Approach |
+|-----------|----------|
+| **MIPROv2** | Bayesian optimization over instruction space |
+| **COPRO** | Coordinate ascent hill-climbing |
+| **SIMBA** | Self-reflective improvement from failures |
+| **GEPA** | Trajectory reflection and gap analysis |
+
+---
+
+## DSPy: Real Results
+
+### Automated Improvement
+
+- One optimizer raised evaluation from **51.9% to 63.0%** automatically
+- HotPot QA: **18.42% relative improvement** without manual prompt editing
+
+### Why This Matters
+
+- **Scales AI Development**: Automates the most time-consuming aspect
+- **Model Switching**: Change from GPT-4 to Llama = config change + re-optimize
+- **Reproducibility**: Systematic optimization vs. ad-hoc prompt tweaking
+
+### Resources
+
+- [DSPy Framework](https://dspy.ai/)
+- [GitHub: stanfordnlp/dspy](https://github.com/stanfordnlp/dspy)
+- [DSPy Tutorial 2025](https://www.pondhouse-data.com/blog/dspy-build-better-ai-systems-with-automated-prompt-optimization/)
+
+---
+
+## Modern Prompt Structures (2026)
+
+### Beyond Simple Instructions
+
+1. **XML-Tagged Sections** (Claude preferred)
+```xml
+<context>You are analyzing customer feedback</context>
+<instructions>Classify sentiment and extract key themes</instructions>
+<examples>...</examples>
+<input>{{user_input}}</input>
+```
+
+2. **Structured Output Enforcement**
+```
+Respond in JSON format:
+{"sentiment": "positive|negative|neutral", "themes": [...]}
+```
+
+3. **Chain-of-Thought Triggers**
+```
+Think step by step. Show your reasoning before the final answer.
+```
+
+---
+
+## Advanced Prompting Techniques (2026)
+
+### Self-Consistency
+
+- Generate multiple responses with temperature > 0
+- Take majority vote or aggregate answers
+- Reduces hallucination on reasoning tasks
+
+### Tree of Thoughts (ToT)
+
+- Explore multiple reasoning paths
+- Evaluate and prune branches
+- Backtrack when stuck
+
+### Reflection Prompting
+
+```
+First, provide your answer.
+Then, critically evaluate your answer for errors.
+Finally, provide your corrected final answer.
+```
+
+### Meta-Prompting
+
+- Use one LLM call to generate/improve prompts for another
+- "Write a prompt that would help an LLM solve this type of problem"
+
+---
+
+## The Future: Agentic Context Engineering
+
+### ACE (Agentic Context Engineering)
+
+- **Latest research direction** (2025-2026)
+- Context evolves like a "playbook" that self-updates
+- Models autonomously refine their prompts and memory
+
+### Key Trends
+
+1. **Dynamic Context**: Adapts in real-time based on task
+2. **Self-Improving Systems**: Learn from failures automatically
+3. **Multi-Agent Context Sharing**: Agents coordinate context
+4. **Context as Code**: Version-controlled, testable, reviewable
+
+### Industry Impact
+
+- Enterprise AI spending: **$37B in 2025** (up from $11.5B in 2024)
+- Organizations with robust context architectures see:
+  - 50% improvement in response times
+  - 40% higher quality outputs
 
 ---
 
