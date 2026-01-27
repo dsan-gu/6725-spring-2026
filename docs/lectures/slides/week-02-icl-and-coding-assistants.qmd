@@ -1061,59 +1061,73 @@ response = bedrock.invoke_model(
 
 # Industry Case Studies
 
-## Case Study 1: Stripe - Structured Outputs for Payments
+## Case Study 1: Stripe - Agentic Commerce Suite
 
 ### The Challenge
-- Payment data extraction from diverse invoice formats
-- 99.9% accuracy required for financial data
+- Enable AI agents to conduct commerce on behalf of users
+- Manage fragmented integrations across different AI platforms
+- Secure payment credential handling
 
-### The Solution
-- Structured outputs with strict JSON schemas
-- Multi-stage validation pipeline
-- Human review for low-confidence extractions
+### The Solution (December 11, 2025)
+- **Single Integration**: Sell through multiple AI agents with one integration
+- **Shared Payment Tokens**: AI agents securely transmit buyer credentials to merchants
+- **Agentic Commerce Protocol (ACP)**: Open standard for AI-driven commerce
 
-### Results
-- 94% automation rate on invoice processing
-- $2M+ annual savings in manual processing
-- Sub-second response times
+### Adoption
+Major retailers: Coach, Kate Spade, URBN, Revolve, Ashley Furniture
+Platforms: Squarespace, Wix, Etsy, WooCommerce, BigCommerce
+
+Source: [Stripe Agentic Commerce Suite](https://stripe.com/newsroom/news/agentic-commerce-suite)
 
 ---
 
-## Case Study 2: Notion - Context Engineering for AI Assistant
+## Case Study 2: Notion 3.0 - AI Agents with Context Engineering
 
 ### The Challenge
 - AI needs to understand user's entire workspace
-- Millions of documents per organization
-- Real-time relevance required
+- Multi-step workflows requiring sustained context
+- Integration with external tools
 
-### The Solution
-- Hierarchical context architecture
-- Dynamic context selection based on task type
-- Aggressive caching of workspace structure
+### The Solution (September 18, 2025)
+- **20+ minute multi-step actions** with state-of-the-art memory system
+- **AI Connectors**: Pull context from Slack, Google Drive, GitHub
+- **Custom Instructions Page**: Agent learns your work style and preferences
+- **MCP Partnerships**: Lovable, Perplexity, Mistral, HubSpot
+- **Built-in Models**: Claude Sonnet 4, GPT-5, Gemini 3 Pro (no extra fees)
 
-### Results
-- 60% improvement in answer relevance
-- 3x reduction in API costs through caching
-- User satisfaction up 40%
+### Customer Quotes
+> "We can now instantly spin up ready-to-use systems that used to take hours..." - Ben Levick, Ramp
+
+> "It's like a coworker that's been around and has genuine context." - Harsha Yeddanupudy, Faire
+
+Source: [Notion 3.0: Agents](https://www.notion.com/releases/2025-09-18)
 
 ---
 
-## Case Study 3: Cursor - Agentic Code Generation
+## Case Study 3: Cursor - Fastest Growing SaaS Company
 
-### The Challenge
-- Multi-file code changes with consistency
-- Understanding entire codebase context
-- Developer trust and verification
+### The Numbers (2025)
+- **1M users**, 360,000+ paying customers (within 16 months)
+- **$500M ARR** (May 2025), up from $300M in April (~60% MoM growth)
+- **$2.6B valuation** (January 2025)
+- Fastest SaaS company from $1M to $500M ARR
 
-### The Solution
-- "Composer" mode with diff-based output
-- Codebase indexing for context retrieval
-- Iterative refinement with human feedback
+### Enterprise Adoption
+- 25% of Fortune 500 companies pilot or deploy Cursor
+- 40,000+ enterprise customers
+- Used by OpenAI, Shopify engineers
 
-### Results
-- 500K+ active developers
-- 40% of code accepted without modification
-- $400M valuation (2025)
+### Productivity Impact
+- **126% productivity increase** reported by users
+- **40% faster debugging**
+- **25-35% reduction** in development time
+- 5x faster code completion than manual typing
+
+### Efficiency
+- Only **40-60 employees**
+- **$1.67M-$2.5M revenue per employee**
+
+Source: [Cursor Statistics 2025](https://devgraphiq.com/cursor-statistics/)
 
 ---
 
