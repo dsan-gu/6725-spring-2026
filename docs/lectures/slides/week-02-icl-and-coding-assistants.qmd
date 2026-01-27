@@ -1778,18 +1778,72 @@ kiro-cli chat
 
 ## References and Further Reading
 
-- **Code samples**:
-  - https://github.com/NirDiamant/Prompt_Engineering/tree/main
+---
 
-- **Important Papers**:
-  - Brown et al. (2020). "Language Models are Few-Shot Learners." [[GPT-3 Paper](https://arxiv.org/pdf/2005.14165)]
-  - Wei et al. (2022). "Chain of Thought Prompting Elicits Reasoning in Large Language Models." [link](https://arxiv.org/pdf/2201.11903)
-  - Min et al. (2022). "Rethinking the Role of Demonstrations: What Makes In-Context Learning Work?" [link](https://arxiv.org/pdf/2202.12837)
+## References: Foundational Papers
 
+- Brown et al. (2020). "Language Models are Few-Shot Learners." [GPT-3 Paper](https://arxiv.org/pdf/2005.14165)
+- Wei et al. (2022). "Chain of Thought Prompting Elicits Reasoning in Large Language Models." [link](https://arxiv.org/pdf/2201.11903)
+- Min et al. (2022). "Rethinking the Role of Demonstrations: What Makes In-Context Learning Work?" [link](https://arxiv.org/pdf/2202.12837)
+- Touvron et al. (2023). "LLaMA: Open and Efficient Foundation Language Models." [link](https://arxiv.org/pdf/2302.13971)
 
-- **Comparison Studies**:
-  - Fine-Tuning vs. In-Context Learning vs. cPT: "Prompting vs. Tuning: Which Approach Works Better for LLMs?" [Reddit thread](https://www.reddit.com/r/LocalLLaMA/comments/152s9ei/when_is_it_best_to_use_prompt_engineering_vs/)
-  - Touvron et al. (2023). "LLaMA: Open and Efficient Foundation Language Models." [link](https://arxiv.org/pdf/2302.13971)
-  - Ruoss, Pardo et al (2024) "LMAct: A Benchmark for In-Context Imitation Learning with Long Multimodal Demonstrations" [link](https://arxiv.org/html/2412.01441v1)
+---
+
+## References: Context Engineering & DSPy
+
+### Context Engineering
+- [Context Engineering Guide - Prompting Guide](https://www.promptingguide.ai/guides/context-engineering-guide)
+- [From Prompt Engineering to Context Engineering](https://www.ajeetraina.com/from-prompt-engineering-to-context-engineering/)
+- [Context Engineering: A Complete Guide 2026](https://codeconductor.ai/blog/context-engineering/)
+
+### DSPy Framework
+- [DSPy Official Site](https://dspy.ai/)
+- [GitHub: stanfordnlp/dspy](https://github.com/stanfordnlp/dspy)
+- [DSPy Tutorial 2025](https://www.pondhouse-data.com/blog/dspy-build-better-ai-systems-with-automated-prompt-optimization/)
+
+---
+
+## References: Prompt Engineering by Model
+
+| Model Family | Official Prompt Engineering Guide |
+|--------------|-----------------------------------|
+| Amazon Nova | [docs.aws.amazon.com/nova](https://docs.aws.amazon.com/nova/latest/userguide/prompting.html) |
+| Anthropic Claude | [docs.anthropic.com](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/) |
+| Meta LLaMA | [llama.com/docs](https://www.llama.com/docs/how-to-guides/prompting/) |
+
+### Evaluation & Testing
+- [Promptfoo Documentation](https://www.promptfoo.dev/)
+- [Anthropic Evaluation Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/evaluation)
+
+---
+
+## References: AI Coding Assistants
+
+### Claude Code
+- [Claude Code Docs](https://docs.anthropic.com/en/docs/claude-code)
+- [CLAUDE.md Guide](https://docs.anthropic.com/en/docs/claude-code/memory)
+- [Skills Reference](https://code.claude.com/docs/en/skills)
+- [Hooks Reference](https://code.claude.com/docs/en/hooks)
+- [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices)
+- [The Complete Guide to CLAUDE.md](https://www.builder.io/blog/claude-md-guide)
+- [Awesome Claude Code](https://github.com/hesreallyhim/awesome-claude-code)
+
+### Other Tools
+- [Cursor](https://cursor.com) | [Cursor Statistics](https://devgraphiq.com/cursor-statistics/)
+- [AWS Kiro](https://kiro.dev/) | [Kiro CLI Docs](https://kiro.dev/cli/)
+- [Google Antigravity](https://antigravity.google)
+- [Aider](https://aider.chat)
+- [Roo Code](https://roocode.com)
+
+---
+
+## References: Industry Case Studies
+
+- [Stripe Agentic Commerce Suite](https://stripe.com/newsroom/news/agentic-commerce-suite) (Dec 2025)
+- [Notion 3.0: Agents](https://www.notion.com/releases/2025-09-18) (Sep 2025)
+- [Cursor Adoption Trends](https://opsera.ai/blog/cursor-ai-adoption-trends-real-data-from-the-fastest-growing-coding-tool/)
+
+### Code Samples
+- [Prompt Engineering Examples](https://github.com/NirDiamant/Prompt_Engineering/tree/main)
 
 
