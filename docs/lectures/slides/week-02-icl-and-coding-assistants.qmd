@@ -1267,14 +1267,474 @@ Finally, provide your corrected final answer.
 
 ---
 
-## Spotlight: Claude Code & Configuration
+## Spotlight: Claude Code Architecture
 
-- **What is it?**: A CLI-based agent that can traverse files, plan, and execute.
-- **Configuring the Agent** (Files in your repo):
-  - `claude.md`: **Project Context**. High-level architecture, style guides, and rules.
-  - `skills.md`: **Tool Definitions**. Custom scripts/commands the agent can run.
-  - `agent.md`: **Persona**. Defining the agent's role (e.g., "Senior Backend Engineer").
-- **Versatility**: These configuration patterns apply to many agentic tools, not just Claude.
+### The Complete Claude Code Stack (Boris Cherny)
+
+![Claude Code Architecture](img/claudeCode.png){width=85%}
+
+Source: [Boris Cherny on X](https://x.com/bcherny/status/2007179832300581177)
+
+---
+
+# Deep Dive: Claude Code Configuration
+
+## CLAUDE.md: The Project Brain
+
+### What is CLAUDE.md?
+
+- **Persistent context** that Claude automatically incorporates into every conversation
+- Solves the problem of repeatedly explaining the same context
+- Think of it as a configuration file for your AI pair programmer
+
+### File Hierarchy
+
+```
+~/.claude/CLAUDE.md              # Global (all projects)
+~/repos/org/CLAUDE.md            # Organization-wide
+~/repos/org/project/CLAUDE.md    # Project-specific (most common)
+~/repos/org/project/src/CLAUDE.md  # Subdirectory (additive)
+```
+
+**Key Insight**: Files are additive - subdirectory CLAUDE.md appends to parent, doesn't override.
+
+---
+
+## CLAUDE.md: What to Include
+
+### Essential Sections
+
+```markdown
+# Project Overview
+This is a FastAPI e-commerce backend with Stripe integration.
+
+# Tech Stack
+- Python 3.12, FastAPI, SQLAlchemy 2.0
+- PostgreSQL 15, Redis for caching
+- pytest for testing
+
+# Commands
+- Run tests: `uv run pytest`
+- Start dev server: `uv run uvicorn main:app --reload`
+- Lint: `uv run ruff check --fix . && uv run ruff format .`
+
+# Code Style
+- Use Pydantic for all data validation
+- Private functions start with underscore
+- One parameter per line in function signatures
+
+# Architecture Decisions
+- All database queries go through repository pattern
+- Use dependency injection for testability
+```
+
+---
+
+## CLAUDE.md: Best Practices
+
+### Do's
+
+1. **Keep it concise** - ~150-200 instructions max (frontier model limit)
+2. **Focus on the "how"** - Commands, patterns, conventions
+3. **Use `/init`** - Let Claude generate a starter, then refine
+4. **Update regularly** - Treat as living documentation
+
+### Don'ts
+
+1. **Don't auto-generate** - Manually craft for best results
+2. **Don't dump everything** - Use progressive disclosure
+3. **Don't include obvious things** - Claude already knows Python syntax
+
+### Pro Tip: Progressive Disclosure
+
+```markdown
+# For detailed API documentation, see: docs/api/README.md
+# For database schema details, see: docs/schema.md
+```
+
+Tell Claude **where** to find information, not all the information itself.
+
+---
+
+## Skills: Modular Expertise
+
+### What are Skills?
+
+- **Modular chunks** of CLAUDE.md that load only when needed
+- Follow the [Agent Skills open standard](https://agentskills.org/)
+- Can include scripts, templates, and supporting files
+
+### Skill Structure
+
+```
+.claude/skills/
+├── deploy/
+│   ├── SKILL.md           # Skill definition
+│   ├── deploy.sh          # Supporting script
+│   └── config.template    # Template file
+├── review-pr/
+│   └── SKILL.md
+└── database-migrate/
+    └── SKILL.md
+```
+
+### SKILL.md Example
+
+```markdown
+---
+invocation: explicit      # Only when user calls /deploy
+context: fork             # Run in isolated subagent
+agent: general-purpose    # Which agent to use
+---
+
+# Deploy to Production
+
+Follow these steps to deploy:
+1. Run tests: `uv run pytest`
+2. Build: `docker build -t app .`
+3. Push: `docker push registry/app`
+4. Deploy: `kubectl apply -f k8s/`
+```
+
+---
+
+## Skills: Invocation Modes
+
+### Three Ways Skills Activate
+
+| Mode | Frontmatter | Behavior |
+|------|-------------|----------|
+| **Explicit** | `invocation: explicit` | Only via `/skill-name` command |
+| **Automatic** | `invocation: automatic` | Claude loads when relevant |
+| **Implicit** | (default) | Available but not auto-loaded |
+
+### Custom Commands = Skills
+
+```
+.claude/commands/fix-issue.md  →  /project:fix-issue
+.claude/skills/fix-issue/SKILL.md  →  /fix-issue
+```
+
+Both create commands! Skills add: directories, frontmatter, subagent support.
+
+### Passing Arguments
+
+```bash
+/project:fix-github-issue 1234
+```
+
+In `fix-github-issue.md`:
+```markdown
+Fix GitHub issue #$1
+First, read the issue details...
+```
+
+---
+
+## Subagents: Isolated Workers
+
+### What are Subagents?
+
+- **Isolated Claude instances** with their own context window
+- Delegate entire tasks, get results back
+- Keep main conversation context clean
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Main Claude Session                                    │
+│  ┌───────────────────────────────────────────────────┐  │
+│  │ Your conversation history + CLAUDE.md context     │  │
+│  └───────────────────────────────────────────────────┘  │
+│                         │                               │
+│            ┌────────────┴────────────┐                  │
+│            ▼                         ▼                  │
+│  ┌─────────────────┐      ┌─────────────────┐          │
+│  │ Subagent: Explore│      │ Subagent: Plan  │          │
+│  │ (Read-only)      │      │ (Architecture)  │          │
+│  │ Own context      │      │ Own context     │          │
+│  └────────┬─────────┘      └────────┬────────┘          │
+│           │                         │                   │
+│           └─────────┬───────────────┘                   │
+│                     ▼                                   │
+│           Results returned to main                      │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Subagents: Built-in Types
+
+### Available Subagents
+
+| Agent | Purpose | Tools Available |
+|-------|---------|-----------------|
+| **Explore** | Codebase exploration | Glob, Grep, Read (no Edit) |
+| **Plan** | Architecture design | All read tools, no write |
+| **general-purpose** | Full capabilities | All tools |
+| **Custom** | Your definition | Configurable |
+
+### Using Subagents in Skills
+
+```markdown
+---
+context: fork           # Creates isolated subagent
+agent: Explore          # Use Explore agent type
+---
+
+# Find Authentication Code
+Search the codebase for all authentication-related files.
+Look for: login, logout, JWT, session, auth middleware.
+```
+
+### Why Use Subagents?
+
+1. **Context efficiency** - Don't pollute main conversation
+2. **Parallel execution** - Multiple subagents can work simultaneously
+3. **Safety** - Explore agent can't modify files
+
+---
+
+## Hooks: Deterministic Automation
+
+### What are Hooks?
+
+- **Shell commands that trigger automatically** during Claude Code events
+- Programmable checkpoints for validation, formatting, integration
+- The "must-do" rules that complement CLAUDE.md "should-do" suggestions
+
+### Hook Lifecycle
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Claude Code Events                    │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  SessionStart ──► User types prompt                     │
+│       │                                                 │
+│       ▼                                                 │
+│  UserPromptSubmit ──► Claude processes                  │
+│       │                                                 │
+│       ▼                                                 │
+│  PreToolUse ──► [HOOK: Validate/Modify] ──► Tool runs  │
+│       │                                                 │
+│       ▼                                                 │
+│  PostToolUse ──► [HOOK: Format/Log] ──► Continue       │
+│       │                                                 │
+│       ▼                                                 │
+│  Notification ──► [HOOK: Alert user]                   │
+│       │                                                 │
+│       ▼                                                 │
+│  Stop ──► Agent completes response                     │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Hooks: Configuration
+
+### Hook Types and Exit Codes
+
+| Hook | When | Exit 0 | Exit 1 | Exit 2 |
+|------|------|--------|--------|--------|
+| **PreToolUse** | Before tool runs | Continue | Block + retry | Block + error |
+| **PostToolUse** | After tool completes | Continue | - | Show error |
+| **Notification** | On alerts | Continue | - | - |
+
+### Configuration in settings.json
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'About to modify: $TOOL_INPUT'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ruff format $FILE_PATH"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+---
+
+## Hooks: Practical Examples
+
+### Auto-Format on Every Edit
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ $FILE_PATH == *.py ]]; then ruff format $FILE_PATH; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Block Dangerous Operations
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo $TOOL_INPUT | grep -q 'rm -rf'; then exit 1; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Slack Notification on Completion
+
+```json
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -X POST -d '{\"text\":\"Claude needs attention\"}' $SLACK_WEBHOOK"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+---
+
+## Claude Code: Resources
+
+### Official Documentation
+
+- [Claude Code Docs](https://docs.anthropic.com/en/docs/claude-code)
+- [CLAUDE.md Guide](https://docs.anthropic.com/en/docs/claude-code/memory)
+- [Skills Reference](https://code.claude.com/docs/en/skills)
+- [Hooks Reference](https://code.claude.com/docs/en/hooks)
+
+### Community Resources
+
+- [Awesome Claude Code](https://github.com/hesreallyhim/awesome-claude-code) - Curated skills, hooks, plugins
+- [Claude Code Best Practices](https://www.anthropic.com/engineering/claude-code-best-practices) - Official Anthropic guide
+- [The Complete Guide to CLAUDE.md](https://www.builder.io/blog/claude-md-guide)
+
+### Key Insight
+
+> "Hooks are huge and critical for steering Claude in a complex enterprise repo. They are the deterministic 'must-do' rules that complement the 'should-do' suggestions in CLAUDE.md."
+
+---
+
+## Spotlight: Google Antigravity
+
+### What is Antigravity?
+
+- **Agent-first IDE** from Google DeepMind (announced Nov 2025)
+- VS Code fork with deep AI integration
+- **Free for individuals** during public preview
+
+### Key Differentiators
+
+| Feature | Description |
+|---------|-------------|
+| **Multi-Agent Orchestration** | "Manager" view for parallel agent tasks |
+| **Artifacts** | Rich outputs (screenshots, diffs, recordings) for verification |
+| **Three Modes** | Agent-driven, Review-driven, Agent-assisted |
+| **Multi-Model** | Gemini 3, Claude Sonnet/Opus 4, GPT-OSS-120b |
+
+### Performance
+
+- **SWE-bench Verified**: 76.2% (1% behind Claude Sonnet 4.5)
+- **Terminal-Bench 2.0**: 54.2% (vs GPT-5.1's 47.6%)
+
+### Download
+
+- [antigravity.google](https://antigravity.google) - macOS, Windows, Linux
+
+---
+
+## Spotlight: AWS Kiro
+
+### What is Kiro?
+
+- **Agentic IDE + CLI** from AWS
+- Spec-driven development with agent hooks and "powers"
+- **Free tier available** - 500 bonus credits for new users
+
+### Kiro CLI Installation
+
+```bash
+# macOS (Homebrew)
+brew install --cask kiro-cli
+
+# Linux (one-liner)
+curl -fsSL https://kiro.dev/install.sh | sh
+
+# Verify installation
+kiro-cli --version
+```
+
+### Getting Started
+
+```bash
+# Login with AWS Builder ID, GitHub, or Google
+kiro-cli auth login
+
+# Start interactive chat
+kiro-cli chat
+
+# Select model (Auto recommended)
+# Options: Auto (1x), claude-sonnet-4.5 (1.3x), claude-haiku-4.5 (0.4x)
+```
+
+### Key Features
+
+- **Steering files** - Similar to CLAUDE.md
+- **MCP integration** - Connect external tools
+- **Powers** - Modular agent capabilities
+- **Works with Kiro IDE** - Shared configuration
+
+### Resources
+
+- [Kiro Downloads](https://kiro.dev/downloads/)
+- [Kiro CLI Docs](https://kiro.dev/cli/)
+- [Kiro FAQ](https://kiro.dev/faq/)
 
 ---
 
