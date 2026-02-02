@@ -1,5 +1,5 @@
 ---
-title: "Week 3: Retrieval Augumented Generation (RAG) - Part 1"
+title: "Week 3: Retrieval Augmented Generation (RAG) - Part 1"
 subtitle: "Applied Generative AI for AI Developers"
 author: "Amit Arora"
 format:
@@ -15,7 +15,7 @@ format:
 
 ## What is RAG? {.center}
 
-RAG = Retrieval Augumented Generation  
+RAG = Retrieval Augmented Generation
 A generative AI approach where the model combines external knowledge retrieval with text generation to provide more accurate and contextually rich responses.
 
 ## Why RAG?
@@ -89,8 +89,167 @@ Key Considerations:
   - **OpenAI embeddings**: Excellent general-purpose performance but can be expensive for large-scale applications.
   - **Cohere embeddings**: Strong multilingual support and competitive performance.
   - **Amazon Titan**: Integrated well with AWS ecosystem, good multilingual capabilities.
-  - **ColBERTv2**: Advanced model with strong performance on academic benchmarks. [Paper](https://arxiv.org/pdf/2112.01488), [HuggingFace](https://huggingface.co/colbert-ir/colbertv2.0), [LangChain example](https://python.langchain.com/docs/integrations/retrievers/ragatouille/).
+  - **Voyage AI**: Recommended by Anthropic, state-of-the-art performance with domain-specific models for finance, healthcare, and code.
+  - **ColBERTv2**: Late interaction model -- independently encodes queries and documents, then uses "MaxSim" for fine-grained token-level similarity. 6-10x smaller footprint than ColBERTv1 with better quality. [Paper](https://arxiv.org/pdf/2112.01488), [HuggingFace](https://huggingface.co/colbert-ir/colbertv2.0), [LangChain example](https://python.langchain.com/docs/integrations/retrievers/ragatouille/).
 
+---
+
+## Beyond Embeddings: Agentic Search {.center}
+
+What if embeddings-based RAG is not the best approach for every use case?
+
+---
+
+## The Case Against Embeddings-Only RAG
+
+The Anthropic engineering team discovered that for **Claude Code**, using Unix tools (`grep`, `ripgrep`, `find`) over codebases gives **better results** than embeddings-based approaches.
+
+> "We did use vector embeddings initially. They're really tricky to maintain because you have to continuously re-index... Claude is really good at agentic search. You can get to the same accuracy level with agentic search and it's just a much cleaner deployment story."
+>
+> -- Cat Wu, PM for Claude Code ([Latent Space Podcast](https://www.latent.space/p/claude-code))
+
+Boris Cherny (Lead Engineer, Claude Code) described the tool as **"not a product as much as it's a Unix utility"** -- fitting Anthropic's product principle of **"do the simple thing first."**
+
+---
+
+## Agentic Search vs Semantic Search
+
+From [Anthropic's official engineering blog](https://www.anthropic.com/engineering/claude-code-best-practices):
+
+> "Semantic search is usually faster than agentic search, but **less accurate, more difficult to maintain, and less transparent**. It involves 'chunking' the relevant context, embedding these chunks as vectors, and then searching for concepts by querying those vectors. Given its limitations, we suggest **starting with agentic search**, and only adding semantic search if you need faster results or more variations."
+
+**Agentic search** = An AI agent iteratively uses tools like `grep`, `find`, `cat`, and `ls` to locate relevant information, reasoning about what to search for next based on what it has found so far.
+
+---
+
+## SWE-Bench Validation
+
+Colin Flaherty (Augment, top of SWE-Bench Verified leaderboard):
+
+> "We explored adding various embedding-based retrieval tools, but found that for SWE-Bench tasks this was **not the bottleneck** -- **grep and find were sufficient**."
+
+Source: [Why Grep Beat Embeddings in Our SWE-Bench Agent](https://jxnl.co/writing/2025/09/11/why-grep-beat-embeddings-in-our-swe-bench-agent-lessons-from-augment/)
+
+### When Does Each Approach Win?
+
+| Approach | Best For |
+|----------|----------|
+| **Agentic Search** (grep/find) | Codebases, structured text, precise lookups |
+| **Semantic Search** (embeddings) | Large unstructured corpora, fuzzy matching |
+| **Hybrid** (both as tools) | Agent chooses the right tool per query |
+
+The takeaway: expose **both** as tools and let the agent decide.
+
+---
+
+## Contextual Retrieval {.center}
+
+Solving the "lost context" problem in chunking
+
+Source: [Anthropic Blog - Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval)
+
+---
+
+## The Problem with Naive Chunking
+
+Traditional RAG chunks documents and embeds each chunk independently. This **loses context**:
+
+```
+Original document:
+"Acme Corp revenue grew 15% in Q3. The company attributed
+this growth to their new AI product line launched in Q2."
+
+Chunk 2 (after splitting):
+"The company attributed this growth to their new AI product line
+launched in Q2."
+```
+
+**Problem**: Which company? What growth? The chunk is orphaned from its context.
+
+---
+
+## Contextual Retrieval: The Solution
+
+Anthropic's approach: use Claude to **prepend chunk-specific context** to each chunk before embedding.
+
+```
+Contextual Chunk 2:
+"This chunk is from Acme Corp's Q3 earnings report. It discusses
+revenue growth of 15%. The company attributed this growth to
+their new AI product line launched in Q2."
+```
+
+### Results
+
+- **49% reduction** in failed retrievals with contextual embeddings alone
+- **67% reduction** when combined with reranking
+- Uses **prompt caching** to keep costs manageable (pennies per document)
+
+### Key Insight
+
+For knowledge bases under **200K tokens**, you may not need RAG at all -- just put the entire context in the prompt window.
+
+---
+
+## Late Chunking
+
+An alternative approach from Jina AI to preserve context during chunking.
+
+**Traditional approach** (chunk-then-embed):
+
+```
+Document -> Split into chunks -> Embed each chunk independently
+```
+
+**Late chunking** (embed-then-chunk):
+
+```
+Document -> Feed entire doc into long-context embedding model
+         -> Get token-level embeddings WITH full context
+         -> THEN split into chunks
+```
+
+### Why It Matters
+
+- Pronouns and references retain their meaning ("The company" knows it means "Acme Corp")
+- Each chunk embedding is aware of the full document context
+- No need for an extra LLM call (unlike contextual retrieval)
+- Trade-off: requires a long-context embedding model
+
+Source: [Late Chunking Paper (arXiv:2409.04701)](https://arxiv.org/pdf/2409.04701), [Weaviate Blog](https://weaviate.io/blog/late-chunking)
+
+---
+
+## Hybrid Search: BM25 + Embeddings
+
+The production standard for enterprise RAG combines **lexical** and **semantic** search.
+
+```
+                    User Query
+                    /        \
+                   /          \
+            BM25 Search    Vector Search
+           (keyword match)  (semantic match)
+                   \          /
+                    \        /
+              Reciprocal Rank Fusion (RRF)
+                       |
+                  Merged Results
+                       |
+                   Reranker
+                       |
+                  Final Results
+```
+
+### Why Hybrid?
+
+- **BM25 alone** misses semantic similarity ("car" vs "automobile")
+- **Embeddings alone** miss exact keyword matches (product IDs, error codes, names)
+- **Together**: best of both worlds
+
+Recommended starting weight: **30% BM25 / 70% embedding** (tune for your domain).
+
+Source: [Superlinked - Optimizing RAG with Hybrid Search](https://superlinked.com/vectorhub/articles/optimizing-rag-with-hybrid-search-reranking)
 
 ## Vector Databases
 
@@ -224,11 +383,15 @@ Features to Consider:
 
 - Represents knowledge as **entities and relationships**
 - Uses **graph traversal and structured queries**
-- Common tools: Neo4j, Memgraph
+- Common tools: Neo4j, Memgraph, Amazon Neptune
+- **Microsoft GraphRAG**: Open-source framework that extracts knowledge graphs from documents, builds community hierarchies, and generates summaries for retrieval. Outperforms baseline RAG for global sensemaking over 1M+ token datasets.
 - Strengths:
   - Captures **contextual relationships**
   - Enables **logical reasoning** over data
   - Ideal for **structured, interconnected knowledge**
+  - More **comprehensive and diverse** answers with fewer hallucinations
+
+Source: [Microsoft GraphRAG](https://www.microsoft.com/en-us/research/project/graphrag/), [Paper (arXiv:2404.16130)](https://arxiv.org/abs/2404.16130)
 
 ---
 
@@ -366,7 +529,7 @@ bedrock = boto3.client(
 
 # Initialize the LLM
 llm = ChatBedrockConverse(
-    model_id="anthropic.claude-3-sonnet-20240229",  # or your preferred Claude model
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
     client=bedrock,
     model_kwargs={"temperature": 0}
 )
@@ -387,10 +550,313 @@ sql_chain.run("What are the top 5 research topics?")
 
 ## Summary of different types of RAG on text data
 
-- **Vector DB RAG** → Best for **scalable, unstructured text search**
-- **Graph RAG** → Best for **structured reasoning & entity relationships**
-- **SQL RAG** → Best for **highly structured, tabular data**
-- **Hybrid RAG** → Best of all approaches!
+- **Vector DB RAG** --> Best for **scalable, unstructured text search**
+- **Graph RAG** --> Best for **structured reasoning & entity relationships**
+- **SQL RAG** --> Best for **highly structured, tabular data**
+- **Hybrid RAG** --> Best of all approaches!
+
+---
+
+## Agentic RAG {.center}
+
+Moving from static pipelines to autonomous retrieval agents
+
+---
+
+## What is Agentic RAG?
+
+Traditional RAG follows a **fixed pipeline**: retrieve, then generate. Agentic RAG embeds **autonomous AI agents** that make decisions at each step.
+
+```
+Traditional RAG:
+  Query -> Retrieve -> Generate -> Done
+
+Agentic RAG:
+  Query -> Agent decides what to fetch
+       -> Agent calls tools (search, SQL, API, grep)
+       -> Agent evaluates results
+       -> Agent decides: enough? or search again?
+       -> Agent may rewrite query and retry
+       -> Agent generates answer with citations
+       -> Agent self-checks for hallucinations
+```
+
+### Key Capabilities
+
+- **Query planning**: Decomposes complex questions into sub-queries
+- **Tool selection**: Chooses between vector search, keyword search, SQL, APIs
+- **Self-correction**: Evaluates retrieved documents and retries if quality is low
+- **Multi-step reasoning**: Chains multiple retrieval steps for complex questions
+
+Source: [Agentic RAG Survey (arXiv:2501.09136)](https://arxiv.org/abs/2501.09136)
+
+---
+
+## Agentic RAG Architecture
+
+```
+                    +-------------------+
+                    |   User Question   |
+                    +--------+----------+
+                             |
+                    +--------v----------+
+                    |   Planning Agent  |
+                    | (decompose query) |
+                    +--------+----------+
+                             |
+              +--------------+--------------+
+              |              |              |
+     +--------v---+  +------v-----+  +-----v------+
+     | Vector     |  | Keyword    |  | SQL        |
+     | Search     |  | Search     |  | Query      |
+     +--------+---+  +------+-----+  +-----+------+
+              |              |              |
+              +--------------+--------------+
+                             |
+                    +--------v----------+
+                    | Evaluation Agent  |
+                    | (assess quality)  |
+                    +--------+----------+
+                             |
+                     Good enough? --NO--> Rewrite & Retry
+                             |
+                            YES
+                             |
+                    +--------v----------+
+                    | Generation Agent  |
+                    | (answer + cite)   |
+                    +-------------------+
+```
+
+---
+
+## Corrective RAG (CRAG)
+
+CRAG adds a **retrieval evaluator** that assesses document quality before generation.
+
+### How It Works
+
+1. Retrieve documents as usual
+2. A lightweight evaluator scores each document: **Correct / Incorrect / Ambiguous**
+3. Based on the assessment:
+   - **Correct**: Refine and use the document
+   - **Incorrect**: Discard and fall back to **web search**
+   - **Ambiguous**: Combine refined document with web search results
+
+### Why It Matters
+
+- **Plug-and-play**: Works with any existing RAG pipeline
+- **Self-correcting**: Does not blindly trust retrieved documents
+- **Web search fallback**: Handles cases where local knowledge base is insufficient
+
+Source: [CRAG Paper (arXiv:2401.15884)](https://arxiv.org/abs/2401.15884), [LangGraph CRAG Tutorial](https://langchain-ai.github.io/langgraph/tutorials/rag/langgraph_crag/)
+
+---
+
+## Self-RAG
+
+Self-RAG teaches the model to **reflect** during generation, dynamically deciding when and what to retrieve.
+
+### Self-RAG Process
+
+```
+Input query
+  |
+  v
+Should I retrieve? (reflection token)
+  |
+  YES --> Retrieve documents
+  |         |
+  |         v
+  |       Is this document relevant? (reflection token)
+  |         |
+  |        YES --> Generate with this evidence
+  |         |         |
+  |         |         v
+  |         |       Is my response supported? (reflection token)
+  |         |         |
+  |         |        YES --> Return response
+  |         |         NO --> Try next document
+  |         |
+  |        NO --> Skip this document
+  |
+  NO --> Generate without retrieval
+```
+
+### CRAG + Self-RAG Together
+
+- **CRAG** cleans the retrieval inputs (better documents in)
+- **Self-RAG** refines the generation outputs (better answers out)
+- Complementary approaches that can be combined
+
+---
+
+## RAG vs Long Context Windows {.center}
+
+With context windows reaching 200K+ tokens, is RAG still necessary?
+
+---
+
+## RAG vs Long Context: The Trade-offs
+
+| Factor | RAG | Long Context |
+|--------|-----|-------------|
+| **Cost per query** | ~$0.00008 | ~$0.10 (1,250x more) |
+| **Query latency** | ~1 second | ~45 seconds |
+| **Accuracy (QA benchmarks)** | Good | Slightly better |
+| **Scales to millions of docs** | Yes | No |
+| **"Lost in the Middle" problem** | Minimal | Significant |
+| **Requires indexing pipeline** | Yes | No |
+| **Real-time data updates** | Easy | Requires re-prompting |
+
+Source: [Long Context vs. RAG for LLMs (arXiv:2501.01880)](https://arxiv.org/abs/2501.01880)
+
+---
+
+## The "Lost in the Middle" Problem
+
+Research shows that LLMs with long context windows tend to **pay more attention to the beginning and end** of the context, while information in the middle gets lower attention.
+
+```
+Attention Distribution in Long Context:
+
+High  |##                              ##
+      |###                            ###
+      |####                          ####
+      |#####                        #####
+      |######                      ######
+      |########                  ########
+Low   |############        ############
+      +-----------------------------------
+       Beginning    Middle         End
+```
+
+RAG mitigates this by retrieving only the **most relevant** chunks, keeping the context window focused and small.
+
+---
+
+## When to Use Which Approach
+
+### Use RAG When:
+
+- Knowledge base is **larger than the context window**
+- You need **real-time updates** (new documents added frequently)
+- **Cost matters** (RAG is 1,000x+ cheaper per query)
+- You need **source attribution** and traceability
+- Working with **millions of documents**
+
+### Use Long Context When:
+
+- Entire corpus fits in the context window (< 200K tokens)
+- You need the model to reason **across the entire document**
+- Summarization or analysis of a **single long document**
+- Prototyping before building a full RAG pipeline
+
+### The Answer: Context Engineering
+
+The field is moving toward **context engineering** -- dynamically assembling the most effective context per query, mixing RAG retrieval, long context, and cached context as appropriate.
+
+---
+
+## RAG Evaluation with RAGAS {.center}
+
+How do you know if your RAG pipeline is actually working?
+
+---
+
+## RAGAS: RAG Assessment Framework
+
+[RAGAS](https://docs.ragas.io/en/stable/) is the industry-standard open-source framework for evaluating RAG pipelines.
+
+### Core Metrics
+
+| Metric | What It Measures |
+|--------|-----------------|
+| **Context Precision** | Are the retrieved documents actually relevant? |
+| **Context Recall** | Did we retrieve all the relevant documents? |
+| **Faithfulness** | Is the generated answer supported by the retrieved context? |
+| **Answer Relevancy** | Does the answer actually address the question? |
+
+### The Key Insight
+
+RAG evaluation requires measuring **two separate things**:
+
+1. **Retrieval quality**: Did we find the right documents? (Context Precision + Recall)
+2. **Generation quality**: Did we produce a good answer from those documents? (Faithfulness + Relevancy)
+
+A RAG system can fail at either stage -- good retrieval with bad generation, or bad retrieval with good generation.
+
+---
+
+## RAGAS in Practice
+
+```python
+from ragas import evaluate
+from ragas.metrics import (
+    context_precision,
+    context_recall,
+    faithfulness,
+    answer_relevancy
+)
+
+# Prepare evaluation dataset
+eval_dataset = {
+    "question": ["What is the capital of France?"],
+    "answer": ["The capital of France is Paris."],
+    "contexts": [["Paris is the capital and largest city of France."]],
+    "ground_truth": ["Paris is the capital of France."]
+}
+
+# Run evaluation
+results = evaluate(
+    dataset=eval_dataset,
+    metrics=[
+        context_precision,
+        context_recall,
+        faithfulness,
+        answer_relevancy
+    ]
+)
+
+print(results)
+# {'context_precision': 1.0, 'context_recall': 1.0,
+#  'faithfulness': 1.0, 'answer_relevancy': 0.98}
+```
+
+### Other Evaluation Tools
+
+- **DeepEval**: pytest-integrated RAG evaluation
+- **Giskard**: ML model testing including RAG
+- **LangSmith**: End-to-end LLM application monitoring
+
+Source: [RAGAS Paper (arXiv:2309.15217)](https://arxiv.org/abs/2309.15217), [RAGAS Documentation](https://docs.ragas.io/en/stable/)
+
+---
+
+## Amazon Bedrock Knowledge Bases {.center}
+
+Fully managed RAG as a service
+
+---
+
+## Amazon Bedrock Knowledge Bases
+
+A fully managed service that handles the entire RAG pipeline -- from document ingestion to retrieval-augmented generation.
+
+### Key Features
+
+- **Advanced chunking**: Semantic, hierarchical, and fixed-size chunking strategies
+- **Multiple vector stores**: Aurora PostgreSQL, OpenSearch Serverless, Neptune, MongoDB Atlas, Pinecone, Redis Enterprise
+- **GraphRAG support**: Uses Neptune Analytics for knowledge graph-based retrieval (GA March 2025)
+- **Multimodal retrieval**: Supports images, audio, and video alongside text
+- **Contextual retrieval**: Integrates Anthropic's contextual retrieval technique
+
+### APIs
+
+- **RetrieveAndGenerate**: End-to-end RAG in a single API call
+- **Retrieve**: Get relevant chunks without generation (bring your own LLM)
+
+Source: [Amazon Bedrock Knowledge Bases](https://aws.amazon.com/bedrock/knowledge-bases/), [Documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html)
 
 ---
 
@@ -499,10 +965,46 @@ graph TD
 
 ---
 
-## References
-1. [Talk to your slide deck: AWS blog post](https://aws.amazon.com/blogs/machine-learning/talk-to-your-slide-deck-using-multimodal-foundation-models-hosted-on-amazon-bedrock-and-amazon-sagemaker-part-1/)
-1. [Retrieve data and generate AI responses with Amazon Bedrock Knowledge Bases](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html)
-1. [Course Bookmarks repo: links for RAG](https://github.com/gu-dsan6725/bookmarks/tree/main?tab=readme-ov-file#rag)
-1. [Multimodal Few-Shot Learning with Frozen Language Models (2023)](https://arxiv.org/pdf/2106.13884)
-1. [Learning Transferable Visual Models From Natural Language Supervision](https://cdn.openai.com/papers/Learning_Transferable_Visual_Models_From_Natural_Language.pdf)
-1. [Multimodal Chain-of-Thought Reasoning in Language Models](https://arxiv.org/pdf/2302.00923)
+## References & Further Reading
+
+### Retrieval Approaches
+
+1. [Anthropic Engineering: Claude Code Best Practices (Agentic Search)](https://www.anthropic.com/engineering/claude-code-best-practices)
+1. [Latent Space Podcast: Claude Code](https://www.latent.space/p/claude-code) -- Cat Wu and Boris Cherny on grep vs embeddings
+1. [Why Grep Beat Embeddings in Our SWE-Bench Agent](https://jxnl.co/writing/2025/09/11/why-grep-beat-embeddings-in-our-swe-bench-agent-lessons-from-augment/)
+1. [Anthropic Blog: Contextual Retrieval](https://www.anthropic.com/news/contextual-retrieval)
+1. [Late Chunking Paper (arXiv:2409.04701)](https://arxiv.org/pdf/2409.04701)
+1. [Weaviate: Late Chunking](https://weaviate.io/blog/late-chunking)
+1. [Superlinked: Optimizing RAG with Hybrid Search & Reranking](https://superlinked.com/vectorhub/articles/optimizing-rag-with-hybrid-search-reranking)
+
+### Advanced RAG Techniques
+
+1. [Agentic RAG Survey (arXiv:2501.09136)](https://arxiv.org/abs/2501.09136)
+1. [Corrective RAG Paper (arXiv:2401.15884)](https://arxiv.org/abs/2401.15884)
+1. [LangGraph CRAG Tutorial](https://langchain-ai.github.io/langgraph/tutorials/rag/langgraph_crag/)
+1. [Microsoft GraphRAG](https://www.microsoft.com/en-us/research/project/graphrag/) and [Paper (arXiv:2404.16130)](https://arxiv.org/abs/2404.16130)
+1. [ColBERTv2 Paper (arXiv:2112.01488)](https://arxiv.org/abs/2112.01488)
+1. [Long Context vs. RAG (arXiv:2501.01880)](https://arxiv.org/abs/2501.01880)
+
+### RAG Evaluation
+
+1. [RAGAS Documentation](https://docs.ragas.io/en/stable/) and [Paper (arXiv:2309.15217)](https://arxiv.org/abs/2309.15217)
+1. [Chunking Techniques with LangChain and LlamaIndex](https://blog.lancedb.com/chunking-techniques-with-langchain-and-llamaindex/)
+
+### Amazon Bedrock & AWS
+
+1. [Amazon Bedrock Knowledge Bases](https://aws.amazon.com/bedrock/knowledge-bases/)
+1. [Amazon Bedrock Knowledge Bases Documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html)
+1. [Amazon Bedrock Knowledge Bases GraphRAG](https://aws.amazon.com/blogs/machine-learning/build-graphrag-applications-using-amazon-bedrock-knowledge-bases/)
+1. [Contextual Retrieval with Amazon Bedrock Knowledge Bases](https://aws.amazon.com/blogs/machine-learning/contextual-retrieval-in-anthropic-using-amazon-bedrock-knowledge-bases/)
+1. [Talk to Your Slide Deck (Multimodal RAG)](https://aws.amazon.com/blogs/machine-learning/talk-to-your-slide-deck-using-multimodal-foundation-models-hosted-on-amazon-bedrock-and-amazon-sagemaker-part-1/)
+
+### Multimodal RAG
+
+1. [Multimodal Few-Shot Learning with Frozen Language Models](https://arxiv.org/pdf/2106.13884)
+1. [CLIP: Learning Transferable Visual Models From Natural Language](https://cdn.openai.com/papers/Learning_Transferable_Visual_Models_From_Natural_Language.pdf)
+1. [Multimodal Chain-of-Thought Reasoning](https://arxiv.org/pdf/2302.00923)
+
+### Course Resources
+
+1. [Course Bookmarks: RAG](https://github.com/gu-dsan6725/bookmarks/tree/main?tab=readme-ov-file#rag)

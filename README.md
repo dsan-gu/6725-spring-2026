@@ -46,7 +46,7 @@
 1. To render the site locally run the following command. This will start a local website and provide a URL such as `http://127.0.0.1:8000/course/` for accessing the website.
 
     ```{.bash}
-    mkdocs serve
+    mkdocs serve -a 127.0.0.1:9999
     ```
 
 1. To build the static site for offline viewing or download, run the following command. This will generate the site in the `site/` directory.

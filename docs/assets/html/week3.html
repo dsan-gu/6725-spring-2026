@@ -442,7 +442,7 @@
   <meta name="generator" content="quarto-1.6.40">
 
   <meta name="author" content="Amit Arora">
-  <title>Week 3: Retrieval Augumented Generation (RAG) - Part 1</title>
+  <title>Week 3: Retrieval Augmented Generation (RAG) - Part 1</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -1051,7 +1051,7 @@ margin-right: 0; }
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Week 3: Retrieval Augumented Generation (RAG) - Part 1</h1>
+  <h1 class="title">Week 3: Retrieval Augmented Generation (RAG) - Part 1</h1>
   <p class="subtitle">Applied Generative AI for AI Developers</p>
 
 <div class="quarto-title-authors">
@@ -1065,8 +1065,7 @@ Amit Arora
 </section>
 <section id="what-is-rag" class="slide level2 center">
 <h2>What is RAG?</h2>
-<p>RAG = Retrieval Augumented Generation<br>
-A generative AI approach where the model combines external knowledge retrieval with text generation to provide more accurate and contextually rich responses.</p>
+<p>RAG = Retrieval Augmented Generation A generative AI approach where the model combines external knowledge retrieval with text generation to provide more accurate and contextually rich responses.</p>
 </section>
 <section id="why-rag" class="slide level2">
 <h2>Why RAG?</h2>
@@ -1141,8 +1140,143 @@ A generative AI approach where the model combines external knowledge retrieval w
 <li><strong>OpenAI embeddings</strong>: Excellent general-purpose performance but can be expensive for large-scale applications.</li>
 <li><strong>Cohere embeddings</strong>: Strong multilingual support and competitive performance.</li>
 <li><strong>Amazon Titan</strong>: Integrated well with AWS ecosystem, good multilingual capabilities.</li>
-<li><strong>ColBERTv2</strong>: Advanced model with strong performance on academic benchmarks. <a href="https://arxiv.org/pdf/2112.01488">Paper</a>, <a href="https://huggingface.co/colbert-ir/colbertv2.0">HuggingFace</a>, <a href="https://python.langchain.com/docs/integrations/retrievers/ragatouille/">LangChain example</a>.</li>
+<li><strong>Voyage AI</strong>: Recommended by Anthropic, state-of-the-art performance with domain-specific models for finance, healthcare, and code.</li>
+<li><strong>ColBERTv2</strong>: Late interaction model – independently encodes queries and documents, then uses “MaxSim” for fine-grained token-level similarity. 6-10x smaller footprint than ColBERTv1 with better quality. <a href="https://arxiv.org/pdf/2112.01488">Paper</a>, <a href="https://huggingface.co/colbert-ir/colbertv2.0">HuggingFace</a>, <a href="https://python.langchain.com/docs/integrations/retrievers/ragatouille/">LangChain example</a>.</li>
 </ul>
+</section>
+<section id="beyond-embeddings-agentic-search" class="slide level2 center">
+<h2>Beyond Embeddings: Agentic Search</h2>
+<p>What if embeddings-based RAG is not the best approach for every use case?</p>
+</section>
+<section id="the-case-against-embeddings-only-rag" class="slide level2">
+<h2>The Case Against Embeddings-Only RAG</h2>
+<p>The Anthropic engineering team discovered that for <strong>Claude Code</strong>, using Unix tools (<code>grep</code>, <code>ripgrep</code>, <code>find</code>) over codebases gives <strong>better results</strong> than embeddings-based approaches.</p>
+<blockquote>
+<p>“We did use vector embeddings initially. They’re really tricky to maintain because you have to continuously re-index… Claude is really good at agentic search. You can get to the same accuracy level with agentic search and it’s just a much cleaner deployment story.”</p>
+<p>– Cat Wu, PM for Claude Code (<a href="https://www.latent.space/p/claude-code">Latent Space Podcast</a>)</p>
+</blockquote>
+<p>Boris Cherny (Lead Engineer, Claude Code) described the tool as <strong>“not a product as much as it’s a Unix utility”</strong> – fitting Anthropic’s product principle of <strong>“do the simple thing first.”</strong></p>
+</section>
+<section id="agentic-search-vs-semantic-search" class="slide level2">
+<h2>Agentic Search vs Semantic Search</h2>
+<p>From <a href="https://www.anthropic.com/engineering/claude-code-best-practices">Anthropic’s official engineering blog</a>:</p>
+<blockquote>
+<p>“Semantic search is usually faster than agentic search, but <strong>less accurate, more difficult to maintain, and less transparent</strong>. It involves ‘chunking’ the relevant context, embedding these chunks as vectors, and then searching for concepts by querying those vectors. Given its limitations, we suggest <strong>starting with agentic search</strong>, and only adding semantic search if you need faster results or more variations.”</p>
+</blockquote>
+<p><strong>Agentic search</strong> = An AI agent iteratively uses tools like <code>grep</code>, <code>find</code>, <code>cat</code>, and <code>ls</code> to locate relevant information, reasoning about what to search for next based on what it has found so far.</p>
+</section>
+<section id="swe-bench-validation" class="slide level2">
+<h2>SWE-Bench Validation</h2>
+<p>Colin Flaherty (Augment, top of SWE-Bench Verified leaderboard):</p>
+<blockquote>
+<p>“We explored adding various embedding-based retrieval tools, but found that for SWE-Bench tasks this was <strong>not the bottleneck</strong> – <strong>grep and find were sufficient</strong>.”</p>
+</blockquote>
+<p>Source: <a href="https://jxnl.co/writing/2025/09/11/why-grep-beat-embeddings-in-our-swe-bench-agent-lessons-from-augment/">Why Grep Beat Embeddings in Our SWE-Bench Agent</a></p>
+<h3 id="when-does-each-approach-win">When Does Each Approach Win?</h3>
+<table class="caption-top">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Approach</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Agentic Search</strong> (grep/find)</td>
+<td>Codebases, structured text, precise lookups</td>
+</tr>
+<tr class="even">
+<td><strong>Semantic Search</strong> (embeddings)</td>
+<td>Large unstructured corpora, fuzzy matching</td>
+</tr>
+<tr class="odd">
+<td><strong>Hybrid</strong> (both as tools)</td>
+<td>Agent chooses the right tool per query</td>
+</tr>
+</tbody>
+</table>
+<p>The takeaway: expose <strong>both</strong> as tools and let the agent decide.</p>
+</section>
+<section id="contextual-retrieval" class="slide level2 center">
+<h2>Contextual Retrieval</h2>
+<p>Solving the “lost context” problem in chunking</p>
+<p>Source: <a href="https://www.anthropic.com/news/contextual-retrieval">Anthropic Blog - Contextual Retrieval</a></p>
+</section>
+<section id="the-problem-with-naive-chunking" class="slide level2">
+<h2>The Problem with Naive Chunking</h2>
+<p>Traditional RAG chunks documents and embeds each chunk independently. This <strong>loses context</strong>:</p>
+<pre><code>Original document:
+&quot;Acme Corp revenue grew 15% in Q3. The company attributed
+this growth to their new AI product line launched in Q2.&quot;
+
+Chunk 2 (after splitting):
+&quot;The company attributed this growth to their new AI product line
+launched in Q2.&quot;</code></pre>
+<p><strong>Problem</strong>: Which company? What growth? The chunk is orphaned from its context.</p>
+</section>
+<section id="contextual-retrieval-the-solution" class="slide level2">
+<h2>Contextual Retrieval: The Solution</h2>
+<p>Anthropic’s approach: use Claude to <strong>prepend chunk-specific context</strong> to each chunk before embedding.</p>
+<pre><code>Contextual Chunk 2:
+&quot;This chunk is from Acme Corp&#39;s Q3 earnings report. It discusses
+revenue growth of 15%. The company attributed this growth to
+their new AI product line launched in Q2.&quot;</code></pre>
+<h3 id="results">Results</h3>
+<ul>
+<li><strong>49% reduction</strong> in failed retrievals with contextual embeddings alone</li>
+<li><strong>67% reduction</strong> when combined with reranking</li>
+<li>Uses <strong>prompt caching</strong> to keep costs manageable (pennies per document)</li>
+</ul>
+<h3 id="key-insight">Key Insight</h3>
+<p>For knowledge bases under <strong>200K tokens</strong>, you may not need RAG at all – just put the entire context in the prompt window.</p>
+</section>
+<section id="late-chunking" class="slide level2">
+<h2>Late Chunking</h2>
+<p>An alternative approach from Jina AI to preserve context during chunking.</p>
+<p><strong>Traditional approach</strong> (chunk-then-embed):</p>
+<pre><code>Document -&gt; Split into chunks -&gt; Embed each chunk independently</code></pre>
+<p><strong>Late chunking</strong> (embed-then-chunk):</p>
+<pre><code>Document -&gt; Feed entire doc into long-context embedding model
+         -&gt; Get token-level embeddings WITH full context
+         -&gt; THEN split into chunks</code></pre>
+<h3 id="why-it-matters">Why It Matters</h3>
+<ul>
+<li>Pronouns and references retain their meaning (“The company” knows it means “Acme Corp”)</li>
+<li>Each chunk embedding is aware of the full document context</li>
+<li>No need for an extra LLM call (unlike contextual retrieval)</li>
+<li>Trade-off: requires a long-context embedding model</li>
+</ul>
+<p>Source: <a href="https://arxiv.org/pdf/2409.04701">Late Chunking Paper (arXiv:2409.04701)</a>, <a href="https://weaviate.io/blog/late-chunking">Weaviate Blog</a></p>
+</section>
+<section id="hybrid-search-bm25-embeddings" class="slide level2">
+<h2>Hybrid Search: BM25 + Embeddings</h2>
+<p>The production standard for enterprise RAG combines <strong>lexical</strong> and <strong>semantic</strong> search.</p>
+<pre><code>                    User Query
+                    /        \
+                   /          \
+            BM25 Search    Vector Search
+           (keyword match)  (semantic match)
+                   \          /
+                    \        /
+              Reciprocal Rank Fusion (RRF)
+                       |
+                  Merged Results
+                       |
+                   Reranker
+                       |
+                  Final Results</code></pre>
+<h3 id="why-hybrid">Why Hybrid?</h3>
+<ul>
+<li><strong>BM25 alone</strong> misses semantic similarity (“car” vs “automobile”)</li>
+<li><strong>Embeddings alone</strong> miss exact keyword matches (product IDs, error codes, names)</li>
+<li><strong>Together</strong>: best of both worlds</li>
+</ul>
+<p>Recommended starting weight: <strong>30% BM25 / 70% embedding</strong> (tune for your domain).</p>
+<p>Source: <a href="https://superlinked.com/vectorhub/articles/optimizing-rag-with-hybrid-search-reranking">Superlinked - Optimizing RAG with Hybrid Search</a></p>
 </section>
 <section id="vector-databases" class="slide level2">
 <h2>Vector Databases</h2>
@@ -1295,14 +1429,17 @@ A generative AI approach where the model combines external knowledge retrieval w
 <ul>
 <li>Represents knowledge as <strong>entities and relationships</strong></li>
 <li>Uses <strong>graph traversal and structured queries</strong></li>
-<li>Common tools: Neo4j, Memgraph</li>
+<li>Common tools: Neo4j, Memgraph, Amazon Neptune</li>
+<li><strong>Microsoft GraphRAG</strong>: Open-source framework that extracts knowledge graphs from documents, builds community hierarchies, and generates summaries for retrieval. Outperforms baseline RAG for global sensemaking over 1M+ token datasets.</li>
 <li>Strengths:
 <ul>
 <li>Captures <strong>contextual relationships</strong></li>
 <li>Enables <strong>logical reasoning</strong> over data</li>
 <li>Ideal for <strong>structured, interconnected knowledge</strong></li>
+<li>More <strong>comprehensive and diverse</strong> answers with fewer hallucinations</li>
 </ul></li>
 </ul>
+<p>Source: <a href="https://www.microsoft.com/en-us/research/project/graphrag/">Microsoft GraphRAG</a>, <a href="https://arxiv.org/abs/2404.16130">Paper (arXiv:2404.16130)</a></p>
 </section>
 <section id="key-differences" class="slide level2">
 <h2>Key Differences</h2>
@@ -1416,11 +1553,11 @@ A generative AI approach where the model combines external knowledge retrieval w
 <h2>Example: Finding Relevant Information</h2>
 <p>The vector search for this would have to include potentially several chunks of text and may still not get all the collaborators whereas the graph retrieval would be deterministic and more accurate.</p>
 <h3 id="vector-db-rag-query-faiss"><strong>Vector DB RAG Query</strong> (FAISS)</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href></a>retriever <span class="op">=</span> vectorstore.as_retriever()</span>
-<span id="cb1-2"><a href></a>retriever.get_relevant_documents(<span class="st">&quot;Who all did Bohr collaborate with?&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href></a>retriever <span class="op">=</span> vectorstore.as_retriever()</span>
+<span id="cb6-2"><a href></a>retriever.get_relevant_documents(<span class="st">&quot;Who all did Bohr collaborate with?&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <h3 id="graph-rag-query-cypher-for-memgraph"><strong>Graph RAG Query</strong> (Cypher for Memgraph)</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource cypher number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1"><a href></a>MATCH (p:Person {id: &quot;Bohr&quot;})-[:COLLABORATED_WITH]-&gt;(collaborator)</span>
-<span id="cb2-2"><a href></a> RETURN collaborator.id;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource cypher number-lines code-with-copy"><code class="sourceCode"><span id="cb7-1"><a href></a>MATCH (p:Person {id: &quot;Bohr&quot;})-[:COLLABORATED_WITH]-&gt;(collaborator)</span>
+<span id="cb7-2"><a href></a> RETURN collaborator.id;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="sql-rag-structured-data-retrieval" class="slide level2">
 <h2>SQL RAG: Structured Data Retrieval</h2>
@@ -1430,9 +1567,9 @@ A generative AI approach where the model combines external knowledge retrieval w
 <li>Best for <strong>highly structured, tabular data</strong>.</li>
 <li>Example query: we want to find the average trip distance on a given day from our favorite NYC TLC dataset, now this is a question that neither a vector db nor a graph db can answer.</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href></a>SELECT AVG(trip_distance) AS avg_trip_distance</span>
-<span id="cb3-2"><a href></a>FROM nyc_taxi_data</span>
-<span id="cb3-3"><a href></a>WHERE DATE(tpep_pickup_datetime) <span class="op">=</span> <span class="st">&#39;2024-12-11&#39;</span><span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href></a>SELECT AVG(trip_distance) AS avg_trip_distance</span>
+<span id="cb8-2"><a href></a>FROM nyc_taxi_data</span>
+<span id="cb8-3"><a href></a>WHERE DATE(tpep_pickup_datetime) <span class="op">=</span> <span class="st">&#39;2024-12-11&#39;</span><span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li>Works well when LLMs can generate SQL queries dynamically based on natural language input.</li>
 </ul>
@@ -1452,32 +1589,32 @@ A generative AI approach where the model combines external knowledge retrieval w
 </section>
 <section id="langchain-connectors-for-sql-databases-1" class="slide level2">
 <h2>LangChain Connectors for SQL Databases</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href></a><span class="im">from</span> langchain.sql_database <span class="im">import</span> SQLDatabase</span>
-<span id="cb4-2"><a href></a><span class="im">from</span> langchain.chains <span class="im">import</span> SQLDatabaseChain</span>
-<span id="cb4-3"><a href></a><span class="im">from</span> langchain_aws <span class="im">import</span> ChatBedrockConverse</span>
-<span id="cb4-4"><a href></a><span class="im">import</span> boto3</span>
-<span id="cb4-5"><a href></a></span>
-<span id="cb4-6"><a href></a><span class="co"># Initialize Bedrock client</span></span>
-<span id="cb4-7"><a href></a>bedrock <span class="op">=</span> boto3.client(</span>
-<span id="cb4-8"><a href></a>    service_name<span class="op">=</span><span class="st">&#39;bedrock-runtime&#39;</span>,</span>
-<span id="cb4-9"><a href></a>    region_name<span class="op">=</span><span class="st">&#39;us-east-1&#39;</span>  <span class="co"># replace with your region</span></span>
-<span id="cb4-10"><a href></a>)</span>
-<span id="cb4-11"><a href></a></span>
-<span id="cb4-12"><a href></a><span class="co"># Initialize the LLM</span></span>
-<span id="cb4-13"><a href></a>llm <span class="op">=</span> ChatBedrockConverse(</span>
-<span id="cb4-14"><a href></a>    model_id<span class="op">=</span><span class="st">&quot;anthropic.claude-3-sonnet-20240229&quot;</span>,  <span class="co"># or your preferred Claude model</span></span>
-<span id="cb4-15"><a href></a>    client<span class="op">=</span>bedrock,</span>
-<span id="cb4-16"><a href></a>    model_kwargs<span class="op">=</span>{<span class="st">&quot;temperature&quot;</span>: <span class="dv">0</span>}</span>
-<span id="cb4-17"><a href></a>)</span>
-<span id="cb4-18"><a href></a></span>
-<span id="cb4-19"><a href></a><span class="co"># Connect to database</span></span>
-<span id="cb4-20"><a href></a>db <span class="op">=</span> SQLDatabase.from_uri(<span class="st">&quot;sqlite:///example.db&quot;</span>)</span>
-<span id="cb4-21"><a href></a></span>
-<span id="cb4-22"><a href></a><span class="co"># Create the chain</span></span>
-<span id="cb4-23"><a href></a>sql_chain <span class="op">=</span> SQLDatabaseChain.from_llm(llm<span class="op">=</span>llm, database<span class="op">=</span>db, verbose<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb4-24"><a href></a></span>
-<span id="cb4-25"><a href></a><span class="co"># Run the query</span></span>
-<span id="cb4-26"><a href></a>sql_chain.run(<span class="st">&quot;What are the top 5 research topics?&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href></a><span class="im">from</span> langchain.sql_database <span class="im">import</span> SQLDatabase</span>
+<span id="cb9-2"><a href></a><span class="im">from</span> langchain.chains <span class="im">import</span> SQLDatabaseChain</span>
+<span id="cb9-3"><a href></a><span class="im">from</span> langchain_aws <span class="im">import</span> ChatBedrockConverse</span>
+<span id="cb9-4"><a href></a><span class="im">import</span> boto3</span>
+<span id="cb9-5"><a href></a></span>
+<span id="cb9-6"><a href></a><span class="co"># Initialize Bedrock client</span></span>
+<span id="cb9-7"><a href></a>bedrock <span class="op">=</span> boto3.client(</span>
+<span id="cb9-8"><a href></a>    service_name<span class="op">=</span><span class="st">&#39;bedrock-runtime&#39;</span>,</span>
+<span id="cb9-9"><a href></a>    region_name<span class="op">=</span><span class="st">&#39;us-east-1&#39;</span>  <span class="co"># replace with your region</span></span>
+<span id="cb9-10"><a href></a>)</span>
+<span id="cb9-11"><a href></a></span>
+<span id="cb9-12"><a href></a><span class="co"># Initialize the LLM</span></span>
+<span id="cb9-13"><a href></a>llm <span class="op">=</span> ChatBedrockConverse(</span>
+<span id="cb9-14"><a href></a>    model_id<span class="op">=</span><span class="st">&quot;anthropic.claude-sonnet-4-20250514-v1:0&quot;</span>,</span>
+<span id="cb9-15"><a href></a>    client<span class="op">=</span>bedrock,</span>
+<span id="cb9-16"><a href></a>    model_kwargs<span class="op">=</span>{<span class="st">&quot;temperature&quot;</span>: <span class="dv">0</span>}</span>
+<span id="cb9-17"><a href></a>)</span>
+<span id="cb9-18"><a href></a></span>
+<span id="cb9-19"><a href></a><span class="co"># Connect to database</span></span>
+<span id="cb9-20"><a href></a>db <span class="op">=</span> SQLDatabase.from_uri(<span class="st">&quot;sqlite:///example.db&quot;</span>)</span>
+<span id="cb9-21"><a href></a></span>
+<span id="cb9-22"><a href></a><span class="co"># Create the chain</span></span>
+<span id="cb9-23"><a href></a>sql_chain <span class="op">=</span> SQLDatabaseChain.from_llm(llm<span class="op">=</span>llm, database<span class="op">=</span>db, verbose<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-24"><a href></a></span>
+<span id="cb9-25"><a href></a><span class="co"># Run the query</span></span>
+<span id="cb9-26"><a href></a>sql_chain.run(<span class="st">&quot;What are the top 5 research topics?&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li>Enables <strong>natural language to SQL translation</strong> for intelligent retrieval from structured datasets.</li>
 </ul>
@@ -1485,11 +1622,324 @@ A generative AI approach where the model combines external knowledge retrieval w
 <section id="summary-of-different-types-of-rag-on-text-data" class="slide level2">
 <h2>Summary of different types of RAG on text data</h2>
 <ul>
-<li><strong>Vector DB RAG</strong> → Best for <strong>scalable, unstructured text search</strong></li>
-<li><strong>Graph RAG</strong> → Best for <strong>structured reasoning &amp; entity relationships</strong></li>
-<li><strong>SQL RAG</strong> → Best for <strong>highly structured, tabular data</strong></li>
-<li><strong>Hybrid RAG</strong> → Best of all approaches!</li>
+<li><strong>Vector DB RAG</strong> –&gt; Best for <strong>scalable, unstructured text search</strong></li>
+<li><strong>Graph RAG</strong> –&gt; Best for <strong>structured reasoning &amp; entity relationships</strong></li>
+<li><strong>SQL RAG</strong> –&gt; Best for <strong>highly structured, tabular data</strong></li>
+<li><strong>Hybrid RAG</strong> –&gt; Best of all approaches!</li>
 </ul>
+</section>
+<section id="agentic-rag" class="slide level2 center">
+<h2>Agentic RAG</h2>
+<p>Moving from static pipelines to autonomous retrieval agents</p>
+</section>
+<section id="what-is-agentic-rag" class="slide level2">
+<h2>What is Agentic RAG?</h2>
+<p>Traditional RAG follows a <strong>fixed pipeline</strong>: retrieve, then generate. Agentic RAG embeds <strong>autonomous AI agents</strong> that make decisions at each step.</p>
+<pre><code>Traditional RAG:
+  Query -&gt; Retrieve -&gt; Generate -&gt; Done
+
+Agentic RAG:
+  Query -&gt; Agent decides what to fetch
+       -&gt; Agent calls tools (search, SQL, API, grep)
+       -&gt; Agent evaluates results
+       -&gt; Agent decides: enough? or search again?
+       -&gt; Agent may rewrite query and retry
+       -&gt; Agent generates answer with citations
+       -&gt; Agent self-checks for hallucinations</code></pre>
+<h3 id="key-capabilities">Key Capabilities</h3>
+<ul>
+<li><strong>Query planning</strong>: Decomposes complex questions into sub-queries</li>
+<li><strong>Tool selection</strong>: Chooses between vector search, keyword search, SQL, APIs</li>
+<li><strong>Self-correction</strong>: Evaluates retrieved documents and retries if quality is low</li>
+<li><strong>Multi-step reasoning</strong>: Chains multiple retrieval steps for complex questions</li>
+</ul>
+<p>Source: <a href="https://arxiv.org/abs/2501.09136">Agentic RAG Survey (arXiv:2501.09136)</a></p>
+</section>
+<section id="agentic-rag-architecture" class="slide level2">
+<h2>Agentic RAG Architecture</h2>
+<pre><code>                    +-------------------+
+                    |   User Question   |
+                    +--------+----------+
+                             |
+                    +--------v----------+
+                    |   Planning Agent  |
+                    | (decompose query) |
+                    +--------+----------+
+                             |
+              +--------------+--------------+
+              |              |              |
+     +--------v---+  +------v-----+  +-----v------+
+     | Vector     |  | Keyword    |  | SQL        |
+     | Search     |  | Search     |  | Query      |
+     +--------+---+  +------+-----+  +-----+------+
+              |              |              |
+              +--------------+--------------+
+                             |
+                    +--------v----------+
+                    | Evaluation Agent  |
+                    | (assess quality)  |
+                    +--------+----------+
+                             |
+                     Good enough? --NO--&gt; Rewrite &amp; Retry
+                             |
+                            YES
+                             |
+                    +--------v----------+
+                    | Generation Agent  |
+                    | (answer + cite)   |
+                    +-------------------+</code></pre>
+</section>
+<section id="corrective-rag-crag" class="slide level2">
+<h2>Corrective RAG (CRAG)</h2>
+<p>CRAG adds a <strong>retrieval evaluator</strong> that assesses document quality before generation.</p>
+<h3 id="how-it-works">How It Works</h3>
+<ol type="1">
+<li>Retrieve documents as usual</li>
+<li>A lightweight evaluator scores each document: <strong>Correct / Incorrect / Ambiguous</strong></li>
+<li>Based on the assessment:
+<ul>
+<li><strong>Correct</strong>: Refine and use the document</li>
+<li><strong>Incorrect</strong>: Discard and fall back to <strong>web search</strong></li>
+<li><strong>Ambiguous</strong>: Combine refined document with web search results</li>
+</ul></li>
+</ol>
+<h3 id="why-it-matters-1">Why It Matters</h3>
+<ul>
+<li><strong>Plug-and-play</strong>: Works with any existing RAG pipeline</li>
+<li><strong>Self-correcting</strong>: Does not blindly trust retrieved documents</li>
+<li><strong>Web search fallback</strong>: Handles cases where local knowledge base is insufficient</li>
+</ul>
+<p>Source: <a href="https://arxiv.org/abs/2401.15884">CRAG Paper (arXiv:2401.15884)</a>, <a href="https://langchain-ai.github.io/langgraph/tutorials/rag/langgraph_crag/">LangGraph CRAG Tutorial</a></p>
+</section>
+<section id="self-rag" class="slide level2">
+<h2>Self-RAG</h2>
+<p>Self-RAG teaches the model to <strong>reflect</strong> during generation, dynamically deciding when and what to retrieve.</p>
+<h3 id="self-rag-process">Self-RAG Process</h3>
+<pre><code>Input query
+  |
+  v
+Should I retrieve? (reflection token)
+  |
+  YES --&gt; Retrieve documents
+  |         |
+  |         v
+  |       Is this document relevant? (reflection token)
+  |         |
+  |        YES --&gt; Generate with this evidence
+  |         |         |
+  |         |         v
+  |         |       Is my response supported? (reflection token)
+  |         |         |
+  |         |        YES --&gt; Return response
+  |         |         NO --&gt; Try next document
+  |         |
+  |        NO --&gt; Skip this document
+  |
+  NO --&gt; Generate without retrieval</code></pre>
+<h3 id="crag-self-rag-together">CRAG + Self-RAG Together</h3>
+<ul>
+<li><strong>CRAG</strong> cleans the retrieval inputs (better documents in)</li>
+<li><strong>Self-RAG</strong> refines the generation outputs (better answers out)</li>
+<li>Complementary approaches that can be combined</li>
+</ul>
+</section>
+<section id="rag-vs-long-context-windows" class="slide level2 center">
+<h2>RAG vs Long Context Windows</h2>
+<p>With context windows reaching 200K+ tokens, is RAG still necessary?</p>
+</section>
+<section id="rag-vs-long-context-the-trade-offs" class="slide level2">
+<h2>RAG vs Long Context: The Trade-offs</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>RAG</th>
+<th>Long Context</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Cost per query</strong></td>
+<td>~$0.00008</td>
+<td>~$0.10 (1,250x more)</td>
+</tr>
+<tr class="even">
+<td><strong>Query latency</strong></td>
+<td>~1 second</td>
+<td>~45 seconds</td>
+</tr>
+<tr class="odd">
+<td><strong>Accuracy (QA benchmarks)</strong></td>
+<td>Good</td>
+<td>Slightly better</td>
+</tr>
+<tr class="even">
+<td><strong>Scales to millions of docs</strong></td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>“Lost in the Middle” problem</strong></td>
+<td>Minimal</td>
+<td>Significant</td>
+</tr>
+<tr class="even">
+<td><strong>Requires indexing pipeline</strong></td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>Real-time data updates</strong></td>
+<td>Easy</td>
+<td>Requires re-prompting</td>
+</tr>
+</tbody>
+</table>
+<p>Source: <a href="https://arxiv.org/abs/2501.01880">Long Context vs. RAG for LLMs (arXiv:2501.01880)</a></p>
+</section>
+<section id="the-lost-in-the-middle-problem" class="slide level2">
+<h2>The “Lost in the Middle” Problem</h2>
+<p>Research shows that LLMs with long context windows tend to <strong>pay more attention to the beginning and end</strong> of the context, while information in the middle gets lower attention.</p>
+<pre><code>Attention Distribution in Long Context:
+
+High  |##                              ##
+      |###                            ###
+      |####                          ####
+      |#####                        #####
+      |######                      ######
+      |########                  ########
+Low   |############        ############
+      +-----------------------------------
+       Beginning    Middle         End</code></pre>
+<p>RAG mitigates this by retrieving only the <strong>most relevant</strong> chunks, keeping the context window focused and small.</p>
+</section>
+<section id="when-to-use-which-approach" class="slide level2">
+<h2>When to Use Which Approach</h2>
+<h3 id="use-rag-when">Use RAG When:</h3>
+<ul>
+<li>Knowledge base is <strong>larger than the context window</strong></li>
+<li>You need <strong>real-time updates</strong> (new documents added frequently)</li>
+<li><strong>Cost matters</strong> (RAG is 1,000x+ cheaper per query)</li>
+<li>You need <strong>source attribution</strong> and traceability</li>
+<li>Working with <strong>millions of documents</strong></li>
+</ul>
+<h3 id="use-long-context-when">Use Long Context When:</h3>
+<ul>
+<li>Entire corpus fits in the context window (&lt; 200K tokens)</li>
+<li>You need the model to reason <strong>across the entire document</strong></li>
+<li>Summarization or analysis of a <strong>single long document</strong></li>
+<li>Prototyping before building a full RAG pipeline</li>
+</ul>
+<h3 id="the-answer-context-engineering">The Answer: Context Engineering</h3>
+<p>The field is moving toward <strong>context engineering</strong> – dynamically assembling the most effective context per query, mixing RAG retrieval, long context, and cached context as appropriate.</p>
+</section>
+<section id="rag-evaluation-with-ragas" class="slide level2 center">
+<h2>RAG Evaluation with RAGAS</h2>
+<p>How do you know if your RAG pipeline is actually working?</p>
+</section>
+<section id="ragas-rag-assessment-framework" class="slide level2">
+<h2>RAGAS: RAG Assessment Framework</h2>
+<p><a href="https://docs.ragas.io/en/stable/">RAGAS</a> is the industry-standard open-source framework for evaluating RAG pipelines.</p>
+<h3 id="core-metrics">Core Metrics</h3>
+<table class="caption-top">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>What It Measures</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Context Precision</strong></td>
+<td>Are the retrieved documents actually relevant?</td>
+</tr>
+<tr class="even">
+<td><strong>Context Recall</strong></td>
+<td>Did we retrieve all the relevant documents?</td>
+</tr>
+<tr class="odd">
+<td><strong>Faithfulness</strong></td>
+<td>Is the generated answer supported by the retrieved context?</td>
+</tr>
+<tr class="even">
+<td><strong>Answer Relevancy</strong></td>
+<td>Does the answer actually address the question?</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-key-insight">The Key Insight</h3>
+<p>RAG evaluation requires measuring <strong>two separate things</strong>:</p>
+<ol type="1">
+<li><strong>Retrieval quality</strong>: Did we find the right documents? (Context Precision + Recall)</li>
+<li><strong>Generation quality</strong>: Did we produce a good answer from those documents? (Faithfulness + Relevancy)</li>
+</ol>
+<p>A RAG system can fail at either stage – good retrieval with bad generation, or bad retrieval with good generation.</p>
+</section>
+<section id="ragas-in-practice" class="slide level2">
+<h2>RAGAS in Practice</h2>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href></a><span class="im">from</span> ragas <span class="im">import</span> evaluate</span>
+<span id="cb14-2"><a href></a><span class="im">from</span> ragas.metrics <span class="im">import</span> (</span>
+<span id="cb14-3"><a href></a>    context_precision,</span>
+<span id="cb14-4"><a href></a>    context_recall,</span>
+<span id="cb14-5"><a href></a>    faithfulness,</span>
+<span id="cb14-6"><a href></a>    answer_relevancy</span>
+<span id="cb14-7"><a href></a>)</span>
+<span id="cb14-8"><a href></a></span>
+<span id="cb14-9"><a href></a><span class="co"># Prepare evaluation dataset</span></span>
+<span id="cb14-10"><a href></a>eval_dataset <span class="op">=</span> {</span>
+<span id="cb14-11"><a href></a>    <span class="st">&quot;question&quot;</span>: [<span class="st">&quot;What is the capital of France?&quot;</span>],</span>
+<span id="cb14-12"><a href></a>    <span class="st">&quot;answer&quot;</span>: [<span class="st">&quot;The capital of France is Paris.&quot;</span>],</span>
+<span id="cb14-13"><a href></a>    <span class="st">&quot;contexts&quot;</span>: [[<span class="st">&quot;Paris is the capital and largest city of France.&quot;</span>]],</span>
+<span id="cb14-14"><a href></a>    <span class="st">&quot;ground_truth&quot;</span>: [<span class="st">&quot;Paris is the capital of France.&quot;</span>]</span>
+<span id="cb14-15"><a href></a>}</span>
+<span id="cb14-16"><a href></a></span>
+<span id="cb14-17"><a href></a><span class="co"># Run evaluation</span></span>
+<span id="cb14-18"><a href></a>results <span class="op">=</span> evaluate(</span>
+<span id="cb14-19"><a href></a>    dataset<span class="op">=</span>eval_dataset,</span>
+<span id="cb14-20"><a href></a>    metrics<span class="op">=</span>[</span>
+<span id="cb14-21"><a href></a>        context_precision,</span>
+<span id="cb14-22"><a href></a>        context_recall,</span>
+<span id="cb14-23"><a href></a>        faithfulness,</span>
+<span id="cb14-24"><a href></a>        answer_relevancy</span>
+<span id="cb14-25"><a href></a>    ]</span>
+<span id="cb14-26"><a href></a>)</span>
+<span id="cb14-27"><a href></a></span>
+<span id="cb14-28"><a href></a><span class="bu">print</span>(results)</span>
+<span id="cb14-29"><a href></a><span class="co"># {&#39;context_precision&#39;: 1.0, &#39;context_recall&#39;: 1.0,</span></span>
+<span id="cb14-30"><a href></a><span class="co">#  &#39;faithfulness&#39;: 1.0, &#39;answer_relevancy&#39;: 0.98}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h3 id="other-evaluation-tools">Other Evaluation Tools</h3>
+<ul>
+<li><strong>DeepEval</strong>: pytest-integrated RAG evaluation</li>
+<li><strong>Giskard</strong>: ML model testing including RAG</li>
+<li><strong>LangSmith</strong>: End-to-end LLM application monitoring</li>
+</ul>
+<p>Source: <a href="https://arxiv.org/abs/2309.15217">RAGAS Paper (arXiv:2309.15217)</a>, <a href="https://docs.ragas.io/en/stable/">RAGAS Documentation</a></p>
+</section>
+<section id="amazon-bedrock-knowledge-bases" class="slide level2 center">
+<h2>Amazon Bedrock Knowledge Bases</h2>
+<p>Fully managed RAG as a service</p>
+</section>
+<section id="amazon-bedrock-knowledge-bases-1" class="slide level2">
+<h2>Amazon Bedrock Knowledge Bases</h2>
+<p>A fully managed service that handles the entire RAG pipeline – from document ingestion to retrieval-augmented generation.</p>
+<h3 id="key-features">Key Features</h3>
+<ul>
+<li><strong>Advanced chunking</strong>: Semantic, hierarchical, and fixed-size chunking strategies</li>
+<li><strong>Multiple vector stores</strong>: Aurora PostgreSQL, OpenSearch Serverless, Neptune, MongoDB Atlas, Pinecone, Redis Enterprise</li>
+<li><strong>GraphRAG support</strong>: Uses Neptune Analytics for knowledge graph-based retrieval (GA March 2025)</li>
+<li><strong>Multimodal retrieval</strong>: Supports images, audio, and video alongside text</li>
+<li><strong>Contextual retrieval</strong>: Integrates Anthropic’s contextual retrieval technique</li>
+</ul>
+<h3 id="apis">APIs</h3>
+<ul>
+<li><strong>RetrieveAndGenerate</strong>: End-to-end RAG in a single API call</li>
+<li><strong>Retrieve</strong>: Get relevant chunks without generation (bring your own LLM)</li>
+</ul>
+<p>Source: <a href="https://aws.amazon.com/bedrock/knowledge-bases/">Amazon Bedrock Knowledge Bases</a>, <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html">Documentation</a></p>
 </section>
 <section id="multimodal-rag-beyond-text" class="slide level2">
 <h2>Multimodal RAG: Beyond Text</h2>
@@ -1517,15 +1967,15 @@ A generative AI approach where the model combines external knowledge retrieval w
 </section>
 <section id="architecture-deep-dive" class="slide level2">
 <h2>Architecture Deep Dive</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource mermaid number-lines code-with-copy"><code class="sourceCode"><span id="cb5-1"><a href></a>graph TD</span>
-<span id="cb5-2"><a href></a>    A[Input Query] --&gt; B[Query Encoder]</span>
-<span id="cb5-3"><a href></a>    B --&gt; C[Cross-Modal Vector Search]</span>
-<span id="cb5-4"><a href></a>    D[Image Database] --&gt; C</span>
-<span id="cb5-5"><a href></a>    E[Text Database] --&gt; C</span>
-<span id="cb5-6"><a href></a>    F[Audio Database] --&gt; C</span>
-<span id="cb5-7"><a href></a>    C --&gt; G[Context Assembly]</span>
-<span id="cb5-8"><a href></a>    G --&gt; H[LLM]</span>
-<span id="cb5-9"><a href></a>    H --&gt; I[Enhanced Response]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource mermaid number-lines code-with-copy"><code class="sourceCode"><span id="cb15-1"><a href></a>graph TD</span>
+<span id="cb15-2"><a href></a>    A[Input Query] --&gt; B[Query Encoder]</span>
+<span id="cb15-3"><a href></a>    B --&gt; C[Cross-Modal Vector Search]</span>
+<span id="cb15-4"><a href></a>    D[Image Database] --&gt; C</span>
+<span id="cb15-5"><a href></a>    E[Text Database] --&gt; C</span>
+<span id="cb15-6"><a href></a>    F[Audio Database] --&gt; C</span>
+<span id="cb15-7"><a href></a>    C --&gt; G[Context Assembly]</span>
+<span id="cb15-8"><a href></a>    G --&gt; H[LLM]</span>
+<span id="cb15-9"><a href></a>    H --&gt; I[Enhanced Response]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="implementation-challenges" class="slide level2">
 <h2>Implementation Challenges</h2>
@@ -1624,15 +2074,49 @@ A generative AI approach where the model combines external knowledge retrieval w
 <li>Interactive learning systems</li>
 </ul>
 </section>
-<section id="references" class="slide level2">
-<h2>References</h2>
+<section id="references-further-reading" class="slide level2">
+<h2>References &amp; Further Reading</h2>
+<h3 id="retrieval-approaches">Retrieval Approaches</h3>
 <ol type="1">
-<li><a href="https://aws.amazon.com/blogs/machine-learning/talk-to-your-slide-deck-using-multimodal-foundation-models-hosted-on-amazon-bedrock-and-amazon-sagemaker-part-1/">Talk to your slide deck: AWS blog post</a></li>
-<li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html">Retrieve data and generate AI responses with Amazon Bedrock Knowledge Bases</a></li>
-<li><a href="https://github.com/gu-dsan6725/bookmarks/tree/main?tab=readme-ov-file#rag">Course Bookmarks repo: links for RAG</a></li>
-<li><a href="https://arxiv.org/pdf/2106.13884">Multimodal Few-Shot Learning with Frozen Language Models (2023)</a></li>
-<li><a href="https://cdn.openai.com/papers/Learning_Transferable_Visual_Models_From_Natural_Language.pdf">Learning Transferable Visual Models From Natural Language Supervision</a></li>
-<li><a href="https://arxiv.org/pdf/2302.00923">Multimodal Chain-of-Thought Reasoning in Language Models</a></li>
+<li><a href="https://www.anthropic.com/engineering/claude-code-best-practices">Anthropic Engineering: Claude Code Best Practices (Agentic Search)</a></li>
+<li><a href="https://www.latent.space/p/claude-code">Latent Space Podcast: Claude Code</a> – Cat Wu and Boris Cherny on grep vs embeddings</li>
+<li><a href="https://jxnl.co/writing/2025/09/11/why-grep-beat-embeddings-in-our-swe-bench-agent-lessons-from-augment/">Why Grep Beat Embeddings in Our SWE-Bench Agent</a></li>
+<li><a href="https://www.anthropic.com/news/contextual-retrieval">Anthropic Blog: Contextual Retrieval</a></li>
+<li><a href="https://arxiv.org/pdf/2409.04701">Late Chunking Paper (arXiv:2409.04701)</a></li>
+<li><a href="https://weaviate.io/blog/late-chunking">Weaviate: Late Chunking</a></li>
+<li><a href="https://superlinked.com/vectorhub/articles/optimizing-rag-with-hybrid-search-reranking">Superlinked: Optimizing RAG with Hybrid Search &amp; Reranking</a></li>
+</ol>
+<h3 id="advanced-rag-techniques">Advanced RAG Techniques</h3>
+<ol type="1">
+<li><a href="https://arxiv.org/abs/2501.09136">Agentic RAG Survey (arXiv:2501.09136)</a></li>
+<li><a href="https://arxiv.org/abs/2401.15884">Corrective RAG Paper (arXiv:2401.15884)</a></li>
+<li><a href="https://langchain-ai.github.io/langgraph/tutorials/rag/langgraph_crag/">LangGraph CRAG Tutorial</a></li>
+<li><a href="https://www.microsoft.com/en-us/research/project/graphrag/">Microsoft GraphRAG</a> and <a href="https://arxiv.org/abs/2404.16130">Paper (arXiv:2404.16130)</a></li>
+<li><a href="https://arxiv.org/abs/2112.01488">ColBERTv2 Paper (arXiv:2112.01488)</a></li>
+<li><a href="https://arxiv.org/abs/2501.01880">Long Context vs. RAG (arXiv:2501.01880)</a></li>
+</ol>
+<h3 id="rag-evaluation">RAG Evaluation</h3>
+<ol type="1">
+<li><a href="https://docs.ragas.io/en/stable/">RAGAS Documentation</a> and <a href="https://arxiv.org/abs/2309.15217">Paper (arXiv:2309.15217)</a></li>
+<li><a href="https://blog.lancedb.com/chunking-techniques-with-langchain-and-llamaindex/">Chunking Techniques with LangChain and LlamaIndex</a></li>
+</ol>
+<h3 id="amazon-bedrock-aws">Amazon Bedrock &amp; AWS</h3>
+<ol type="1">
+<li><a href="https://aws.amazon.com/bedrock/knowledge-bases/">Amazon Bedrock Knowledge Bases</a></li>
+<li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html">Amazon Bedrock Knowledge Bases Documentation</a></li>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/build-graphrag-applications-using-amazon-bedrock-knowledge-bases/">Amazon Bedrock Knowledge Bases GraphRAG</a></li>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/contextual-retrieval-in-anthropic-using-amazon-bedrock-knowledge-bases/">Contextual Retrieval with Amazon Bedrock Knowledge Bases</a></li>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/talk-to-your-slide-deck-using-multimodal-foundation-models-hosted-on-amazon-bedrock-and-amazon-sagemaker-part-1/">Talk to Your Slide Deck (Multimodal RAG)</a></li>
+</ol>
+<h3 id="multimodal-rag">Multimodal RAG</h3>
+<ol type="1">
+<li><a href="https://arxiv.org/pdf/2106.13884">Multimodal Few-Shot Learning with Frozen Language Models</a></li>
+<li><a href="https://cdn.openai.com/papers/Learning_Transferable_Visual_Models_From_Natural_Language.pdf">CLIP: Learning Transferable Visual Models From Natural Language</a></li>
+<li><a href="https://arxiv.org/pdf/2302.00923">Multimodal Chain-of-Thought Reasoning</a></li>
+</ol>
+<h3 id="course-resources">Course Resources</h3>
+<ol type="1">
+<li><a href="https://github.com/gu-dsan6725/bookmarks/tree/main?tab=readme-ov-file#rag">Course Bookmarks: RAG</a></li>
 </ol>
 
 </section>
