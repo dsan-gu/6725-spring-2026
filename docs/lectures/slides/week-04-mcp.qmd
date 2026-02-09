@@ -85,6 +85,72 @@ MCP reduces integration complexity from **O(M x N)** to **O(M + N)**
 
 ---
 
+## MCP Core Primitives {.center}
+
+The building blocks that servers expose to AI clients
+
+---
+
+## Server Primitives: Tools, Resources, Prompts
+
+### Tools (Server → Client)
+- **Executable functions** the AI can invoke to perform actions
+- **Can have side effects**: write files, call APIs, modify databases
+- Each tool has a name, input schema (JSON Schema), and output
+- Example: `create_issue(title, body)`, `send_email(to, subject, message)`
+
+### Resources (Server → Client)
+- **Read-only data sources** accessible to the AI (like GET endpoints)
+- Provide context without side effects
+- URI-based addressing: `file:///path`, `db://table/id`, `api://endpoint`
+- Example: `config://settings`, `data://users/{id}`
+
+### Prompts (Server → Client)
+- **Pre-defined templates** for common interaction patterns
+- Standardize how the AI approaches specific tasks
+- Include placeholders for dynamic content
+- Example: `code_review`, `summarize_document`, `generate_tests`
+
+---
+
+## Advanced Primitives: Sampling, Elicitation, Notifications
+
+### Sampling (Client ← Server)
+- **Reverse flow**: Server requests LLM completions from the client
+- Enables agentic patterns where tools need AI reasoning mid-execution
+- Server sends sampling request → Client runs LLM → Returns result to server
+- Use case: Tool that needs to classify/summarize data before proceeding
+
+### Elicitation (Client ← Server)
+- Server requests **user input** when information is missing
+- Client prompts user and returns their response to server
+- Example: "Which project ID should I query?" or "Confirm deletion?"
+- Enables interactive workflows without hardcoding parameters
+
+### Notifications (Server → Client)
+- **One-way messages** from server to client (no response expected)
+- Progress updates for long-running operations
+- Log messages for debugging and monitoring
+- Real-time status changes
+- Example: `progress: 50%`, `log: Processing file 3 of 10`
+
+---
+
+## MCP Primitive Summary
+
+| Primitive | Direction | Purpose | Side Effects |
+|-----------|-----------|---------|--------------|
+| **Tools** | Server → Client | Execute actions | Yes |
+| **Resources** | Server → Client | Provide data | No (read-only) |
+| **Prompts** | Server → Client | Template interactions | No |
+| **Sampling** | Client ← Server | Request LLM completion | No |
+| **Elicitation** | Client ← Server | Request user input | No |
+| **Notifications** | Server → Client | Send updates/logs | No |
+
+**Key insight**: MCP is bidirectional -- servers can request things from clients too!
+
+---
+
 ## Challenges with Using MCP at Scale
 
 **Discovery & Configuration**:

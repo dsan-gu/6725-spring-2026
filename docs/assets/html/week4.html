@@ -1156,6 +1156,111 @@ Amit Arora
 <li><strong>Resources</strong>: Local files, databases, or remote APIs via web</li>
 </ul>
 </section>
+<section id="mcp-core-primitives" class="slide level2 center">
+<h2>MCP Core Primitives</h2>
+<p>The building blocks that servers expose to AI clients</p>
+</section>
+<section id="server-primitives-tools-resources-prompts" class="slide level2">
+<h2>Server Primitives: Tools, Resources, Prompts</h2>
+<h3 id="tools-server-client">Tools (Server → Client)</h3>
+<ul>
+<li><strong>Executable functions</strong> the AI can invoke to perform actions</li>
+<li><strong>Can have side effects</strong>: write files, call APIs, modify databases</li>
+<li>Each tool has a name, input schema (JSON Schema), and output</li>
+<li>Example: <code>create_issue(title, body)</code>, <code>send_email(to, subject, message)</code></li>
+</ul>
+<h3 id="resources-server-client">Resources (Server → Client)</h3>
+<ul>
+<li><strong>Read-only data sources</strong> accessible to the AI (like GET endpoints)</li>
+<li>Provide context without side effects</li>
+<li>URI-based addressing: <code>file:///path</code>, <code>db://table/id</code>, <code>api://endpoint</code></li>
+<li>Example: <code>config://settings</code>, <code>data://users/{id}</code></li>
+</ul>
+<h3 id="prompts-server-client">Prompts (Server → Client)</h3>
+<ul>
+<li><strong>Pre-defined templates</strong> for common interaction patterns</li>
+<li>Standardize how the AI approaches specific tasks</li>
+<li>Include placeholders for dynamic content</li>
+<li>Example: <code>code_review</code>, <code>summarize_document</code>, <code>generate_tests</code></li>
+</ul>
+</section>
+<section id="advanced-primitives-sampling-elicitation-notifications" class="slide level2">
+<h2>Advanced Primitives: Sampling, Elicitation, Notifications</h2>
+<h3 id="sampling-client-server">Sampling (Client ← Server)</h3>
+<ul>
+<li><strong>Reverse flow</strong>: Server requests LLM completions from the client</li>
+<li>Enables agentic patterns where tools need AI reasoning mid-execution</li>
+<li>Server sends sampling request → Client runs LLM → Returns result to server</li>
+<li>Use case: Tool that needs to classify/summarize data before proceeding</li>
+</ul>
+<h3 id="elicitation-client-server">Elicitation (Client ← Server)</h3>
+<ul>
+<li>Server requests <strong>user input</strong> when information is missing</li>
+<li>Client prompts user and returns their response to server</li>
+<li>Example: “Which project ID should I query?” or “Confirm deletion?”</li>
+<li>Enables interactive workflows without hardcoding parameters</li>
+</ul>
+<h3 id="notifications-server-client">Notifications (Server → Client)</h3>
+<ul>
+<li><strong>One-way messages</strong> from server to client (no response expected)</li>
+<li>Progress updates for long-running operations</li>
+<li>Log messages for debugging and monitoring</li>
+<li>Real-time status changes</li>
+<li>Example: <code>progress: 50%</code>, <code>log: Processing file 3 of 10</code></li>
+</ul>
+</section>
+<section id="mcp-primitive-summary" class="slide level2">
+<h2>MCP Primitive Summary</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Primitive</th>
+<th>Direction</th>
+<th>Purpose</th>
+<th>Side Effects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Tools</strong></td>
+<td>Server → Client</td>
+<td>Execute actions</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><strong>Resources</strong></td>
+<td>Server → Client</td>
+<td>Provide data</td>
+<td>No (read-only)</td>
+</tr>
+<tr class="odd">
+<td><strong>Prompts</strong></td>
+<td>Server → Client</td>
+<td>Template interactions</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><strong>Sampling</strong></td>
+<td>Client ← Server</td>
+<td>Request LLM completion</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>Elicitation</strong></td>
+<td>Client ← Server</td>
+<td>Request user input</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><strong>Notifications</strong></td>
+<td>Server → Client</td>
+<td>Send updates/logs</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key insight</strong>: MCP is bidirectional – servers can request things from clients too!</p>
+</section>
 <section id="challenges-with-using-mcp-at-scale" class="slide level2">
 <h2>Challenges with Using MCP at Scale</h2>
 <p><strong>Discovery &amp; Configuration</strong>:</p>
